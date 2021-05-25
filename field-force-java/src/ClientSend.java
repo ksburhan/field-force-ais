@@ -13,4 +13,11 @@ public class ClientSend {
         packet.write("playername");
         SendPacket(packet);
     }
+
+    public static void SendMove(){
+        Packet packet = new Packet();
+        packet.write(ClientPackets.PLAYERNAME.getId());
+        packet.write("playername");
+        SendPacket(packet);
+    }
 }
