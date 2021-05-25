@@ -14,9 +14,9 @@ public class ClientSend {
         SendPacket(packet);
     }
 
-    public static void SendMove(){
+    public static void SendMovereply(){
         Packet packet = new Packet();
-        packet.write(ClientPackets.PLAYERNAME.getId());
+        packet.write(ClientPackets.MOVEREPLY.getId());
         packet.write("playername");
         SendPacket(packet);
     }

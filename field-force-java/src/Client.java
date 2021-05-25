@@ -49,7 +49,6 @@ public class Client {
                 Packet packet;
                 length = getMessageLength();
                 type = getMessageLength();
-                System.out.println(length + type);
                 packet = new Packet(getMessage(length-4));
                 handleMessages(type, packet);
             }
@@ -59,10 +58,10 @@ public class Client {
     }
     private void handleMessages(int type, Packet packet){
         switch (type){
-            case 1:
-                System.out.println("Type 1: Shouldn't be received. Only used to tell the server playername");
+            case 1: //Login to server with playername and skills
+                System.out.println("Type 1: Shouldn't be received. Only used to tell the server own playerinformation");
                 break;
-            case 2:
+            case 2: //Server sends gamemode
                 try {
                     ClientHandle.HandleGamemode(packet);
                 } catch (Exception e) {
@@ -71,23 +70,24 @@ public class Client {
                 int gameMode = 1;
                 System.out.println("the picked gamemode is: " + gameMode);
                 break;
-            case 3:
+            case 3: //Server sends playerturns and ids
                 break;
-            case 4:
+            case 4: //Server sends all playerinformation
                 break;
-            case 5:
+            case 5: //Server sends initial Gamefield
                 break;
-            case 6:
+            case 6: //Server sends a moverequest
                 break;
-            case 7:
+            case 7: //Client sends movereply
+                System.out.println("Type 7: Shouldn't be received. Only used to tell the server own move");
                 break;
-            case 8:
+            case 8: //Server sends a movereply of player in turn to ALL players
                 break;
-            case 9:
+            case 9: //Server sends the new gamestate after calculating a move
                 break;
-            case 10:
+            case 10: //Server sends an error. Could be illegal moves or other
                 break;
-            case 11:
+            case 11: //Server sends players that the game is over and the winners' id
                 break;
         }
     }
