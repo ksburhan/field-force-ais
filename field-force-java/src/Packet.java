@@ -3,6 +3,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.exit;
+
 enum ServerPackets
 {
     GAMEMODE(2),
@@ -49,18 +51,63 @@ public class Packet {
         readPos = 0;
     }
 
-    public Packet(int _id) {
+    public Packet(int id) {
         buffer = new ArrayList<>();
         readPos = 0;
 
-        write(_id);
+        write(id);
     }
 
-    public Packet(byte[] _data) {
-        buffer = new ArrayList<Byte>();
+    public Packet(byte[] data) {
+        buffer = new ArrayList<>();
         readPos = 0;
 
-        //setBytes(_data);
+        setBytes(data);
+    }
+
+    private void setBytes(byte[] data) {
+        write(data);
+        readableBuffer = toByteArray();
+    }
+
+    public void writeType(int value){
+        buffer.add((byte) value);
+    }
+
+    public int readInt() throws Exception {
+        if (buffer.size() > readPos)
+        {
+            int value = convertToInt(splitMessage(readableBuffer, readPos, readPos+3));
+            readPos += 4;
+            return value;
+        }
+        else
+        {
+            throw new Exception("Could not read value of type 'int'!");
+        }
+    }
+
+    public String readString() throws Exception {
+        try
+        {
+            int length = readInt();
+            String message = new String(toByteArray(), readPos, length);
+            if (message.length() > 0)
+            {
+                readPos += length;
+            }
+            return message;
+        }
+        catch (Exception e)
+        {
+            throw new Exception("Could not read value of type 'string'!");
+        }
+    }
+
+    public void write(byte[] data){
+        for(Byte b : data) {
+            buffer.add(b);
+        }
     }
 
     public void write(int value){
@@ -69,8 +116,10 @@ public class Packet {
         }
     }
 
-    public void writeType(int value){
-        buffer.add((byte) value);
+    public void write(float value){
+        for(Byte b : floatToByteArray(value)) {
+            buffer.add(b);
+        }
     }
 
     public void write(String value){
@@ -81,7 +130,6 @@ public class Packet {
     }
 
     public void writeLength(){
-        //buffer.add(0,(byte) buffer.size());
         int i = 0;
         for(Byte b : intToByteArray(buffer.size())) {
             buffer.add(i, b);
@@ -110,7 +158,15 @@ public class Packet {
         return reverse(arr, arr.length);
     }
 
-    static byte[] reverse(byte[] a, int n)
+    private byte[] floatToByteArray(float value){
+        ByteBuffer buf = ByteBuffer.allocate(4);
+        buf.putFloat(value);
+        buf.flip();
+        byte[] arr = buf.array();
+        return reverse(arr, arr.length);
+    }
+
+    public static byte[] reverse(byte[] a, int n)
     {
         byte[] b = new byte[n];
         int j = n;
@@ -119,5 +175,32 @@ public class Packet {
             j = j - 1;
         }
         return b;
+    }
+
+    public static byte[] splitMessage(byte[] message, int start, int end) {
+        int size=end-start+1;
+        byte[] splitted=new byte[size];
+        int counter=0;
+        for(int i=start;i<=end;i++){
+            splitted [counter] = message[i];
+            counter++;
+
+        }
+        return splitted;
+    }
+
+    public static int convertToInt(byte[] buffer){
+        buffer = Packet.reverse(buffer, buffer.length);
+        int result=0;
+        if(buffer.length==4) {
+            result = buffer[0] << 24 | (buffer[1] & 0xFF) << 16 | (buffer[2] & 0xFF) << 8 | (buffer[3] & 0xFF);
+        }
+        else if (buffer.length==2){
+            result=(buffer[0] & 0xFF) << 8 | (buffer[1] & 0xFF);
+        }
+        else{
+            exit(-1);
+        }
+        return result;
     }
 }

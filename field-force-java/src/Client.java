@@ -40,27 +40,35 @@ public class Client {
 
             ClientSend.SendPlayername();
 
+            int length;
             int type;
-            byte[] message;
             this.gameIsRunning = true;
 
             while (this.gameIsRunning) {
                 System.out.println("waiting for message");
-                type = this.input.read();
-                message = getMessage(getMessageLength());
-                handleMessages(type, message);
+                Packet packet;
+                length = getMessageLength();
+                type = getMessageLength();
+                System.out.println(length + type);
+                packet = new Packet(getMessage(length-4));
+                handleMessages(type, packet);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private void handleMessages(int type,byte[] message){
+    private void handleMessages(int type, Packet packet){
         switch (type){
             case 1:
                 System.out.println("Type 1: Shouldn't be received. Only used to tell the server playername");
                 break;
             case 2:
-                int gameMode = message[0];
+                try {
+                    ClientHandle.HandleGamemode(packet);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                int gameMode = 1;
                 System.out.println("the picked gamemode is: " + gameMode);
                 break;
             case 3:
@@ -101,6 +109,7 @@ public class Client {
         }
         return message;
     }
+
     private int getMessageLength(){
         byte[] buffer = new byte[4];
         try {
@@ -108,32 +117,6 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return convertToInt(buffer);
-    }
-
-    private byte[] splitMessage(byte[] message, int start, int end) {
-        int size=end-start+1;
-        byte[] splitted=new byte[size];
-        int counter=0;
-        for(int i=start;i<=end;i++){
-            splitted [counter] = message[i];
-            counter++;
-
-        }
-        return splitted;
-    }
-
-    private int convertToInt(byte[] buffer){
-        int result=0;
-        if(buffer.length==4) {
-            result = buffer[0] << 24 | (buffer[1] & 0xFF) << 16 | (buffer[2] & 0xFF) << 8 | (buffer[3] & 0xFF);
-        }
-        else if (buffer.length==2){
-            result=(buffer[0] & 0xFF) << 8 | (buffer[1] & 0xFF);
-        }
-        else{
-            exit(-1);
-        }
-        return result;
+        return Packet.convertToInt(buffer);
     }
 }
