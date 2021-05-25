@@ -70,10 +70,6 @@ public class Packet {
         readableBuffer = toByteArray();
     }
 
-    public void writeType(int value){
-        buffer.add((byte) value);
-    }
-
     public int readInt() throws Exception {
         if (buffer.size() > readPos)
         {
@@ -190,7 +186,6 @@ public class Packet {
     }
 
     public static int convertToInt(byte[] buffer){
-        buffer = Packet.reverse(buffer, buffer.length);
         int result=0;
         if(buffer.length==4) {
             result = buffer[0] << 24 | (buffer[1] & 0xFF) << 16 | (buffer[2] & 0xFF) << 8 | (buffer[3] & 0xFF);
@@ -201,6 +196,6 @@ public class Packet {
         else{
             exit(-1);
         }
-        return result;
+        return Integer.reverseBytes(result);
     }
 }
