@@ -6,4 +6,8 @@ public class Fire extends MapObject {
     public Fire(){
         duration = 2;
     }
+
+    public int reduceDuration(){
+        return duration--;
+    }
 }
