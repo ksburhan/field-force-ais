@@ -1,11 +1,9 @@
+package Connection;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-
-import static java.lang.System.exit;
-import static java.lang.System.out;
 
 public class Client {
 
@@ -38,14 +36,13 @@ public class Client {
             this.output = new DataOutputStream(socket.getOutputStream());
             this.input = new DataInputStream(socket.getInputStream());
 
-            ClientSend.SendPlayername();
+            ClientSend.sendPlayername();
 
             int length;
             int type;
             this.gameIsRunning = true;
 
             while (this.gameIsRunning) {
-                System.out.println("waiting for message");
                 Packet packet;
                 length = getMessageLength();
                 type = getMessageLength();
@@ -61,38 +58,61 @@ public class Client {
             case 1: //Login to server with playername and skills
                 System.out.println("Type 1: Shouldn't be received. Only used to tell the server own playerinformation");
                 break;
-            case 2: //Server sends gamemode
+            case 2: //Server sends gamemode and id
                 try {
-                    ClientHandle.HandleGamemode(packet);
+                    ClientHandle.handleGamemode(packet);
+                    System.out.println("Type 2");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                int gameMode = 1;
-                System.out.println("the picked gamemode is: " + gameMode);
                 break;
-            case 3: //Server sends playerturns and ids
+            case 3: //Server sends playerturns and playerinformation (with ids for turnorder and skills)
+                try {
+                    ClientHandle.handlePlayerinformation(packet);
+                    System.out.println("Type 3");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
-            case 4: //Server sends all playerinformation
+            case 4: //Server sends initial Gamefield
+                try {
+                    ClientHandle.handleInitialMap(packet);
+                    System.out.println("Type 4");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
-            case 5: //Server sends initial Gamefield
+            case 5: //Server sends a moverequest
+                try {
+                    ClientHandle.handleMoveRequest(packet);
+                    System.out.println("Type 5");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
-            case 6: //Server sends a moverequest
+            case 6: //Connection.Client sends movereply
+                System.out.println("Type 6: Shouldn't be received. Only used to tell the server own move");
                 break;
-            case 7: //Client sends movereply
-                System.out.println("Type 7: Shouldn't be received. Only used to tell the server own move");
+            case 7: //Server sends a movereply of player in turn to ALL players
                 break;
-            case 8: //Server sends a movereply of player in turn to ALL players
+            case 8: //Server sends the new gamestate after calculating a move
                 break;
-            case 9: //Server sends the new gamestate after calculating a move
+            case 9: //Server sends an error. Could be illegal moves or
+                try {
+                    ClientHandle.handleErrors(packet);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
-            case 10: //Server sends an error. Could be illegal moves or other
+            case 10: //Server sends players that the game is over and the winners' id
                 break;
-            case 11: //Server sends players that the game is over and the winners' id
+            default:
+                System.out.println("Error: No type detected: " + type);
                 break;
         }
     }
 
-    public void SendPacket(Packet packet){
+    public void sendPacket(Packet packet){
         try{
             output.write(packet.toByteArray());
         } catch (IOException e) {
