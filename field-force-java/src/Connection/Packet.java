@@ -1,44 +1,11 @@
+package Connection;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.System.exit;
-
-enum ServerPackets
-{
-    GAMEMODE(2),
-    TURNORDER(3),
-    PLAYERINFORMATION(4),
-    GAMEFIELD(5),
-    MOVEREQUEST(6),
-    MOVEDISTRIBUTION(8),
-    NEWGAMESTATE(9),
-    ERROR(10),
-    GAMEOVER(11);
-
-    private final int id;
-    ServerPackets(int id){
-        this.id = id;
-    }
-    public int getId() {
-        return id;
-    }
-}
-
-enum ClientPackets
-{
-    PLAYERNAME(1),
-    MOVEREPLY(7);
-
-    private final int id;
-    ClientPackets(int id){
-        this.id = id;
-    }
-    public int getId() {
-        return id;
-    }
-}
 
 public class Packet {
 
@@ -100,6 +67,19 @@ public class Packet {
         }
     }
 
+    public char[][] readMap(int dimension) throws Exception {
+        char[][] map = new char[dimension][dimension];
+        for (int y = 0; y < dimension; y++)
+        {
+            for (int x = 0; x < dimension; x++)
+            {
+                map[x][y] = (char) readInt();
+                System.out.println(map[x][y]);
+            }
+        }
+        return map;
+    }
+
     public void write(byte[] data){
         for(Byte b : data) {
             buffer.add(b);
@@ -139,7 +119,7 @@ public class Packet {
 
     public byte[] toByteArray() {
         final int n = buffer.size();
-        byte ret[] = new byte[n];
+        byte[] ret = new byte[n];
         for (int i = 0; i < n; i++) {
             ret[i] = buffer.get(i);
         }
