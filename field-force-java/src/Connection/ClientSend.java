@@ -1,8 +1,6 @@
 package Connection;
 
-import Connection.Client;
-import Connection.ClientPackets;
-import Connection.Packet;
+import Game.Move;
 
 public class ClientSend {
 
@@ -18,10 +16,11 @@ public class ClientSend {
         sendPacket(packet);
     }
 
-    public static void sendMovereply(){
+    public static void sendMovereply(int id, Move move){
         Packet packet = new Packet();
         packet.write(ClientPackets.MOVEREPLY.getId());
-        packet.write("playername");
+        packet.write(id);
+        packet.write(move);
         sendPacket(packet);
     }
 }

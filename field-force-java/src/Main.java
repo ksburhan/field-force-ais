@@ -1,3 +1,4 @@
+import AI.AI;
 import Connection.Client;
 
 public class Main {
@@ -26,6 +27,7 @@ public class Main {
             }
 
         }
+        AI ai = AI.getInstance();
         Client client = Client.getInstance();
         client.initConnection(ip, port);
     }

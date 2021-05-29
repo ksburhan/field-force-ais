@@ -1,5 +1,8 @@
 package Connection;
 
+import Game.Move;
+import Game.Skill;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -74,7 +77,6 @@ public class Packet {
             for (int x = 0; x < dimension; x++)
             {
                 map[x][y] = (char) readInt();
-                System.out.println(map[x][y]);
             }
         }
         return map;
@@ -103,6 +105,16 @@ public class Packet {
         for(Byte b : value.getBytes(StandardCharsets.US_ASCII)) {
             buffer.add(b);
         }
+    }
+
+    public void write(Move move){
+        write(move.getType().getId());
+        write(move.getDirection().getId());
+        write(move.getSkill());
+    }
+
+    public void write(Skill skill){
+        write(skill.getId());
     }
 
     public void writeLength(){
