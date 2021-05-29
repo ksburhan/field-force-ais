@@ -114,7 +114,10 @@ public class Packet {
     }
 
     public void write(Skill skill){
-        write(skill.getId());
+        if(skill != null)
+            write(skill.getId());
+        else
+            write(0);
     }
 
     public void writeLength(){
