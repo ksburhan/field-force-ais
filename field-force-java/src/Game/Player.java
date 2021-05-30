@@ -3,8 +3,8 @@ package Game;
 public class Player extends MapObject {
     private int playerNumber;
     private String name;
-    private int hp;
-    private int shield;
+    private int hp = 150;
+    private int shield = 0;
 
     private Skill skill1;
     private Skill skill2;
@@ -14,8 +14,6 @@ public class Player extends MapObject {
         this.id = id;
         this.playerNumber = playerNumber;
         this.name = name;
-        this.hp = 150;
-        this.shield = 0;
     }
 
     public int getPlayerNumber() {
