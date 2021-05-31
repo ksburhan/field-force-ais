@@ -1,5 +1,8 @@
 package Game;
 
+import Board.GameField;
+import Board.Tile;
+
 import java.util.ArrayList;
 import java.util.List;
 

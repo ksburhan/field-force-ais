@@ -1,5 +1,7 @@
 package Game;
 
+import Board.MapObject;
+
 public class Player extends MapObject {
     private int playerNumber;
     private String name;

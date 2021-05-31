@@ -1,4 +1,4 @@
-package Game;
+package Board;
 
 public class Fire extends MapObject {
     private int duration = 2;

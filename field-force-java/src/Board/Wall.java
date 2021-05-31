@@ -1,6 +1,4 @@
-package Game;
-
-import Game.MapObject;
+package Board;
 
 public class Wall extends MapObject {
     private int hp;

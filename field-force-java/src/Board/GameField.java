@@ -1,4 +1,5 @@
-package Game;
+package Board;
+import Game.GameState;
 
 public class GameField {
 

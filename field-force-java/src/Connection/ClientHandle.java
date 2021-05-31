@@ -1,7 +1,7 @@
 package Connection;
 
 import AI.AI;
-import Game.GameField;
+import Board.GameField;
 import Game.GameState;
 import Game.Move;
 import Game.Player;
