@@ -8,6 +8,9 @@ public class Player extends MapObject {
     private int hp = 150;
     private int shield = 0;
 
+    public boolean active = true;
+    public int onFire = 0;
+
     private Skill skill1;
     private Skill skill2;
 

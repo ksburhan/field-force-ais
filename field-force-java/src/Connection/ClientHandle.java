@@ -45,9 +45,8 @@ public class ClientHandle {
     }
 
     public static void handleMovedistribution(Packet packet) throws Exception {
-        int gamemode = packet.readInt();
         String message = packet.readString();
-        System.out.println("CLIENTHANDLE " + gamemode + " " + message);
+        System.out.println("CLIENTHANDLE " + message);
     }
 
     public static void handleNewGamestate(Packet packet) throws Exception {

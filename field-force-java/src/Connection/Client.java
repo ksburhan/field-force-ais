@@ -94,6 +94,12 @@ public class Client {
                 System.out.println("Type 6: Shouldn't be received. Only used to tell the server own move");
                 break;
             case 7: //Server sends a movereply of player in turn to ALL players
+                try {
+                    ClientHandle.handleMovedistribution(packet);
+                    System.out.println("Type 7");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case 8: //Server sends the new gamestate after calculating a move
                 break;
