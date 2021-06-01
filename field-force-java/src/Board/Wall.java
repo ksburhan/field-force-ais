@@ -1,11 +1,15 @@
 package Board;
 
 public class Wall extends MapObject {
-    private int hp;
+    private int hp = 20;
 
     public Wall(char id, int x, int y){
         super(id, x, y);
-        hp = 20;
+    }
+
+    public Wall(char id, int x, int y, int hp){
+        super(id, x, y);
+        this.hp = hp;
     }
 
     public int getHp() {

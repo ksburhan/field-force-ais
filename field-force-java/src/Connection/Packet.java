@@ -1,7 +1,8 @@
 package Connection;
 
-import Game.Move;
-import Game.Skill;
+import Board.Fire;
+import Board.Wall;
+import Game.*;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -80,6 +81,55 @@ public class Packet {
             }
         }
         return map;
+    }
+
+    public List<Player> readPlayers() throws Exception {
+        List<Player> players = new ArrayList<>();
+        int playerCount = readInt();
+        for (int i = 0; i < playerCount; i++){
+            int playerNumber = readInt();
+            String playerName = readString();
+            players.add(new Player((char)(playerNumber+'0'), playerNumber, playerName));
+        }
+        return players;
+    }
+
+    public List<Fire> readFires() throws Exception {
+        List<Fire> fires = new ArrayList<>();
+        int fireCount = readInt();
+        for (int i = 0; i < fireCount; i++)
+        {
+             int x = readInt();
+             int y = readInt();
+             int duration = readInt();
+             fires.add(new Fire('f',x,y, duration));
+        }
+        return fires;
+    }
+
+    public List<Wall> readWalls() throws Exception {
+        List<Wall> walls = new ArrayList<>();
+        int wallCount = readInt();
+        for (int i = 0; i < wallCount; i++)
+        {
+            int x = readInt();
+            int y = readInt();
+            int hp = readInt();
+            walls.add(new Wall('-', x, y, hp));
+        }
+        return walls;
+    }
+
+    public Move readMove() throws Exception {
+        MoveType type =  MoveType.fromInt(readInt());
+        Direction direction = Direction.fromInt(readInt());
+        Skill skill = readSkill();
+        return new Move(type, direction, skill);
+    }
+
+    public Skill readSkill() throws Exception {
+        int skillId = readInt();
+        return new Skill(skillId);
     }
 
     public void write(byte[] data){

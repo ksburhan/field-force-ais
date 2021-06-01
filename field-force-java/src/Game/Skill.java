@@ -14,6 +14,9 @@ public class Skill {
         this.cooldown = cooldown;
         this.range = range;
     }
+    public Skill(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;

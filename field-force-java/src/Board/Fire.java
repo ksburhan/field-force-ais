@@ -7,6 +7,11 @@ public class Fire extends MapObject {
         super(id, x, y);
     }
 
+    public Fire(char id, int x, int y, int duration){
+        super(id, x, y);
+        this.duration = duration;
+    }
+
     public int reduceDuration(){
         return duration--;
     }

@@ -1,7 +1,9 @@
 package Connection;
 
 import AI.AI;
+import Board.Fire;
 import Board.GameField;
+import Board.Wall;
 import Game.GameState;
 import Game.Move;
 import Game.Player;
@@ -18,15 +20,9 @@ public class ClientHandle {
     }
 
     public static void handlePlayerinformation(Packet packet) throws Exception {
-        int playerCount = packet.readInt();
-        List<Player> players = new ArrayList<>();
-        for (int i = 0; i < playerCount; i++){
-            int playerNumber = packet.readInt();
-            String playerName = packet.readString();
-            players.add(new Player((char)(playerNumber+'0'), playerNumber, playerName));
-        }
+        List<Player> players = packet.readPlayers();
         GameState.setPlayers(players);
-        System.out.println("CLIENTHANDLE " + playerCount);
+        System.out.println("CLIENTHANDLE " + players.size());
     }
 
     public static void handleInitialMap(Packet packet) throws Exception {
@@ -45,8 +41,16 @@ public class ClientHandle {
     }
 
     public static void handleMovedistribution(Packet packet) throws Exception {
-        String message = packet.readString();
-        System.out.println("CLIENTHANDLE " + message);
+        int lastPlayerID = packet.readInt();
+        Move move = packet.readMove();
+        int dimension = packet.readInt();
+        char[][] map = packet.readMap(dimension);
+        List<Player> players = packet.readPlayers();
+        int playerInTurn = packet.readInt();
+        List<Fire> fires = packet.readFires();
+        List<Wall> walls = packet.readWalls();
+        AI.instance.setCurrentState(new GameState(new GameField(dimension, map), players, playerInTurn, fires, walls));
+        System.out.println("CLIENTHANDLE ");
     }
 
     public static void handleNewGamestate(Packet packet) throws Exception {

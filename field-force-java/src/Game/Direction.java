@@ -15,4 +15,18 @@ public enum Direction {
     public int getId() {
         return id;
     }
+
+    public static Direction fromInt(int id){
+        switch(id){
+            case 1:
+                return Direction.NORTH;
+            case 2:
+                return Direction.EAST;
+            case 3:
+                return Direction.SOUTH;
+            case 4:
+                return Direction.WEST;
+        }
+        return null;
+    }
 }

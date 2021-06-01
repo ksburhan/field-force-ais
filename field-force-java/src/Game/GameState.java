@@ -1,7 +1,9 @@
 package Game;
 
+import Board.Fire;
 import Board.GameField;
 import Board.Tile;
+import Board.Wall;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +13,23 @@ public class GameState {
     private static List<Player> players = new ArrayList<>();
     private int playerInTurn;
 
+
+    private List<Fire> fires = new ArrayList<>();
+    private List<Wall> walls = new ArrayList<>();
+
     private GameField currentField;
 
     public GameState(GameField gameField, int playerInTurn){
         this.currentField = gameField;
         this.playerInTurn = playerInTurn;
+    }
+
+    public GameState(GameField gameField, List<Player> players, int playerInTurn, List<Fire> fires, List<Wall> walls){
+        this.currentField = gameField;
+        GameState.players = players;
+        this.playerInTurn = playerInTurn;
+        this.fires = fires;
+        this.walls = walls;
     }
 
     public int nextPlayer(){
