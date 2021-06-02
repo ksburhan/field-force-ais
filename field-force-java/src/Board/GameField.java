@@ -5,10 +5,12 @@ public class GameField {
 
     private int dimension;
     private Tile[][] field;
+    private char[][] fieldChars;
 
     public GameField(int dimension, char[][] map){
         this.dimension = dimension;
         this.field = createField(map);
+        this.fieldChars = map;
     }
 
     private Tile[][] createField(char[][] map) {
@@ -73,5 +75,13 @@ public class GameField {
 
     public void setField(Tile[][] field) {
         this.field = field;
+    }
+
+    public char[][] getFieldChars() {
+        return fieldChars;
+    }
+
+    public void setFieldChars(char[][] fieldChars) {
+        this.fieldChars = fieldChars;
     }
 }

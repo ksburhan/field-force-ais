@@ -84,6 +84,10 @@ public class GameState {
         return false;
     }
 
+    public void simulateNextGamestate(Move move){
+
+    }
+
     public static List<Player> getPlayers() {
         return players;
     }

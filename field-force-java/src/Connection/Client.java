@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import static java.lang.System.exit;
+
 public class Client {
 
     private static Client instance;
@@ -64,6 +66,7 @@ public class Client {
                     System.out.println("Type 2");
                 } catch (Exception e) {
                     e.printStackTrace();
+                    exit(-2);
                 }
                 break;
             case 3: //Server sends playerturns and playerinformation (with ids for turnorder and skills)
@@ -72,6 +75,7 @@ public class Client {
                     System.out.println("Type 3");
                 } catch (Exception e) {
                     e.printStackTrace();
+                    exit(-3);
                 }
                 break;
             case 4: //Server sends initial Gamefield
@@ -80,6 +84,7 @@ public class Client {
                     System.out.println("Type 4");
                 } catch (Exception e) {
                     e.printStackTrace();
+                    exit(-4);
                 }
                 break;
             case 5: //Server sends a moverequest
@@ -88,6 +93,7 @@ public class Client {
                     System.out.println("Type 5");
                 } catch (Exception e) {
                     e.printStackTrace();
+                    exit(-5);
                 }
                 break;
             case 6: //Connection.Client sends movereply
@@ -99,9 +105,17 @@ public class Client {
                     System.out.println("Type 7");
                 } catch (Exception e) {
                     e.printStackTrace();
+                    exit(-7);
                 }
                 break;
             case 8: //Server sends the new gamestate after calculating a move
+                try {
+                    ClientHandle.handleNewGamestate(packet);
+                    System.out.println("Type 8");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    exit(-8);
+                }
                 break;
             case 9: //Server sends an error. Could be illegal moves or
                 try {

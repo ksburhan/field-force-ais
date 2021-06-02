@@ -43,6 +43,9 @@ public class ClientHandle {
     public static void handleMovedistribution(Packet packet) throws Exception {
         int lastPlayerID = packet.readInt();
         Move move = packet.readMove();
+    }
+
+    public static void handleNewGamestate(Packet packet) throws Exception {
         int dimension = packet.readInt();
         char[][] map = packet.readMap(dimension);
         List<Player> players = packet.readPlayers();
@@ -50,13 +53,6 @@ public class ClientHandle {
         List<Fire> fires = packet.readFires();
         List<Wall> walls = packet.readWalls();
         AI.instance.setCurrentState(new GameState(new GameField(dimension, map), players, playerInTurn, fires, walls));
-        System.out.println("CLIENTHANDLE ");
-    }
-
-    public static void handleNewGamestate(Packet packet) throws Exception {
-        int gamemode = packet.readInt();
-        String message = packet.readString();
-        System.out.println("CLIENTHANDLE " + gamemode + " " + message);
     }
 
     public static void handleErrors(Packet packet) throws Exception {
