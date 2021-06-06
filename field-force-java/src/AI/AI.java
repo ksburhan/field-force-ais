@@ -13,7 +13,6 @@ public class AI {
 
     public Move getBestMove(List<Move> moves){
         Random rand = new Random();
-        System.out.println(moves.size());
         return moves.get(rand.nextInt(moves.size()));
     }
 
