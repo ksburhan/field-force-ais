@@ -61,6 +61,15 @@ public class GameField {
         return field;
     }
 
+    public void printMap(){
+        for (int y = 0; y < dimension; y++) {
+            for (int x = 0; x < dimension; x++) {
+                System.out.print(this.field[x][y].getContent().id + " ");
+            }
+            System.out.println();
+        }
+    }
+
     public int getDimension() {
         return dimension;
     }

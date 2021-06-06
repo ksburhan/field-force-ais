@@ -1,5 +1,9 @@
 package Connection;
 
+import AI.AI;
+import Board.GameField;
+import Game.GameState;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -82,6 +86,7 @@ public class Client {
                 try {
                     ClientHandle.handleInitialMap(packet);
                     System.out.println("Type 4");
+                    AI.getInstance().getCurrentState().getCurrentField().printMap();
                 } catch (Exception e) {
                     e.printStackTrace();
                     exit(-4);
@@ -111,6 +116,7 @@ public class Client {
             case 8: //Server sends the new gamestate after calculating a move
                 try {
                     ClientHandle.handleNewGamestate(packet);
+                    AI.getInstance().getCurrentState().getCurrentField().printMap();
                     System.out.println("Type 8");
                 } catch (Exception e) {
                     e.printStackTrace();

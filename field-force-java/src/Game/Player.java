@@ -14,8 +14,8 @@ public class Player extends MapObject {
     private Skill skill1;
     private Skill skill2;
 
-    public Player(char id, int playerNumber, String name){
-        super(id);
+    public Player(char id, int playerNumber, String name, int x, int y){
+        super(id, x, y);
         this.id = id;
         this.playerNumber = playerNumber;
         this.name = name;

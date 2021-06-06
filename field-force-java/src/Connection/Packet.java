@@ -89,7 +89,9 @@ public class Packet {
         for (int i = 0; i < playerCount; i++){
             int playerNumber = readInt();
             String playerName = readString();
-            players.add(new Player((char)(playerNumber+'0'), playerNumber, playerName));
+            int xPos = readInt();
+            int yPos = readInt();
+            players.add(new Player((char)(playerNumber+'0'), playerNumber, playerName, xPos, yPos));
         }
         return players;
     }
