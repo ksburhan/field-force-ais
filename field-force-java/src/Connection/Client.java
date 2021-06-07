@@ -123,7 +123,7 @@ public class Client {
                     exit(-8);
                 }
                 break;
-            case 9: //Server sends an error. Could be illegal moves or
+            case 9: //Server sends an error. Could be illegal moves
                 try {
                     ClientHandle.handleErrors(packet);
                 } catch (Exception e) {
@@ -131,6 +131,12 @@ public class Client {
                 }
                 break;
             case 10: //Server sends players that the game is over and the winners' id
+                try {
+                    ClientHandle.handleGameover(packet);
+                    this.gameIsRunning = false;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 System.out.println("Error: No type detected: " + type);
