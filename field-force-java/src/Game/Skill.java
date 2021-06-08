@@ -18,7 +18,7 @@ public class Skill {
         this.id = id;
     }
 
-    public void PrepareForNextRound()
+    public void prepareForNextRound()
     {
         if(cooldownLeft > 0)
         {

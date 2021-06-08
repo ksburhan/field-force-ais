@@ -15,7 +15,7 @@ public class Wall extends MapObject {
         this.hp = hp;
     }
 
-    public void TakeDamage(int damage)
+    public void takeDamage(int damage)
     {
         hp -= damage;
         if (hp <= 0)

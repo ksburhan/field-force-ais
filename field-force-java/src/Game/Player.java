@@ -22,62 +22,63 @@ public class Player extends MapObject {
         this.name = name;
     }
 
-    public void TakeDamage(int damage){
+    public void takeDamage(int damage){
         if(shield > 0)
         {
-            TakeShieldDamage(damage);
+            takeShieldDamage(damage);
         }
         else
         {
             hp -= damage;
             if (hp <= 0)
-                SetInactive();
+                setInactive();
         }
     }
-    public void TakeShieldDamage(int shieldDamage) {
+    public void takeShieldDamage(int shieldDamage) {
         shield -= shieldDamage;
         if (shield <= 0)
         {
             int damage = shield * (-1);
             shield = 0;
-            TakeDamage(damage);
+            takeDamage(damage);
         }
     }
-    public void Heal(int heal)
+    public void heal(int heal)
     {
         hp += heal;
         if (hp > GameConstants.HP)
             hp = GameConstants.HP;
     }
-    public void ChargeShield(int charge)
+    public void chargeShield(int charge)
     {
         shield += charge;
         if (shield > GameConstants.SHIELD)
             shield = GameConstants.SHIELD;
     }
 
-    public void SetOnFire()
+    public void setOnFire()
     {
         onFire = GameConstants.ON_FIRE_EFFECT_DURATION;
     }
 
-    public void SetInactive()
+    public void setInactive()
     {
-        Destroy();
+        destroy();
         active = false;
+        AI.instance.getCurrentState().getPlayerInTurn().remove(this.playerNumber);
     }
 
-    public void PrepareForNextRound()
+    public void prepareForNextRound()
     {
         if(onFire > 0)
         {
-            TakeDamage(GameConstants.ON_FIRE_DAMAGE);
+            takeDamage(GameConstants.ON_FIRE_DAMAGE);
             onFire--;
         }
         if(skill1 != null)
-            skill1.PrepareForNextRound();
+            skill1.prepareForNextRound();
         if(skill2 != null)
-            skill2.PrepareForNextRound();
+            skill2.prepareForNextRound();
     }
 
     public int getPlayerNumber() {

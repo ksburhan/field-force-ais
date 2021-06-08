@@ -15,12 +15,12 @@ public class Fire extends MapObject {
         this.duration = duration;
     }
 
-    public void PrepareForNextRound()
+    public void prepareForNextRound()
     {
         duration--;
         if (duration <= 0)
         {
-            Destroy();
+            destroy();
         }
     }
 

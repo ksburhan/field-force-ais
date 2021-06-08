@@ -1,8 +1,6 @@
 package Connection;
 
 import AI.AI;
-import Board.GameField;
-import Game.GameState;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -60,11 +58,9 @@ public class Client {
         }
     }
     private void handleMessages(int type, Packet packet){
-        switch (type){
-            case 1: //Login to server with playername and skills
-                System.out.println("Type 1: Shouldn't be received. Only used to tell the server own playerinformation");
-                break;
-            case 2: //Server sends gamemode and id
+        ServerPackets typeEnum = ServerPackets.values()[type];
+        switch (typeEnum){
+            case GAMEMODE: //Server sends gamemode and id
                 try {
                     ClientHandle.handleGamemode(packet);
                     System.out.println("Type 2");
@@ -73,7 +69,7 @@ public class Client {
                     exit(-2);
                 }
                 break;
-            case 3: //Server sends playerturns and playerinformation (with ids for turnorder and skills)
+            case PLAYERINFORMATION: //Server sends playerturns and playerinformation (with ids for turnorder and skills)
                 try {
                     ClientHandle.handlePlayerinformation(packet);
                     System.out.println("Type 3");
@@ -82,7 +78,7 @@ public class Client {
                     exit(-3);
                 }
                 break;
-            case 4: //Server sends initial Gamefield
+            case GAMEFIELD: //Server sends initial Gamefield
                 try {
                     ClientHandle.handleInitialMap(packet);
                     System.out.println("Type 4");
@@ -92,7 +88,7 @@ public class Client {
                     exit(-4);
                 }
                 break;
-            case 5: //Server sends a moverequest
+            case MOVEREQUEST: //Server sends a moverequest
                 try {
                     ClientHandle.handleMoveRequest(packet);
                     System.out.println("Type 5");
@@ -101,10 +97,7 @@ public class Client {
                     exit(-5);
                 }
                 break;
-            case 6: //Connection.Client sends movereply
-                System.out.println("Type 6: Shouldn't be received. Only used to tell the server own move");
-                break;
-            case 7: //Server sends a movereply of player in turn to ALL players
+            case MOVEDISTRIBUTION: //Server sends a movereply of player in turn to ALL players
                 try {
                     ClientHandle.handleMovedistribution(packet);
                     System.out.println("Type 7");
@@ -113,7 +106,7 @@ public class Client {
                     exit(-7);
                 }
                 break;
-            case 8: //Server sends the new gamestate after calculating a move
+            case NEWGAMESTATE: //Server sends the new gamestate after calculating a move
                 try {
                     ClientHandle.handleNewGamestate(packet);
                     AI.getInstance().getCurrentState().getCurrentField().printMap();
@@ -123,14 +116,14 @@ public class Client {
                     exit(-8);
                 }
                 break;
-            case 9: //Server sends an error. Could be illegal moves
+            case ERROR: //Server sends an error. Could be illegal moves
                 try {
                     ClientHandle.handleErrors(packet);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
-            case 10: //Server sends players that the game is over and the winners' id
+            case GAMEOVER: //Server sends players that the game is over and the winners' id
                 try {
                     ClientHandle.handleGameover(packet);
                     this.gameIsRunning = false;

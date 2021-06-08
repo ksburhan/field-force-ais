@@ -17,7 +17,7 @@ public class MapObject{
         this.id = id;
     }
 
-    public void Destroy(){
+    public void destroy(){
         int x = getxPos();
         int y = getyPos();
         AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';

@@ -1,9 +1,7 @@
 package Game;
 
-import Board.Fire;
-import Board.GameField;
-import Board.Tile;
-import Board.Wall;
+import AI.AI;
+import Board.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,11 +111,72 @@ public class GameState {
     }
 
     public void MoveToTile(Player player, int xTarget, int yTarget){
-
+        MapObject targetCellContent = currentField.getField()[xTarget][yTarget].getContent();
+        int x = player.getxPos();
+        int y = player.getyPos();
+        if (targetCellContent.getId() == '0')
+        {
+            AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
+            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
+            AI.instance.getCurrentState().getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
+            AI.instance.getCurrentState().getCurrentField().getField()[xTarget][yTarget].setContent(player);
+            player.setPos(xTarget, yTarget);
+        }
+        else if (targetCellContent instanceof Player)
+        {
+            player.takeDamage(GameConstants.WALK_IN_PLAYER_DAMAGE);
+            ((Player) targetCellContent).takeDamage(GameConstants.PLAYER_WALKED_INTO_DAMAGE);
+        }
+        else if (targetCellContent instanceof Fire)
+        {
+            AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
+            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
+            AI.instance.getCurrentState().getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
+            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(player);
+            player.setPos(xTarget, yTarget);
+            player.takeDamage(GameConstants.ON_FIRE_DAMAGE);
+            player.setOnFire();
+        }
+        else if (targetCellContent instanceof Wall)
+        {
+            player.takeDamage(GameConstants.WALK_IN_WALL_DAMAGE);
+            ((Wall) targetCellContent).takeDamage(GameConstants.WALL_TAKE_DAMAGE);
+        }
+        else if (targetCellContent.id == 'x')
+        {
+            AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
+            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
+            player.setInactive();
+        }
+        else if (targetCellContent.id == 'h')
+        {
+            AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
+            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
+            AI.instance.getCurrentState().getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
+            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(player);
+            player.setPos(xTarget, yTarget);
+            player.heal(GameConstants.HEAL);
+        }
+        else if (targetCellContent.id == 's')
+        {
+            AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
+            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
+            AI.instance.getCurrentState().getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
+            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(player);
+            player.chargeShield(GameConstants.SHIELD_CHARGE);
+        }
     }
 
     public void AttackTile(Player player, int xTarget, int yTarget){
-
+        MapObject targetCellContent = currentField.getField()[xTarget][yTarget].getContent();
+        if (targetCellContent instanceof Player)
+        {
+            ((Player) targetCellContent).takeDamage(GameConstants.ATTACK_DAMAGE);
+        }
+        else if (targetCellContent instanceof Wall)
+        {
+            ((Wall) targetCellContent).takeDamage(GameConstants.ATTACK_DAMAGE);
+        }
     }
 
     private void PrepareForNextRound()
@@ -127,13 +186,13 @@ public class GameState {
             Player p = players.get(i);
             if (p.active)
             {
-                p.PrepareForNextRound();
+                p.prepareForNextRound();
             }
         }
         for (Fire f : fires)
         {
             if(f != null)
-                f.PrepareForNextRound();
+                f.prepareForNextRound();
         }
     }
 
