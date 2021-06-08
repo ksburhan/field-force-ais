@@ -1,5 +1,6 @@
 package Game;
 
+import AI.AI;
 import Board.MapObject;
 
 public class Player extends MapObject {
@@ -19,6 +20,64 @@ public class Player extends MapObject {
         this.id = id;
         this.playerNumber = playerNumber;
         this.name = name;
+    }
+
+    public void TakeDamage(int damage){
+        if(shield > 0)
+        {
+            TakeShieldDamage(damage);
+        }
+        else
+        {
+            hp -= damage;
+            if (hp <= 0)
+                SetInactive();
+        }
+    }
+    public void TakeShieldDamage(int shieldDamage) {
+        shield -= shieldDamage;
+        if (shield <= 0)
+        {
+            int damage = shield * (-1);
+            shield = 0;
+            TakeDamage(damage);
+        }
+    }
+    public void Heal(int heal)
+    {
+        hp += heal;
+        if (hp > GameConstants.HP)
+            hp = GameConstants.HP;
+    }
+    public void ChargeShield(int charge)
+    {
+        shield += charge;
+        if (shield > GameConstants.SHIELD)
+            shield = GameConstants.SHIELD;
+    }
+
+    public void SetOnFire()
+    {
+        onFire = GameConstants.ON_FIRE_EFFECT_DURATION;
+    }
+
+    public void SetInactive()
+    {
+        Destroy();
+        active = false;
+    }
+
+    public void PrepareForNextRound()
+    {
+        if(onFire > 0)
+        {
+            TakeDamage(GameConstants.ON_FIRE_DAMAGE);
+            onFire--;
+        }
+        if(skill1 != null)
+            skill1.PrepareForNextRound();
+        if(skill2 != null)
+            skill2.PrepareForNextRound();
     }
 
     public int getPlayerNumber() {

@@ -11,7 +11,7 @@ import java.util.List;
 public class GameState {
 
     private static List<Player> players = new ArrayList<>();
-    private int playerInTurn;
+    private List<Integer> playerInTurn = new ArrayList<>();
 
 
     private List<Fire> fires = new ArrayList<>();
@@ -19,21 +19,17 @@ public class GameState {
 
     private GameField currentField;
 
-    public GameState(GameField gameField, int playerInTurn){
+    public GameState(GameField gameField, List<Integer> playerInTurn){
         this.currentField = gameField;
         this.playerInTurn = playerInTurn;
     }
 
-    public GameState(GameField gameField, List<Player> players, int playerInTurn, List<Fire> fires, List<Wall> walls){
+    public GameState(GameField gameField, List<Player> players, List<Integer> playerInTurn, List<Fire> fires, List<Wall> walls){
         this.currentField = gameField;
         GameState.players = players;
         this.playerInTurn = playerInTurn;
         this.fires = fires;
         this.walls = walls;
-    }
-
-    public int nextPlayer(){
-        return (playerInTurn % players.size()) + 1;
     }
 
     public List<Move> getAllMoves(int playerID){
@@ -76,7 +72,7 @@ public class GameState {
     }
 
     private boolean isValidTarget(char c){
-        for (char x : GameConstants.validTargets){
+        for (char x : GameConstants.VALID_TARGETS){
             if(x == c){
                 return true;
             }
@@ -84,8 +80,61 @@ public class GameState {
         return false;
     }
 
-    public void simulateNextGamestate(Move move){
+    public void simulateNextGamestate(int playerID, Move move){
+        Player player = players.get(playerID-1);
+        switch (move.getType().getId())
+        {
+            case 1: // MOVEMENT
+                if (move.getDirection() == Direction.NORTH)
+                    MoveToTile(player, player.getxPos(), player.getyPos() - 1);
+                if (move.getDirection() == Direction.EAST)
+                    MoveToTile(player, player.getxPos() + 1, player.getyPos());
+                if (move.getDirection() == Direction.SOUTH)
+                    MoveToTile(player, player.getxPos(), player.getyPos() + 1);
+                if (move.getDirection() == Direction.WEST)
+                    MoveToTile(player, player.getxPos() - 1, player.getyPos());
+                break;
+            case 2: // ATTACK
+                if (move.getDirection() == Direction.NORTH)
+                    AttackTile(player, player.getxPos(), player.getyPos() - 1);
+                if (move.getDirection() == Direction.EAST)
+                    AttackTile(player, player.getxPos() + 1, player.getyPos());
+                if (move.getDirection() == Direction.SOUTH)
+                    AttackTile(player, player.getxPos(), player.getyPos() + 1);
+                if (move.getDirection() == Direction.WEST)
+                    AttackTile(player, player.getxPos() - 1, player.getyPos());
+                break;
+            case 3: // SKILL
+                break;
+        }
+        if(playerInTurn.remove(Integer.valueOf(playerID)))
+            playerInTurn.add(playerID);
+        PrepareForNextRound();
+    }
 
+    public void MoveToTile(Player player, int xTarget, int yTarget){
+
+    }
+
+    public void AttackTile(Player player, int xTarget, int yTarget){
+
+    }
+
+    private void PrepareForNextRound()
+    {
+        for (int i = 0; i < players.size(); i++)
+        {
+            Player p = players.get(i);
+            if (p.active)
+            {
+                p.PrepareForNextRound();
+            }
+        }
+        for (Fire f : fires)
+        {
+            if(f != null)
+                f.PrepareForNextRound();
+        }
     }
 
     public static List<Player> getPlayers() {
@@ -96,11 +145,11 @@ public class GameState {
         GameState.players = players;
     }
 
-    public int getPlayerInTurn() {
+    public List<Integer> getPlayerInTurn() {
         return playerInTurn;
     }
 
-    public void setPlayerInTurn(int playerInTurn) {
+    public void setPlayerInTurn(List<Integer> playerInTurn) {
         this.playerInTurn = playerInTurn;
     }
 

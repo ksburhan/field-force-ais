@@ -18,6 +18,14 @@ public class Skill {
         this.id = id;
     }
 
+    public void PrepareForNextRound()
+    {
+        if(cooldownLeft > 0)
+        {
+            cooldownLeft--;
+        }
+    }
+
     public int getId() {
         return id;
     }

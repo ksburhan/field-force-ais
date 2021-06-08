@@ -96,6 +96,16 @@ public class Packet {
         return players;
     }
 
+    public List<Integer> readPlayerInTurn() throws Exception {
+        List<Integer> playerInTurn = new ArrayList<>();
+        int playerCount = readInt();
+        for (int i = 0; i < playerCount; i++){
+            int playerNumber = readInt();
+            playerInTurn.add(playerNumber);
+        }
+        return playerInTurn;
+    }
+
     public List<Fire> readFires() throws Exception {
         List<Fire> fires = new ArrayList<>();
         int fireCount = readInt();

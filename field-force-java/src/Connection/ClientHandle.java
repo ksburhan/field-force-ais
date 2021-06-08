@@ -29,7 +29,8 @@ public class ClientHandle {
         int dimension = packet.readInt();
         char[][] map = packet.readMap(dimension);
         GameField gameField = new GameField(dimension, map);
-        AI.instance.setCurrentState(new GameState(gameField, 1));
+        List<Integer> playerInTurn = packet.readPlayerInTurn();
+        AI.instance.setCurrentState(new GameState(gameField, playerInTurn));
     }
 
     public static void handleMoveRequest(Packet packet) throws Exception {
@@ -49,7 +50,7 @@ public class ClientHandle {
         int dimension = packet.readInt();
         char[][] map = packet.readMap(dimension);
         List<Player> players = packet.readPlayers();
-        int playerInTurn = packet.readInt();
+        List<Integer> playerInTurn = packet.readPlayerInTurn();
         List<Fire> fires = packet.readFires();
         List<Wall> walls = packet.readWalls();
         AI.instance.setCurrentState(new GameState(new GameField(dimension, map), players, playerInTurn, fires, walls));

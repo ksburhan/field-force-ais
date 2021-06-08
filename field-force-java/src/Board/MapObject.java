@@ -1,5 +1,7 @@
 package Board;
 
+import AI.AI;
+
 public class MapObject{
     public char id;
     private int xPos;
@@ -13,6 +15,13 @@ public class MapObject{
 
     public MapObject(char id) {
         this.id = id;
+    }
+
+    public void Destroy(){
+        int x = getxPos();
+        int y = getyPos();
+        AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
+        AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
     }
 
     public char getId() {
