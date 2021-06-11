@@ -1,21 +1,41 @@
 package Game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Skill {
+
+    public static List<Skill> allSkills = new ArrayList<Skill>();
 
     private int id;
     private String name;
     private int cooldown;
-    private int cooldownLeft = 0;
     private int range;
+    private int value;
+    private SkillType type;
 
-    public Skill(int id, String name, int cooldown, int range) {
+    private int cooldownLeft = 0;
+
+    public Skill(int id, String name, int cooldown, int range, int value, SkillType type) {
         this.id = id;
         this.name = name;
         this.cooldown = cooldown;
         this.range = range;
+        this.value = value;
+        this.type = type;
     }
     public Skill(int id) {
         this.id = id;
+    }
+
+    public static Skill getSkill(int id)
+    {
+        for(Skill s : allSkills)
+        {
+            if (s.id == id)
+                return s;
+        }
+        return null;
     }
 
     public void prepareForNextRound()
@@ -64,5 +84,13 @@ public class Skill {
 
     public void setRange(int range) {
         this.range = range;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
     }
 }

@@ -20,7 +20,7 @@ public class Wall extends MapObject {
         hp -= damage;
         if (hp <= 0)
         {
-            Destroy();
+            destroy();
         }
     }
 

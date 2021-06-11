@@ -1,6 +1,7 @@
 package Connection;
 
 import AI.AI;
+import Board.Consumable;
 import Board.Fire;
 import Board.GameField;
 import Board.Wall;
@@ -8,7 +9,6 @@ import Game.GameState;
 import Game.Move;
 import Game.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ClientHandle {
@@ -16,13 +16,12 @@ public class ClientHandle {
     public static void handleGamemode(Packet packet) throws Exception {
         int gamemode = packet.readInt();
         int ownID = packet.readInt();
-        System.out.println("CLIENTHANDLE gamemode: " + gamemode);
+        packet.readConfig();
     }
 
     public static void handlePlayerinformation(Packet packet) throws Exception {
         List<Player> players = packet.readPlayers();
         GameState.setPlayers(players);
-        System.out.println("CLIENTHANDLE " + players.size());
     }
 
     public static void handleInitialMap(Packet packet) throws Exception {
@@ -36,7 +35,6 @@ public class ClientHandle {
     public static void handleMoveRequest(Packet packet) throws Exception {
         int ownId = packet.readInt();
         String message = packet.readString();
-        System.out.println("CLIENTHANDLE " + ownId + " " + message);
         Move bestMove = AI.instance.getBestMove(AI.instance.getCurrentState().getAllMoves(ownId));
         ClientSend.sendMovereply(ownId, bestMove);
     }
@@ -53,7 +51,8 @@ public class ClientHandle {
         List<Integer> playerInTurn = packet.readPlayerInTurn();
         List<Fire> fires = packet.readFires();
         List<Wall> walls = packet.readWalls();
-        AI.instance.setCurrentState(new GameState(new GameField(dimension, map), players, playerInTurn, fires, walls));
+        List<Consumable> consumables = packet.readConsumables();
+        AI.instance.setCurrentState(new GameState(new GameField(dimension, map), players, playerInTurn, fires, walls, consumables));
     }
 
     public static void handleErrors(Packet packet) throws Exception {
@@ -63,6 +62,6 @@ public class ClientHandle {
 
     public static void handleGameover(Packet packet) throws Exception {
         String message = packet.readString();
-        System.out.println("CLIENTHANDLE " + message);
+        System.out.println("CLIENTHANDLE Gameover: " + message);
     }
 }

@@ -6,28 +6,30 @@ public class Main {
         String ip = "127.0.0.1";
         int port = 26353;
 
-        String playername = "playername";
-
+        AI ai = AI.getInstance();
         for ( int i = 0; i < args.length; i++ ) {
-            if ( args[i].equals("-i") ) {
-                i++;
-                ip = args[i];
-            } else if ( args[i].equals("-p") ) {
-                i++;
-                port = Integer.parseInt(args[i]);
-            } else if ( args[i].equals("-n") ) {
-                i++;
-                playername = args[i];
-            }else if ( args[i].equals("-h") ) {
-                System.out.println("-i <ip>     Set ip to connect to");
-                System.out.println("-p <port>   Set port to connect to");
-                System.out.println("-n <name>   Set playername");
-                System.out.println("-h          Show help");
-
+            switch (args[i]) {
+                case "-i" -> {
+                    i++;
+                    ip = args[i];
+                }
+                case "-p" -> {
+                    i++;
+                    port = Integer.parseInt(args[i]);
+                }
+                case "-n" -> {
+                    i++;
+                    AI.playername = args[i];
+                }
+                case "-h" -> {
+                    System.out.println("-i <ip>     Set ip to connect to");
+                    System.out.println("-p <port>   Set port to connect to");
+                    System.out.println("-n <name>   Set playername");
+                    System.out.println("-h          Show help");
+                }
             }
 
         }
-        AI ai = AI.getInstance();
         Client client = Client.getInstance();
         client.initConnection(ip, port);
     }

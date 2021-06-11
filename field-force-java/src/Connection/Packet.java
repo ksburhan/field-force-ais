@@ -1,5 +1,6 @@
 package Connection;
 
+import Board.Consumable;
 import Board.Fire;
 import Board.Wall;
 import Game.*;
@@ -130,6 +131,73 @@ public class Packet {
             walls.add(new Wall('-', x, y, hp));
         }
         return walls;
+    }
+
+    public void readConfig() throws Exception {
+        // read basics
+        GameConstants.HP = readInt();
+        GameConstants.SHIELD = readInt();
+
+        GameConstants.ATTACK_DAMAGE = readInt();
+        GameConstants.WALK_IN_PLAYER_DAMAGE = readInt();
+        GameConstants.PLAYER_WALKED_INTO_DAMAGE = readInt();
+
+        GameConstants.FIRE_DURATION_ON_MAP = readInt();
+        GameConstants.ON_FIRE_EFFECT_DURATION = readInt();
+        GameConstants.ON_FIRE_DAMAGE = readInt();
+
+        GameConstants.WALL_HP = readInt();
+        GameConstants.WALK_IN_WALL_DAMAGE = readInt();
+        GameConstants.WALL_TAKE_DAMAGE = readInt();
+
+        // read consumeables
+        Consumable.allConsumables = readConfigConsumables();
+
+        // read skills
+        Skill.allSkills = readSkills();
+    }
+
+    public List<Consumable> readConfigConsumables() throws Exception {
+        List<Consumable> consumables = new ArrayList<>();
+        int consumableCount = readInt();
+        for (int i = 0; i < consumableCount; i++)
+        {
+            char id = (char) readInt();
+            String conName = readString();
+            int healing = readInt();
+            int shield = readInt();
+            consumables.add(new Consumable(id, conName, healing, shield));
+        }
+        return consumables;
+    }
+
+    public List<Consumable> readConsumables() throws Exception {
+        List<Consumable> consumables = new ArrayList<>();
+        int consumableCount = readInt();
+        for (int i = 0; i < consumableCount; i++)
+        {
+            char id = (char) readInt();
+            int x = readInt();
+            int y = readInt();
+            consumables.add(new Consumable(id, x, y));
+        }
+        return consumables;
+    }
+
+    public List<Skill> readSkills() throws Exception {
+        List<Skill> skills = new ArrayList<>();
+        int skillCount = readInt();
+        for (int i = 0; i < skillCount; i++)
+        {
+            int id = readInt();
+            String name = readString();
+            int cooldown = readInt();
+            int range = readInt();
+            int value = readInt();
+            int type = readInt();
+            skills.add(new Skill(id, name, cooldown, range, value, SkillType.fromInt(type)));
+        }
+        return skills;
     }
 
     public Move readMove() throws Exception {

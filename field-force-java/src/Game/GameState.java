@@ -14,6 +14,7 @@ public class GameState {
 
     private List<Fire> fires = new ArrayList<>();
     private List<Wall> walls = new ArrayList<>();
+    private List<Consumable> consumables = new ArrayList<>();
 
     private GameField currentField;
 
@@ -22,12 +23,13 @@ public class GameState {
         this.playerInTurn = playerInTurn;
     }
 
-    public GameState(GameField gameField, List<Player> players, List<Integer> playerInTurn, List<Fire> fires, List<Wall> walls){
+    public GameState(GameField gameField, List<Player> players, List<Integer> playerInTurn, List<Fire> fires, List<Wall> walls, List<Consumable> consumables){
         this.currentField = gameField;
         GameState.players = players;
         this.playerInTurn = playerInTurn;
         this.fires = fires;
         this.walls = walls;
+        this.consumables = consumables;
     }
 
     public List<Move> getAllMoves(int playerID){
@@ -148,22 +150,19 @@ public class GameState {
             AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
             player.setInactive();
         }
-        else if (targetCellContent.id == 'h')
+        else if (targetCellContent instanceof Consumable)
         {
             AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
             AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
             AI.instance.getCurrentState().getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
             AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(player);
             player.setPos(xTarget, yTarget);
-            player.heal(GameConstants.HEAL);
-        }
-        else if (targetCellContent.id == 's')
-        {
-            AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
-            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
-            AI.instance.getCurrentState().getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
-            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(player);
-            player.chargeShield(GameConstants.SHIELD_CHARGE);
+            if(((Consumable) targetCellContent).getHealing() > 0)
+                player.heal(((Consumable) targetCellContent).getHealing());
+            else
+                player.takeDamage(((Consumable) targetCellContent).getHealing());
+            if(((Consumable) targetCellContent).getShield() > 0)
+                player.chargeShield(((Consumable) targetCellContent).getShield());
         }
     }
 
@@ -181,11 +180,8 @@ public class GameState {
 
     private void PrepareForNextRound()
     {
-        for (int i = 0; i < players.size(); i++)
-        {
-            Player p = players.get(i);
-            if (p.active)
-            {
+        for (Player p : players) {
+            if (p.active) {
                 p.prepareForNextRound();
             }
         }

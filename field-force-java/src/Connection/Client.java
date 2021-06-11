@@ -53,17 +53,20 @@ public class Client {
                 packet = new Packet(getMessage(length-4));
                 handleMessages(type, packet);
             }
+            input.close();
+            output.close();
+            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     private void handleMessages(int type, Packet packet){
-        ServerPackets typeEnum = ServerPackets.values()[type];
+        ServerPackets typeEnum = ServerPackets.fromInt(type);
         switch (typeEnum){
             case GAMEMODE: //Server sends gamemode and id
                 try {
-                    ClientHandle.handleGamemode(packet);
                     System.out.println("Type 2");
+                    ClientHandle.handleGamemode(packet);
                 } catch (Exception e) {
                     e.printStackTrace();
                     exit(-2);
@@ -71,8 +74,8 @@ public class Client {
                 break;
             case PLAYERINFORMATION: //Server sends playerturns and playerinformation (with ids for turnorder and skills)
                 try {
-                    ClientHandle.handlePlayerinformation(packet);
                     System.out.println("Type 3");
+                    ClientHandle.handlePlayerinformation(packet);
                 } catch (Exception e) {
                     e.printStackTrace();
                     exit(-3);
@@ -80,8 +83,8 @@ public class Client {
                 break;
             case GAMEFIELD: //Server sends initial Gamefield
                 try {
-                    ClientHandle.handleInitialMap(packet);
                     System.out.println("Type 4");
+                    ClientHandle.handleInitialMap(packet);
                     AI.getInstance().getCurrentState().getCurrentField().printMap();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -90,8 +93,8 @@ public class Client {
                 break;
             case MOVEREQUEST: //Server sends a moverequest
                 try {
-                    ClientHandle.handleMoveRequest(packet);
                     System.out.println("Type 5");
+                    ClientHandle.handleMoveRequest(packet);
                 } catch (Exception e) {
                     e.printStackTrace();
                     exit(-5);
@@ -99,8 +102,8 @@ public class Client {
                 break;
             case MOVEDISTRIBUTION: //Server sends a movereply of player in turn to ALL players
                 try {
-                    ClientHandle.handleMovedistribution(packet);
                     System.out.println("Type 7");
+                    ClientHandle.handleMovedistribution(packet);
                 } catch (Exception e) {
                     e.printStackTrace();
                     exit(-7);
@@ -108,9 +111,9 @@ public class Client {
                 break;
             case NEWGAMESTATE: //Server sends the new gamestate after calculating a move
                 try {
+                    System.out.println("Type 8");
                     ClientHandle.handleNewGamestate(packet);
                     AI.getInstance().getCurrentState().getCurrentField().printMap();
-                    System.out.println("Type 8");
                 } catch (Exception e) {
                     e.printStackTrace();
                     exit(-8);
@@ -118,6 +121,7 @@ public class Client {
                 break;
             case ERROR: //Server sends an error. Could be illegal moves
                 try {
+                    System.out.println("Type 9");
                     ClientHandle.handleErrors(packet);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -125,6 +129,7 @@ public class Client {
                 break;
             case GAMEOVER: //Server sends players that the game is over and the winners' id
                 try {
+                    System.out.println("Type 10");
                     ClientHandle.handleGameover(packet);
                     this.gameIsRunning = false;
                 } catch (Exception e) {

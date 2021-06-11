@@ -1,5 +1,6 @@
 package Connection;
 
+import AI.AI;
 import Game.Move;
 
 public class ClientSend {
@@ -12,7 +13,7 @@ public class ClientSend {
     public static void sendPlayername(){
         Packet packet = new Packet();
         packet.write(ClientPackets.PLAYERNAME.getId());
-        packet.write("playername");
+        packet.write(AI.playername);
         sendPacket(packet);
     }
 

@@ -8,6 +8,7 @@ import java.util.Random;
 public class AI {
 
     public static AI instance;
+    public static String playername = "playername";
 
     private GameState currentState;
 
