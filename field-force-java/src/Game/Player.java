@@ -6,8 +6,8 @@ import Board.MapObject;
 public class Player extends MapObject {
     private int playerNumber;
     private String name;
-    private int hp = 150;
-    private int shield = 0;
+    private int hp;
+    private int shield;
 
     public boolean active = true;
     public int onFire = 0;
@@ -20,6 +20,8 @@ public class Player extends MapObject {
         this.id = id;
         this.playerNumber = playerNumber;
         this.name = name;
+        this.hp = GameConstants.HP;
+        this.shield = GameConstants.SHIELD;
     }
 
     public void takeDamage(int damage){

@@ -21,11 +21,25 @@ public class Main {
                     i++;
                     AI.playername = args[i];
                 }
+                case "-s1" -> {
+                    i++;
+                    AI.skill1 = Integer.parseInt(args[i]);
+                }
+                case "-s2" -> {
+                    i++;
+                    AI.skill2 = Integer.parseInt(args[i]);
+                    if(AI.skill1 == AI.skill2){
+                        System.out.println("You can't have the same skill twice");
+                        return;
+                    }
+                }
                 case "-h" -> {
-                    System.out.println("-i <ip>     Set ip to connect to");
-                    System.out.println("-p <port>   Set port to connect to");
-                    System.out.println("-n <name>   Set playername");
-                    System.out.println("-h          Show help");
+                    System.out.println("-i <ip>                 Set ip to connect to");
+                    System.out.println("-p <port>               Set port to connect to");
+                    System.out.println("-n <name>               Set playername");
+                    System.out.println("-s1 <skill_id>          Set skill 1");
+                    System.out.println("-s2 <skill_id>          Set skill 2");
+                    System.out.println("-h                      Show help");
                 }
             }
 

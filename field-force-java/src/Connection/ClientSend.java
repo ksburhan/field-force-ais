@@ -14,6 +14,8 @@ public class ClientSend {
         Packet packet = new Packet();
         packet.write(ClientPackets.PLAYERNAME.getId());
         packet.write(AI.playername);
+        packet.write(AI.skill1);
+        packet.write(AI.skill2);
         sendPacket(packet);
     }
 

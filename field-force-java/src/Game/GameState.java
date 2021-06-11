@@ -105,6 +105,7 @@ public class GameState {
                     AttackTile(player, player.getxPos() - 1, player.getyPos());
                 break;
             case 3: // SKILL
+
                 break;
         }
         if(playerInTurn.remove(Integer.valueOf(playerID)))

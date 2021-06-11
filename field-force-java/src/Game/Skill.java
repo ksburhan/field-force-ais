@@ -93,4 +93,12 @@ public class Skill {
     public void setValue(int value) {
         this.value = value;
     }
+
+    public SkillType getType() {
+        return type;
+    }
+
+    public void setType(SkillType type) {
+        this.type = type;
+    }
 }

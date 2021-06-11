@@ -123,6 +123,7 @@ public class Client {
                 try {
                     System.out.println("Type 9");
                     ClientHandle.handleErrors(packet);
+                    exit(-9);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
