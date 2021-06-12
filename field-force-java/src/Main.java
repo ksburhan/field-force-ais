@@ -39,6 +39,7 @@ public class Main {
                     System.out.println("-n <name>               Set playername");
                     System.out.println("-s1 <skill_id>          Set skill 1");
                     System.out.println("-s2 <skill_id>          Set skill 2");
+                    System.out.println("-v                      Set verbose on");
                     System.out.println("-h                      Show help");
                 }
             }

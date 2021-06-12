@@ -42,6 +42,8 @@ public class ClientHandle {
     public static void handleMovedistribution(Packet packet) throws Exception {
         int lastPlayerID = packet.readInt();
         Move move = packet.readMove();
+        String log = packet.readString();
+        System.out.println(log);
     }
 
     public static void handleNewGamestate(Packet packet) throws Exception {
