@@ -24,8 +24,24 @@ public class Skill {
         this.value = value;
         this.type = type;
     }
-    public Skill(int id) {
+    public Skill(int id, int cooldownLeft) {
         this.id = id;
+        Skill s = getSkill(id);
+        assert s != null;
+        this.name = s.getName();
+        this.cooldown = s.getCooldown();
+        this.range = s.getRange();
+        this.value = s.getValue();
+        this.type = s.getType();
+        this.cooldownLeft = cooldownLeft;
+    }
+    public Skill(Skill skill) {
+        this.id = skill.id;
+        this.name = skill.name;
+        this.cooldown = skill.cooldown;
+        this.range = skill.range;
+        this.value = skill.value;
+        this.type = skill.type;
     }
 
     public static Skill getSkill(int id)
@@ -44,6 +60,10 @@ public class Skill {
         {
             cooldownLeft--;
         }
+    }
+
+    public void setUsed(){
+        this.cooldownLeft = cooldown;
     }
 
     public int getId() {

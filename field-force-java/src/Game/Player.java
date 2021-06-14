@@ -24,6 +24,17 @@ public class Player extends MapObject {
         this.shield = GameConstants.SHIELD;
     }
 
+    public Player(char id, int playerNumber, String name, int x, int y, Skill skill1, Skill skill2){
+        super(id, x, y);
+        this.id = id;
+        this.playerNumber = playerNumber;
+        this.name = name;
+        this.hp = GameConstants.HP;
+        this.shield = GameConstants.SHIELD;
+        this.skill1 = skill1;
+        this.skill2 = skill2;
+    }
+
     public void takeDamage(int damage){
         if(shield > 0)
         {

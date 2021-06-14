@@ -1,5 +1,6 @@
 package Connection;
 
+import AI.AI;
 import Board.Consumable;
 import Board.Fire;
 import Board.Wall;
@@ -83,8 +84,7 @@ public class Packet {
         }
         return map;
     }
-
-    public List<Player> readPlayers() throws Exception {
+    public List<Player> readPlayersInit() throws Exception {
         List<Player> players = new ArrayList<>();
         int playerCount = readInt();
         for (int i = 0; i < playerCount; i++){
@@ -93,6 +93,20 @@ public class Packet {
             int xPos = readInt();
             int yPos = readInt();
             players.add(new Player((char)(playerNumber+'0'), playerNumber, playerName, xPos, yPos));
+        }
+        return players;
+    }
+    public List<Player> readPlayers() throws Exception {
+        List<Player> players = new ArrayList<>();
+        int playerCount = readInt();
+        for (int i = 0; i < playerCount; i++){
+            int playerNumber = readInt();
+            String playerName = readString();
+            int xPos = readInt();
+            int yPos = readInt();
+            Skill skill1 = readSkill();
+            Skill skill2 = readSkill();
+            players.add(new Player((char)(playerNumber+'0'), playerNumber, playerName, xPos, yPos, skill1, skill2));
         }
         return players;
     }
@@ -209,7 +223,11 @@ public class Packet {
 
     public Skill readSkill() throws Exception {
         int skillId = readInt();
-        return new Skill(skillId);
+        if(skillId == -1){
+            return null;
+        }
+        int cooldownLeft = readInt();
+        return new Skill(skillId, cooldownLeft);
     }
 
     public void write(byte[] data){
@@ -247,7 +265,7 @@ public class Packet {
         if(skill != null)
             write(skill.getId());
         else
-            write(0);
+            write(-1);
     }
 
     public void writeLength(){

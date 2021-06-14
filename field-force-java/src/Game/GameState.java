@@ -11,6 +11,7 @@ public class GameState {
     private static List<Player> players = new ArrayList<>();
     private List<Integer> playerInTurn = new ArrayList<>();
 
+    private List<Player> currentPlayers = new ArrayList<>();
 
     private List<Fire> fires = new ArrayList<>();
     private List<Wall> walls = new ArrayList<>();
@@ -23,9 +24,18 @@ public class GameState {
         this.playerInTurn = playerInTurn;
     }
 
+    public GameState(GameField gameField, List<Integer> playerInTurn, List<Fire> fires, List<Wall> walls, List<Consumable> consumables){
+        this.currentField = gameField;
+        this.currentPlayers = GameState.players;
+        this.playerInTurn = playerInTurn;
+        this.fires = fires;
+        this.walls = walls;
+        this.consumables = consumables;
+    }
+
     public GameState(GameField gameField, List<Player> players, List<Integer> playerInTurn, List<Fire> fires, List<Wall> walls, List<Consumable> consumables){
         this.currentField = gameField;
-        GameState.players = players;
+        this.currentPlayers = players;
         this.playerInTurn = playerInTurn;
         this.fires = fires;
         this.walls = walls;
@@ -34,7 +44,7 @@ public class GameState {
 
     public List<Move> getAllMoves(int playerID){
         List<Move> moves = new ArrayList<>();
-        Player player = players.get(playerID-1);
+        Player player = currentPlayers.get(playerID-1);
         Tile tile = currentField.getField()[player.getxPos()][player.getyPos()];
         for (MoveType t : MoveType.values()){
             switch (t.getId()){
@@ -63,7 +73,7 @@ public class GameState {
                         if(player.getSkill1() != null && player.getSkill1().getCooldownLeft() == 0)
                             moves.add(new Move(MoveType.SKILL, d, player.getSkill1()));
                         if(player.getSkill2() != null && player.getSkill2().getCooldownLeft() == 0)
-                            moves.add(new Move(MoveType.SKILL, d, player.getSkill1()));
+                            moves.add(new Move(MoveType.SKILL, d, player.getSkill2()));
                     }
                     break;
             }
@@ -86,23 +96,23 @@ public class GameState {
         {
             case 1: // MOVEMENT
                 if (move.getDirection() == Direction.NORTH)
-                    MoveToTile(player, player.getxPos(), player.getyPos() - 1);
+                    moveToTile(player, player.getxPos(), player.getyPos() - 1);
                 if (move.getDirection() == Direction.EAST)
-                    MoveToTile(player, player.getxPos() + 1, player.getyPos());
+                    moveToTile(player, player.getxPos() + 1, player.getyPos());
                 if (move.getDirection() == Direction.SOUTH)
-                    MoveToTile(player, player.getxPos(), player.getyPos() + 1);
+                    moveToTile(player, player.getxPos(), player.getyPos() + 1);
                 if (move.getDirection() == Direction.WEST)
-                    MoveToTile(player, player.getxPos() - 1, player.getyPos());
+                    moveToTile(player, player.getxPos() - 1, player.getyPos());
                 break;
             case 2: // ATTACK
                 if (move.getDirection() == Direction.NORTH)
-                    AttackTile(player, player.getxPos(), player.getyPos() - 1);
+                    attackTile(player, player.getxPos(), player.getyPos() - 1);
                 if (move.getDirection() == Direction.EAST)
-                    AttackTile(player, player.getxPos() + 1, player.getyPos());
+                    attackTile(player, player.getxPos() + 1, player.getyPos());
                 if (move.getDirection() == Direction.SOUTH)
-                    AttackTile(player, player.getxPos(), player.getyPos() + 1);
+                    attackTile(player, player.getxPos(), player.getyPos() + 1);
                 if (move.getDirection() == Direction.WEST)
-                    AttackTile(player, player.getxPos() - 1, player.getyPos());
+                    attackTile(player, player.getxPos() - 1, player.getyPos());
                 break;
             case 3: // SKILL
 
@@ -110,10 +120,10 @@ public class GameState {
         }
         if(playerInTurn.remove(Integer.valueOf(playerID)))
             playerInTurn.add(playerID);
-        PrepareForNextRound();
+        prepareForNextRound();
     }
 
-    public void MoveToTile(Player player, int xTarget, int yTarget){
+    public void moveToTile(Player player, int xTarget, int yTarget){
         MapObject targetCellContent = currentField.getField()[xTarget][yTarget].getContent();
         int x = player.getxPos();
         int y = player.getyPos();
@@ -167,7 +177,7 @@ public class GameState {
         }
     }
 
-    public void AttackTile(Player player, int xTarget, int yTarget){
+    public void attackTile(Player player, int xTarget, int yTarget){
         MapObject targetCellContent = currentField.getField()[xTarget][yTarget].getContent();
         if (targetCellContent instanceof Player)
         {
@@ -179,9 +189,9 @@ public class GameState {
         }
     }
 
-    private void PrepareForNextRound()
+    private void prepareForNextRound()
     {
-        for (Player p : players) {
+        for (Player p : this.currentPlayers) {
             if (p.active) {
                 p.prepareForNextRound();
             }
@@ -199,6 +209,38 @@ public class GameState {
 
     public static void setPlayers(List<Player> players) {
         GameState.players = players;
+    }
+
+    public List<Player> getCurrentPlayers() {
+        return currentPlayers;
+    }
+
+    public void setCurrentPlayers(List<Player> currentPlayers) {
+        this.currentPlayers = currentPlayers;
+    }
+
+    public List<Fire> getFires() {
+        return fires;
+    }
+
+    public void setFires(List<Fire> fires) {
+        this.fires = fires;
+    }
+
+    public List<Wall> getWalls() {
+        return walls;
+    }
+
+    public void setWalls(List<Wall> walls) {
+        this.walls = walls;
+    }
+
+    public List<Consumable> getConsumables() {
+        return consumables;
+    }
+
+    public void setConsumables(List<Consumable> consumables) {
+        this.consumables = consumables;
     }
 
     public List<Integer> getPlayerInTurn() {

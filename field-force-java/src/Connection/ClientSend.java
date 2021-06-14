@@ -2,6 +2,8 @@ package Connection;
 
 import AI.AI;
 import Game.Move;
+import Game.MoveType;
+import Game.SkillType;
 
 public class ClientSend {
 
@@ -24,6 +26,13 @@ public class ClientSend {
         packet.write(ClientPackets.MOVEREPLY.getId());
         packet.write(id);
         packet.write(move);
+        if(move.getType() == MoveType.SKILL) {
+            move.getSkill().setUsed();
+            if(move.getSkill().getId() == AI.skill1)
+                AI.ownPlayer.getSkill1().setUsed();
+            if(move.getSkill().getId() == AI.skill2)
+                AI.ownPlayer.getSkill2().setUsed();
+        }
         sendPacket(packet);
     }
 }

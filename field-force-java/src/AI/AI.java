@@ -16,6 +16,8 @@ public class AI {
     public static int skill1 = 0;
     public static int skill2 = 1;
 
+    public static int gamemode = 0;
+
     private GameState currentState;
 
     public Move getBestMove(List<Move> moves){
