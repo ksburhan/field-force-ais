@@ -6,6 +6,7 @@ import Game.Player;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class AI {
 
@@ -13,14 +14,15 @@ public class AI {
     public static String playername = "playername";
     public static int ownPlayerID;
     public static Player ownPlayer;
-    public static int skill1 = 0;
-    public static int skill2 = 1;
+    public static int skill1 = 3;
+    public static int skill2 = 0;
 
     public static int gamemode = 0;
 
     private GameState currentState;
 
-    public Move getBestMove(List<Move> moves){
+    public Move getBestMove(List<Move> moves) throws InterruptedException {
+        TimeUnit.SECONDS.sleep(1);
         Random rand = new Random();
         for (Move move : moves) {
             if (move.getType() == MoveType.SKILL)

@@ -17,6 +17,10 @@ public class ClientHandle {
     public static void handleGamemode(Packet packet) throws Exception {
         int gamemode = packet.readInt();
         int ownID = packet.readInt();
+        if(gamemode == 1){
+            AI.skill1 = packet.readInt();
+            AI.skill2 = packet.readInt();
+        }
         AI.gamemode = gamemode;
         AI.ownPlayerID = ownID;
         packet.readConfig();
