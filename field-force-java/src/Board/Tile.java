@@ -1,5 +1,7 @@
 package Board;
 
+import Game.Player;
+
 public class Tile {
 
     private int xPos;
@@ -20,7 +22,16 @@ public class Tile {
     public Tile(Tile other){
         this.xPos = other.xPos;
         this.yPos = other.yPos;
-        this.content = new MapObject(other.content);
+        if(other.content instanceof Player)
+            this.content = new Player((Player) other.content);
+        else if(other.content instanceof Wall)
+            this.content = new Wall((Wall) other.content);
+        else if(other.content instanceof Fire)
+            this.content = new Fire((Fire) other.content);
+        else if(other.content instanceof Consumable)
+            this.content = new Consumable((Consumable) other.content);
+        else
+            this.content = new MapObject(other.content);
     }
 
 

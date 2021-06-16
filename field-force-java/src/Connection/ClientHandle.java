@@ -27,7 +27,7 @@ public class ClientHandle {
     }
 
     public static void handlePlayerinformation(Packet packet) throws Exception {
-        List<Player> players = packet.readPlayersInit();
+        List<Player> players = packet.readPlayers();
         GameState.setPlayers(players);
         AI.ownPlayer = GameState.getPlayers().get(AI.ownPlayerID-1);
         AI.ownPlayer.setSkill1(Skill.getSkill(AI.skill1));

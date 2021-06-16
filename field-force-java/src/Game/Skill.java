@@ -80,8 +80,8 @@ public class Skill {
     }
 
     public static void movementType(Player player, Skill skill, Direction direction, GameState gameState){
-        Tile tile = gameState.getCurrentField().getField()[player.getxPos()][player.getyPos()];
         for (int i = 0; i < skill.range; i++){
+            Tile tile = gameState.getCurrentField().getField()[player.getxPos()][player.getyPos()];
             if(direction == Direction.NORTH){
                 if (tile.getnTile() != null){
                     gameState.moveToTile(player, player.getxPos(), player.getyPos() - 1);
@@ -199,14 +199,14 @@ public class Skill {
             targets.add(new int[]{target[0], target[1] - 1});
         }
         for (int[] t : targets) {
-            if(t[0] >= 0 || t[0] < gameState.getCurrentField().getDimension() ||
-                    t[1] >= 0 || t[1] < gameState.getCurrentField().getDimension()) {
+            if(t[0] >= 0 && t[0] < gameState.getCurrentField().getDimension() &&
+                    t[1] >= 0 && t[1] < gameState.getCurrentField().getDimension()) {
                 MapObject targetCellContent = gameState.getCurrentField().getField()[t[0]][t[1]].getContent();
                 if (targetCellContent.getId() == '0' || targetCellContent instanceof Fire || targetCellContent instanceof Consumable)
                 {
-                    Fire fire = new Fire('f', t[0], t[0]);
-                    gameState.getCurrentField().getFieldChars()[t[0]][t[0]] = fire.getId();
-                    gameState.getCurrentField().getField()[t[0]][t[0]].setContent(fire);
+                    Fire fire = new Fire('f', t[0], t[1]);
+                    gameState.getCurrentField().getFieldChars()[t[0]][t[1]] = fire.getId();
+                    gameState.getCurrentField().getField()[t[0]][t[1]].setContent(fire);
                 }
                 else if (targetCellContent instanceof Player)
                 {
@@ -275,28 +275,28 @@ public class Skill {
             tile = gameState.getCurrentField().getField()[xTarget][yTarget];
             if(direction == Direction.NORTH){
                 if (tile.getnTile() != null){
-                    yTarget -= i;
+                    yTarget -= 1;
                 }
                 else {
                     return;
                 }
             } else if(direction == Direction.EAST){
                 if (tile.geteTile() != null){
-                    xTarget += i;
+                    xTarget += 1;
                 }
                 else {
                     return;
                 }
             } else if(direction == Direction.SOUTH){
                 if (tile.getsTile() != null){
-                    yTarget += i;
+                    yTarget += 1;
                 }
                 else {
                     return;
                 }
             } else if(direction == Direction.WEST){
                 if (tile.getwTile() != null){
-                    xTarget -= i;
+                    xTarget -= 1;
                 }
                 else {
                     return;
