@@ -15,6 +15,11 @@ public class Wall extends MapObject {
         this.hp = hp;
     }
 
+    public Wall(Wall other){
+        super(other);
+        this.hp = other.hp;
+    }
+
     public void takeDamage(int damage)
     {
         hp -= damage;

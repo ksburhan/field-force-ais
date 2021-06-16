@@ -24,6 +24,17 @@ public class GameState {
         this.playerInTurn = playerInTurn;
     }
 
+    public GameState(GameState other){
+        this.playerInTurn = new ArrayList<>(other.playerInTurn);
+        this.currentPlayers = new ArrayList<>(other.currentPlayers);
+        this.fires = new ArrayList<>(other.fires);
+        this.walls = new ArrayList<>(other.walls);
+        this.consumables = new ArrayList<>(other.consumables);
+
+        this.currentField = new GameField(other.currentField);
+        System.out.println("Deep copy of gamestate");
+    }
+
     public GameState(GameField gameField, List<Integer> playerInTurn, List<Fire> fires, List<Wall> walls, List<Consumable> consumables){
         this.currentField = gameField;
         this.currentPlayers = GameState.players;
@@ -91,10 +102,10 @@ public class GameState {
     }
 
     public void simulateNextGamestate(int playerID, Move move){
-        Player player = players.get(playerID-1);
-        switch (move.getType().getId())
-        {
-            case 1: // MOVEMENT
+        Player player = currentPlayers.get(playerID-1);
+        switch (move.getType().getId()) {
+            // MOVEMENT
+            case 1 -> {
                 if (move.getDirection() == Direction.NORTH)
                     moveToTile(player, player.getxPos(), player.getyPos() - 1);
                 if (move.getDirection() == Direction.EAST)
@@ -103,8 +114,9 @@ public class GameState {
                     moveToTile(player, player.getxPos(), player.getyPos() + 1);
                 if (move.getDirection() == Direction.WEST)
                     moveToTile(player, player.getxPos() - 1, player.getyPos());
-                break;
-            case 2: // ATTACK
+            }
+            // ATTACK
+            case 2 -> {
                 if (move.getDirection() == Direction.NORTH)
                     attackTile(player, player.getxPos(), player.getyPos() - 1);
                 if (move.getDirection() == Direction.EAST)
@@ -113,10 +125,14 @@ public class GameState {
                     attackTile(player, player.getxPos(), player.getyPos() + 1);
                 if (move.getDirection() == Direction.WEST)
                     attackTile(player, player.getxPos() - 1, player.getyPos());
-                break;
-            case 3: // SKILL
-
-                break;
+            }
+            // SKILL
+            case 3 -> {
+                Skill skill = player.getSkill1();
+                if (move.getSkill().getId() == player.getSkill2().getId())
+                    skill = player.getSkill2();
+                skill.useSkill(player, move.getDirection(), this);
+            }
         }
         if(playerInTurn.remove(Integer.valueOf(playerID)))
             playerInTurn.add(playerID);

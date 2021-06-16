@@ -13,6 +13,30 @@ public class GameField {
         this.fieldChars = map;
     }
 
+    public GameField(GameField other){
+        this.dimension = other.dimension;
+        this.field = new Tile[this.dimension][this.dimension];
+        for(int y=0; y<this.dimension; y++)
+            for(int x=0; x<this.dimension; x++)
+                this.field[x][y] = new Tile(other.field[x][y]);
+        for (int y = 0; y < dimension; y++) {
+            for (int x = 0; x < dimension; x++) {
+                if(y > 0)
+                    this.field[x][y].setnTile(this.field[x][y-1]);
+                if(x != dimension-1)
+                    this.field[x][y].seteTile(this.field[x+1][y]);
+                if(y != dimension-1)
+                    this.field[x][y].setsTile(this.field[x][y+1]);
+                if(x > 0)
+                    this.field[x][y].setwTile(this.field[x-1][y]);
+            }
+        }
+        this.fieldChars = new char[this.dimension][this.dimension];
+        for(int y=0; y<this.dimension; y++)
+            for(int x=0; x<this.dimension; x++)
+                this.fieldChars[x][y] = other.fieldChars[x][y];
+    }
+
     private Tile[][] createField(char[][] map) {
         Tile[][] field = new Tile[dimension][dimension];
         for (int y = 0; y < dimension; y++)

@@ -15,6 +15,11 @@ public class Fire extends MapObject {
         this.duration = duration;
     }
 
+    public Fire(Fire other){
+        super(other);
+        this.duration = other.duration;
+    }
+
     public void prepareForNextRound()
     {
         duration--;

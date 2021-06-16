@@ -17,6 +17,12 @@ public class MapObject{
         this.id = id;
     }
 
+    public MapObject(MapObject other){
+        this.id = other.id;
+        this.xPos = other.xPos;
+        this.yPos = other.yPos;
+    }
+
     public void destroy(){
         int x = getxPos();
         int y = getyPos();

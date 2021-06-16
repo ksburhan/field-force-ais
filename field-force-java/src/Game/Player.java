@@ -35,6 +35,19 @@ public class Player extends MapObject {
         this.skill2 = skill2;
     }
 
+    public Player(Player other){
+        super(other);
+        this.id = other.id;
+        this.playerNumber = other.playerNumber;
+        this.name = other.name;
+        this.hp = other.hp;
+        this.shield = other.shield;
+        this.active = other.active;
+        this.onFire = other.onFire;
+        this.skill1 = new Skill(other.skill1);
+        this.skill2 = new Skill(other.skill2);
+    }
+
     public void takeDamage(int damage){
         if(shield > 0)
         {

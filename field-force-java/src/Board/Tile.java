@@ -17,6 +17,13 @@ public class Tile {
         this.content = content;
     }
 
+    public Tile(Tile other){
+        this.xPos = other.xPos;
+        this.yPos = other.yPos;
+        this.content = new MapObject(other.content);
+    }
+
+
     public int getxPos() {
         return xPos;
     }

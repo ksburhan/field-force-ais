@@ -26,6 +26,13 @@ public class Consumable extends MapObject {
         this.shield = shield;
     }
 
+    public Consumable(Consumable other){
+        super(other);
+        this.conName = other.conName;
+        this.healing = other.healing;
+        this.shield = other.shield;
+    }
+
     public static Consumable getConsumable(char id)
     {
         for(Consumable s : allConsumables)
