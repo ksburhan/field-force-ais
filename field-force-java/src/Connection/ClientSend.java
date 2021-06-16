@@ -27,11 +27,11 @@ public class ClientSend {
         packet.write(id);
         packet.write(move);
         if(move.getType() == MoveType.SKILL) {
-            move.getSkill().setUsed();
+            move.getSkill().setOnCooldown();
             if(move.getSkill().getId() == AI.skill1)
-                AI.ownPlayer.getSkill1().setUsed();
+                AI.ownPlayer.getSkill1().setOnCooldown();
             if(move.getSkill().getId() == AI.skill2)
-                AI.ownPlayer.getSkill2().setUsed();
+                AI.ownPlayer.getSkill2().setOnCooldown();
         }
         sendPacket(packet);
     }

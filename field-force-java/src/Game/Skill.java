@@ -1,5 +1,9 @@
 package Game;
 
+import AI.AI;
+import Board.*;
+import Connection.ServerPackets;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +46,7 @@ public class Skill {
         this.range = skill.range;
         this.value = skill.value;
         this.type = skill.type;
+        this.cooldownLeft = skill.cooldownLeft;
     }
 
     public static Skill getSkill(int id)
@@ -62,7 +67,257 @@ public class Skill {
         }
     }
 
-    public void setUsed(){
+    public void useSkill(Player player, Direction direction, GameState gameState){
+        switch (this.type) {
+            case MOVEMENT -> movementType(player, this, direction, gameState);
+            case REGENERATE -> regenerateType(player, this, direction, gameState);
+            case FIRE -> fireType(player, this, direction, gameState);
+            case ROCKET -> rocketType(player, this, direction, gameState);
+            case PUSH -> pushType(player, this, direction, gameState);
+            case BREAK -> breakType(player, this, direction, gameState);
+        }
+        setOnCooldown();
+    }
+
+    public static void movementType(Player player, Skill skill, Direction direction, GameState gameState){
+        Tile tile = gameState.getCurrentField().getField()[player.getxPos()][player.getyPos()];
+        for (int i = 0; i < skill.range; i++){
+            if(direction == Direction.NORTH){
+                if (tile.getnTile() != null){
+                    gameState.moveToTile(player, player.getxPos(), player.getyPos() - 1);
+                }
+                else {
+                    return;
+                }
+            } else if(direction == Direction.EAST){
+                if (tile.geteTile() != null){
+                    gameState.moveToTile(player, player.getxPos() + 1, player.getyPos());
+                }
+                else {
+                    return;
+                }
+            } else if(direction == Direction.SOUTH){
+                if (tile.getsTile() != null){
+                    gameState.moveToTile(player, player.getxPos(), player.getyPos() + 1);
+                }
+                else {
+                    return;
+                }
+            } else if(direction == Direction.WEST){
+                if (tile.getwTile() != null){
+                    gameState.moveToTile(player, player.getxPos() - 1, player.getyPos());
+                }
+                else {
+                    return;
+                }
+            }
+        }
+    }
+
+    public static void regenerateType(Player player, Skill skill, Direction direction, GameState gameState){
+        player.heal(skill.value);
+    }
+
+    public static void fireType(Player player, Skill skill, Direction direction, GameState gameState){
+        int xTarget = player.getxPos();
+        int yTarget = player.getyPos();
+        Tile tile;
+        for (int i = 0; i < skill.range; i++){
+            tile = gameState.getCurrentField().getField()[xTarget][yTarget];
+            if(direction == Direction.NORTH){
+                if (tile.getnTile() != null){
+                    yTarget -= i;
+                }
+                else {
+                    return;
+                }
+            } else if(direction == Direction.EAST){
+                if (tile.geteTile() != null){
+                    xTarget += i;
+                }
+                else {
+                    return;
+                }
+            } else if(direction == Direction.SOUTH){
+                if (tile.getsTile() != null){
+                    yTarget += i;
+                }
+                else {
+                    return;
+                }
+            } else if(direction == Direction.WEST){
+                if (tile.getwTile() != null){
+                    xTarget -= i;
+                }
+                else {
+                    return;
+                }
+            }
+            MapObject targetCellContent = gameState.getCurrentField().getField()[xTarget][yTarget].getContent();
+            if (targetCellContent.getId() == '0' || targetCellContent instanceof Fire || targetCellContent instanceof Consumable)
+            {
+                Fire fire = new Fire('f', xTarget, yTarget);
+                gameState.getCurrentField().getFieldChars()[xTarget][yTarget] = fire.getId();
+                gameState.getCurrentField().getField()[xTarget][yTarget].setContent(fire);
+            }
+            else if (targetCellContent instanceof Player)
+            {
+                ((Player) targetCellContent).takeDamage(skill.value);
+            }
+            else if (targetCellContent instanceof Wall)
+            {
+                return;
+            }
+        }
+    }
+
+    public static void rocketType(Player player, Skill skill, Direction direction, GameState gameState){
+        List<int[]> targets = new ArrayList<>();
+        int[] target = new int[2];
+        if(direction == Direction.NORTH){
+            target[0] = player.getxPos();
+            target[1] = player.getyPos() - skill.range;
+        } else if(direction == Direction.EAST){
+            target[0] = player.getxPos() + skill.range;
+            target[1] = player.getyPos();
+        } else if(direction == Direction.SOUTH){
+            target[0] = player.getxPos();
+            target[1] = player.getyPos() + skill.range;
+        } else if(direction == Direction.WEST){
+            target[0] = player.getxPos() - skill.range;
+            target[1] = player.getyPos();
+        }
+        targets.add(target);
+        if (direction == Direction.NORTH || direction == Direction.SOUTH)
+        {
+            targets.add(new int[]{target[0] + 1, target[1]});
+            targets.add(new int[]{target[0] - 1, target[1]});
+        }
+        else if (direction == Direction.EAST || direction == Direction.WEST)
+        {
+            targets.add(new int[]{target[0], target[1] + 1});
+            targets.add(new int[]{target[0], target[1] - 1});
+        }
+        for (int[] t : targets) {
+            if(t[0] >= 0 || t[0] < gameState.getCurrentField().getDimension() ||
+                    t[1] >= 0 || t[1] < gameState.getCurrentField().getDimension()) {
+                MapObject targetCellContent = gameState.getCurrentField().getField()[t[0]][t[1]].getContent();
+                if (targetCellContent.getId() == '0' || targetCellContent instanceof Fire || targetCellContent instanceof Consumable)
+                {
+                    Fire fire = new Fire('f', t[0], t[0]);
+                    gameState.getCurrentField().getFieldChars()[t[0]][t[0]] = fire.getId();
+                    gameState.getCurrentField().getField()[t[0]][t[0]].setContent(fire);
+                }
+                else if (targetCellContent instanceof Player)
+                {
+                    ((Player) targetCellContent).takeDamage(skill.value);
+                }
+            }
+        }
+    }
+
+    public static void pushType(Player player, Skill skill, Direction direction, GameState gameState){
+        int xTarget = 0;
+        int yTarget = 0;
+        if(direction == Direction.NORTH){
+            xTarget = player.getxPos();
+            yTarget = player.getyPos() - skill.range;
+        } else if(direction == Direction.EAST){
+            xTarget = player.getxPos() + skill.range;
+            yTarget = player.getyPos();
+        } else if(direction == Direction.SOUTH){
+            xTarget = player.getxPos();
+            yTarget = player.getyPos() + skill.range;
+        } else if(direction == Direction.WEST){
+            xTarget = player.getxPos() - skill.range;
+            yTarget = player.getyPos();
+        }
+        if(xTarget >= 0 || xTarget < gameState.getCurrentField().getDimension() ||
+                yTarget >= 0 || yTarget < gameState.getCurrentField().getDimension()) {
+            Tile tile = gameState.getCurrentField().getField()[xTarget][yTarget];
+            if(tile.getnTile() != null){
+                Tile nTile = tile.getnTile();
+                MapObject targetCellContent = nTile.getContent();
+                if(targetCellContent instanceof Player && nTile.getnTile() != null){
+                    gameState.moveToTile((Player) targetCellContent, targetCellContent.getxPos(), targetCellContent.getyPos() - 1);
+                }
+            }
+            if(tile.geteTile() != null){
+                Tile eTile = tile.geteTile();
+                MapObject targetCellContent = eTile.getContent();
+                if(targetCellContent instanceof Player && eTile.geteTile() != null){
+                    gameState.moveToTile((Player) targetCellContent, targetCellContent.getxPos() + 1, targetCellContent.getyPos());
+                }
+            }
+            if(tile.getsTile() != null){
+                Tile sTile = tile.getsTile();
+                MapObject targetCellContent = sTile.getContent();
+                if(targetCellContent instanceof Player && sTile.getsTile() != null){
+                    gameState.moveToTile((Player) targetCellContent, targetCellContent.getxPos(), targetCellContent.getyPos() + 1);
+                }
+            }
+            if(tile.getwTile() != null){
+                Tile wTile = tile.getwTile();
+                MapObject targetCellContent = wTile.getContent();
+                if(targetCellContent instanceof Player && wTile.getwTile() != null){
+                    gameState.moveToTile((Player) targetCellContent, targetCellContent.getxPos() - 1, targetCellContent.getyPos());
+                }
+            }
+        }
+    }
+
+    public static void breakType(Player player, Skill skill, Direction direction, GameState gameState){
+        int xTarget = player.getxPos();
+        int yTarget = player.getyPos();
+        Tile tile;
+        boolean broke = false;
+        for (int i = 0; i < skill.range; i++){
+            tile = gameState.getCurrentField().getField()[xTarget][yTarget];
+            if(direction == Direction.NORTH){
+                if (tile.getnTile() != null){
+                    yTarget -= i;
+                }
+                else {
+                    return;
+                }
+            } else if(direction == Direction.EAST){
+                if (tile.geteTile() != null){
+                    xTarget += i;
+                }
+                else {
+                    return;
+                }
+            } else if(direction == Direction.SOUTH){
+                if (tile.getsTile() != null){
+                    yTarget += i;
+                }
+                else {
+                    return;
+                }
+            } else if(direction == Direction.WEST){
+                if (tile.getwTile() != null){
+                    xTarget -= i;
+                }
+                else {
+                    return;
+                }
+            }
+            MapObject targetCellContent = gameState.getCurrentField().getField()[xTarget][yTarget].getContent();
+            if (targetCellContent instanceof Player)
+            {
+                ((Player) targetCellContent).takeDamage(skill.value);
+            }
+            else if (targetCellContent instanceof Wall)
+            {
+                if(broke)
+                    return;
+                ((Wall) targetCellContent).takeDamage(GameConstants.WALL_HP);
+                broke = true;
+            }
+        }
+    }
+
+    public void setOnCooldown(){
         this.cooldownLeft = cooldown;
     }
 

@@ -25,8 +25,10 @@ public class AI {
         TimeUnit.SECONDS.sleep(1);
         Random rand = new Random();
         for (Move move : moves) {
-            if (move.getType() == MoveType.SKILL)
+            if (move.getType() == MoveType.SKILL) {
+                currentState.simulateNextGamestate(ownPlayerID, move);
                 return move;
+            }
         }
         return moves.get(rand.nextInt(moves.size()));
     }
