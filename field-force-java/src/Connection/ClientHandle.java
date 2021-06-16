@@ -5,10 +5,7 @@ import Board.Consumable;
 import Board.Fire;
 import Board.GameField;
 import Board.Wall;
-import Game.GameState;
-import Game.Move;
-import Game.Player;
-import Game.Skill;
+import Game.*;
 
 import java.util.List;
 
@@ -16,12 +13,14 @@ public class ClientHandle {
 
     public static void handleGamemode(Packet packet) throws Exception {
         int gamemode = packet.readInt();
+        int timelimit = packet.readInt();
         int ownID = packet.readInt();
         if(gamemode == 1){
             AI.skill1 = packet.readInt();
             AI.skill2 = packet.readInt();
         }
         AI.gamemode = gamemode;
+        AI.timelimit = timelimit * 1000;
         AI.ownPlayerID = ownID;
         packet.readConfig();
     }
@@ -46,6 +45,7 @@ public class ClientHandle {
 
     public static void handleMoveRequest(Packet packet) throws Exception {
         int ownId = packet.readInt();
+        AI.time_start = System.currentTimeMillis();
         Move bestMove = AI.instance.getBestMove(AI.instance.getCurrentState().getAllMoves(ownId));
         ClientSend.sendMovereply(ownId, bestMove);
     }
