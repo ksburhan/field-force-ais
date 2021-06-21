@@ -12,6 +12,12 @@ public class Move {
         this.skill = skill;
     }
 
+    public Move(Move other){
+        this.type = other.type;
+        this.direction = other.direction;
+        this.skill = new Skill(other.skill);
+    }
+
     public MoveType getType() {
         return type;
     }

@@ -18,6 +18,7 @@ public class GameState {
     private List<Consumable> consumables = new ArrayList<>();
 
     private GameField currentField;
+    private Move lastMove;
 
     public GameState(GameField gameField, List<Integer> playerInTurn){
         this.currentField = gameField;
@@ -32,7 +33,7 @@ public class GameState {
         this.consumables = new ArrayList<>(other.consumables);
 
         this.currentField = new GameField(other.currentField);
-        System.out.println("Deep copy of gamestate");
+        this.lastMove = new Move(other.lastMove);
     }
 
     public GameState(GameField gameField, List<Integer> playerInTurn, List<Fire> fires, List<Wall> walls, List<Consumable> consumables){
@@ -137,6 +138,7 @@ public class GameState {
         if(playerInTurn.remove(Integer.valueOf(playerID)))
             playerInTurn.add(playerID);
         prepareForNextRound();
+        this.lastMove = move;
     }
 
     public void moveToTile(Player player, int xTarget, int yTarget){
@@ -273,5 +275,13 @@ public class GameState {
 
     public void setCurrentField(GameField currentField) {
         this.currentField = currentField;
+    }
+
+    public Move getLastMove() {
+        return lastMove;
+    }
+
+    public void setLastMove(Move lastMove) {
+        this.lastMove = lastMove;
     }
 }

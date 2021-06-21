@@ -5,8 +5,8 @@ public enum ServerPackets {
     PLAYERINFORMATION(3),
     GAMEFIELD(4),
     MOVEREQUEST(5),
-    MOVEDISTRIBUTION(7),
-    NEWGAMESTATE(8),
+    NEWGAMESTATE(7),
+    MOVEDISTRIBUTION(8),
     ERROR(9),
     GAMEOVER(10);
 
@@ -26,8 +26,8 @@ public enum ServerPackets {
             case 3 -> PLAYERINFORMATION;
             case 4 -> GAMEFIELD;
             case 5 -> MOVEREQUEST;
-            case 7 -> MOVEDISTRIBUTION;
-            case 8 -> NEWGAMESTATE;
+            case 7 -> NEWGAMESTATE;
+            case 8 -> MOVEDISTRIBUTION;
             case 9 -> ERROR;
             case 10 -> GAMEOVER;
             default -> null;

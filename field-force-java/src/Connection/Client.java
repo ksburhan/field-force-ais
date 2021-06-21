@@ -100,23 +100,23 @@ public class Client {
                     exit(-5);
                 }
                 break;
-            case MOVEDISTRIBUTION: //Server sends a movereply of player in turn to ALL players
-                try {
-                    System.out.println("Type 7");
-                    ClientHandle.handleMovedistribution(packet);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    exit(-7);
-                }
-                break;
             case NEWGAMESTATE: //Server sends the new gamestate after calculating a move
                 try {
-                    System.out.println("Type 8");
+                    System.out.println("Type 7");
                     ClientHandle.handleNewGamestate(packet);
                     AI.getInstance().getCurrentState().getCurrentField().printMap();
                 } catch (Exception e) {
                     e.printStackTrace();
                     exit(-8);
+                }
+                break;
+            case MOVEDISTRIBUTION: //Server sends a movereply of player in turn to ALL players
+                try {
+                    System.out.println("Type 8");
+                    ClientHandle.handleMovedistribution(packet);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    exit(-7);
                 }
                 break;
             case ERROR: //Server sends an error. Could be illegal moves
