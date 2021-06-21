@@ -46,7 +46,7 @@ public class ClientHandle {
     public static void handleMoveRequest(Packet packet) throws Exception {
         int ownId = packet.readInt();
         AI.time_start = System.currentTimeMillis();
-        Move bestMove = AI.instance.getBestMove(AI.instance.getCurrentState().getAllMoves(ownId));
+        Move bestMove = AI.instance.getBestMove();
         ClientSend.sendMovereply(ownId, bestMove);
     }
 

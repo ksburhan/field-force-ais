@@ -15,8 +15,8 @@ public class AI {
     public static String playername = "playername";
     public static int ownPlayerID;
     public static Player ownPlayer;
-    public static int skill1 = 4;
-    public static int skill2 = 5;
+    public static int skill1 = 1;
+    public static int skill2 = 2;
 
     public static int gamemode = 0;
     public static int timelimit = 0;
@@ -24,21 +24,23 @@ public class AI {
 
     private GameState currentState;
 
-    public Move getBestMove(List<Move> moves) throws InterruptedException, TimeoutException {
-        TimeUnit.SECONDS.sleep(1);
-        Random rand = new Random();
-        for (Move move : moves) {
+    public Move getBestMove() throws InterruptedException, TimeoutException {
+        Move bestMove = null;
+        try {
             checkTimelimit();
-            if (move.getType() == MoveType.SKILL) {
-                new GameState(currentState).simulateNextGamestate(ownPlayerID, move);
-                return move;
-            }
+            List<Move> moves = AI.instance.getCurrentState().getAllMoves(ownPlayerID);
+            Random rand = new Random();
+            bestMove = moves.get(rand.nextInt(moves.size()));
+            return bestMove;
         }
-        return moves.get(rand.nextInt(moves.size()));
+        catch (TimeoutException te){
+            System.out.println("Time is running out");
+            return bestMove;
+        }
     }
 
     private void checkTimelimit() throws TimeoutException {
-        if (System.currentTimeMillis() - AI.time_start > AI.timelimit) {
+        if (System.currentTimeMillis() - AI.time_start > AI.timelimit - 500) {
             throw new TimeoutException();
         }
     }
