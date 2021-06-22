@@ -15,8 +15,8 @@ public class AI {
     public static String playername = "playername";
     public static int ownPlayerID;
     public static Player ownPlayer;
-    public static int skill1 = 1;
-    public static int skill2 = 2;
+    public static int skill1 = 0;
+    public static int skill2 = 3;
 
     public static int gamemode = 0;
     public static int timelimit = 0;

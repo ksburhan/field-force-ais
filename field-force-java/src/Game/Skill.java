@@ -232,8 +232,8 @@ public class Skill {
             xTarget = player.getxPos() - skill.range;
             yTarget = player.getyPos();
         }
-        if(xTarget >= 0 || xTarget < gameState.getCurrentField().getDimension() ||
-                yTarget >= 0 || yTarget < gameState.getCurrentField().getDimension()) {
+        if(xTarget >= 0 && xTarget < gameState.getCurrentField().getDimension() &&
+                yTarget >= 0 && yTarget < gameState.getCurrentField().getDimension()) {
             Tile tile = gameState.getCurrentField().getField()[xTarget][yTarget];
             if(tile.getnTile() != null){
                 Tile nTile = tile.getnTile();
