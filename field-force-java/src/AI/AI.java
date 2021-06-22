@@ -31,14 +31,16 @@ public class AI {
 
     public Move getBestMove() throws InterruptedException, TimeoutException {
         try {
-            for(int i = 0; i<10; i++){
+            for(int i = 0; i<30; i++){
                 if(i > 0){
                     globalBestMove = bestMove;
                 }
                 currentDepth = i;
                 checkTimelimit();
-                maximizer(currentDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, currentState.getOwnPlayer(), currentState);
+                int rating = maximizer(currentDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, currentState.getOwnPlayer(), currentState);
+                System.out.println("rating" + rating);
             }
+            System.out.println("reached depth" + currentDepth);
             return globalBestMove;
         }
         catch (TimeoutException te){
@@ -63,6 +65,8 @@ public class AI {
             int rating = minimizer(depth - 1, alpha, beta, copy.getNextPlayer(), copy);
             if(rating > alpha){
                 alpha = rating;
+                if(alpha == 150)
+                    return alpha;
                 if(depth == currentDepth){
                     bestMove = m;
                 }
@@ -88,6 +92,8 @@ public class AI {
                 rating = minimizer(depth - 1, alpha, beta, copy.getNextPlayer(), copy);
             if(rating <= beta){
                 beta = rating;
+                if(beta == 150)
+                    return beta;
             }
             if(alpha >= beta)
                 return beta;

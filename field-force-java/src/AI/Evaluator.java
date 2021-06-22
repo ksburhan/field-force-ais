@@ -12,9 +12,9 @@ public class Evaluator {
         for (Player p : gameState.getCurrentPlayers()) {
             int hp = getPlayerValue(p);
             if (p.getPlayerNumber() == AI.ownPlayerID){
-                allyHP =+ hp;
+                allyHP += hp;
             }else{
-                enemyHP =+ hp;
+                enemyHP += hp;
             }
         }
         return allyHP - enemyHP;
