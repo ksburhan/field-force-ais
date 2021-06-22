@@ -4,6 +4,7 @@ import Game.Move;
 import Game.MoveType;
 import Game.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -24,23 +25,78 @@ public class AI {
 
     private GameState currentState;
 
+    private int currentDepth;
+    private Move bestMove;
+    private Move globalBestMove;
+
     public Move getBestMove() throws InterruptedException, TimeoutException {
-        Move bestMove = null;
         try {
-            checkTimelimit();
-            List<Move> moves = AI.instance.getCurrentState().getAllMoves(ownPlayerID);
-            Random rand = new Random();
-            bestMove = moves.get(rand.nextInt(moves.size()));
-            return bestMove;
+            for(int i = 0; i<10; i++){
+                if(i > 0){
+                    globalBestMove = bestMove;
+                }
+                currentDepth = i;
+                checkTimelimit();
+                maximizer(currentDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, currentState.getOwnPlayer(), currentState);
+            }
+            return globalBestMove;
         }
         catch (TimeoutException te){
             System.out.println("Time is running out");
-            return bestMove;
+            return globalBestMove;
         }
     }
 
+    private int maximizer(int depth, int alpha, int beta, Player player, GameState gameState){
+        try {
+            checkTimelimit();
+        } catch (TimeoutException e) {
+            return alpha;
+        }
+        if(depth == 0)
+            return Evaluator.evaluate(gameState);
+        List<Move> moves = gameState.getAllMoves(player.getPlayerNumber());
+
+        for (Move m : moves){
+            GameState copy = new GameState(gameState);
+            copy.simulateNextGamestate(player.getPlayerNumber(), m);
+            int rating = minimizer(depth - 1, alpha, beta, copy.getNextPlayer(), copy);
+            if(rating > alpha){
+                alpha = rating;
+                if(depth == currentDepth){
+                    bestMove = m;
+                }
+            }
+            if(alpha >= beta)
+                return alpha;
+        }
+        return alpha;
+    }
+
+    private int minimizer(int depth, int alpha, int beta, Player player, GameState gameState){
+        if(depth == 0)
+            return Evaluator.evaluate(gameState);
+        List<Move> moves = gameState.getAllMoves(player.getPlayerNumber());
+
+        for (Move m : moves){
+            GameState copy = new GameState(gameState);
+            copy.simulateNextGamestate(player.getPlayerNumber(), m);
+            int rating;
+            if(copy.getNextPlayer().getPlayerNumber() == AI.ownPlayerID)
+                rating = maximizer(depth - 1, alpha, beta, copy.getNextPlayer(), copy);
+            else
+                rating = minimizer(depth - 1, alpha, beta, copy.getNextPlayer(), copy);
+            if(rating <= beta){
+                beta = rating;
+            }
+            if(alpha >= beta)
+                return beta;
+        }
+        return beta;
+    }
+
     private void checkTimelimit() throws TimeoutException {
-        if (System.currentTimeMillis() - AI.time_start > AI.timelimit - 500) {
+        if (System.currentTimeMillis() - time_start > timelimit - 500) {
             throw new TimeoutException();
         }
     }
