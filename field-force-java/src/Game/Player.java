@@ -90,6 +90,8 @@ public class Player extends MapObject {
     public void setInactive()
     {
         destroy();
+		hp = 0;
+		shield = 0;
         active = false;
     }
 
