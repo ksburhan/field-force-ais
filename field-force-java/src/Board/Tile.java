@@ -32,6 +32,10 @@ public class Tile {
             this.content = new Consumable((Consumable) other.content);
         else
             this.content = new MapObject(other.content);
+        this.nTile = null;
+        this.eTile = null;
+        this.sTile = null;
+        this.wTile = null;
     }
 
 

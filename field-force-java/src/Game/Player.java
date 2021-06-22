@@ -91,7 +91,6 @@ public class Player extends MapObject {
     {
         destroy();
         active = false;
-        AI.instance.getCurrentState().getPlayerInTurn().remove(this.playerNumber);
     }
 
     public void prepareForNextRound()

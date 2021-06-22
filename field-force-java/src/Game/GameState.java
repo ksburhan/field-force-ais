@@ -9,8 +9,8 @@ import java.util.List;
 public class GameState {
 
     private static List<Player> players = new ArrayList<>();
-    private List<Integer> playerInTurn = new ArrayList<>();
 
+    private List<Integer> playerInTurn = new ArrayList<>();
     private List<Player> currentPlayers = new ArrayList<>();
 
     private List<Fire> fires = new ArrayList<>();
@@ -27,13 +27,17 @@ public class GameState {
 
     public GameState(GameState other){
         this.playerInTurn = new ArrayList<>(other.playerInTurn);
-        this.currentPlayers = new ArrayList<>(other.currentPlayers);
+        this.currentPlayers = new ArrayList<>();
+        for (Player p : other.currentPlayers){
+            this.currentPlayers.add(new Player(p));
+        }
         this.fires = new ArrayList<>(other.fires);
         this.walls = new ArrayList<>(other.walls);
         this.consumables = new ArrayList<>(other.consumables);
 
         this.currentField = new GameField(other.currentField);
-        this.lastMove = new Move(other.lastMove);
+        if(other.lastMove != null)
+            this.lastMove = new Move(other.lastMove);
     }
 
     public GameState(GameField gameField, List<Integer> playerInTurn, List<Fire> fires, List<Wall> walls, List<Consumable> consumables){
@@ -135,7 +139,7 @@ public class GameState {
                 skill.useSkill(player, move.getDirection(), this);
             }
         }
-        if(playerInTurn.remove(Integer.valueOf(playerID)))
+        if(playerInTurn.removeIf(p -> p == playerID))
             playerInTurn.add(playerID);
         prepareForNextRound();
         this.lastMove = move;
@@ -147,10 +151,10 @@ public class GameState {
         int y = player.getyPos();
         if (targetCellContent.getId() == '0')
         {
-            AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
-            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
-            AI.instance.getCurrentState().getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
-            AI.instance.getCurrentState().getCurrentField().getField()[xTarget][yTarget].setContent(player);
+            this.getCurrentField().getFieldChars()[x][y] = '0';
+            this.getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
+            this.getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
+            this.getCurrentField().getField()[xTarget][yTarget].setContent(player);
             player.setPos(xTarget, yTarget);
         }
         else if (targetCellContent instanceof Player)
@@ -160,10 +164,10 @@ public class GameState {
         }
         else if (targetCellContent instanceof Fire)
         {
-            AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
-            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
-            AI.instance.getCurrentState().getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
-            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(player);
+            this.getCurrentField().getFieldChars()[x][y] = '0';
+            this.getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
+            this.getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
+            this.getCurrentField().getField()[xTarget][yTarget].setContent(player);
             player.setPos(xTarget, yTarget);
             player.takeDamage(GameConstants.ON_FIRE_DAMAGE);
             player.setOnFire();
@@ -175,16 +179,17 @@ public class GameState {
         }
         else if (targetCellContent.id == 'x')
         {
-            AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
-            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
+            this.getCurrentField().getFieldChars()[x][y] = '0';
+            this.getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
             player.setInactive();
+            this.playerInTurn.removeIf(p -> p == player.getPlayerNumber());
         }
         else if (targetCellContent instanceof Consumable)
         {
-            AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
-            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
-            AI.instance.getCurrentState().getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
-            AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(player);
+            this.getCurrentField().getFieldChars()[x][y] = '0';
+            this.getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
+            this.getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
+            this.getCurrentField().getField()[xTarget][yTarget].setContent(player);
             player.setPos(xTarget, yTarget);
             if(((Consumable) targetCellContent).getHealing() > 0)
                 player.heal(((Consumable) targetCellContent).getHealing());
@@ -219,6 +224,22 @@ public class GameState {
             if(f != null)
                 f.prepareForNextRound();
         }
+    }
+
+    public Player getNextPlayer(){
+        for (Player p : currentPlayers){
+            if(p.getPlayerNumber() == playerInTurn.get(0))
+                return p;
+        }
+        return null;
+    }
+
+    public Player getOwnPlayer(){
+        for (Player p : currentPlayers){
+            if(p.getPlayerNumber() == AI.ownPlayerID)
+                return p;
+        }
+        return null;
     }
 
     public static List<Player> getPlayers() {
