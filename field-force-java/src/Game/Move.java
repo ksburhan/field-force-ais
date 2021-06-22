@@ -15,7 +15,8 @@ public class Move {
     public Move(Move other){
         this.type = other.type;
         this.direction = other.direction;
-        this.skill = new Skill(other.skill);
+        if(skill != null)
+            this.skill = new Skill(other.skill);
     }
 
     public MoveType getType() {
