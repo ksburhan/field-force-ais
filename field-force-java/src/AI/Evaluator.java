@@ -10,18 +10,17 @@ public class Evaluator {
         int enemyHP = 0;
         int allyHP = 0;
         for (Player p : gameState.getCurrentPlayers()) {
-            int hp = getPlayerValue(p);
+            int hp = p.getHp();
+            int shield = p.getShield();
             if (p.getPlayerNumber() == AI.ownPlayerID){
                 allyHP += hp;
+                allyHP += shield;
             }else{
                 enemyHP += hp;
+                enemyHP += shield;
             }
         }
-        return allyHP - enemyHP;
-    }
-
-    private static int getPlayerValue(Player player){
-        return player.getHp();
+        return allyHP - enemyHP*2;
     }
 
 }
