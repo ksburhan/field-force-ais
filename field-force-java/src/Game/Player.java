@@ -21,16 +21,15 @@ public class Player extends MapObject {
         this.playerNumber = playerNumber;
         this.name = name;
         this.hp = GameConstants.HP;
-        this.shield = GameConstants.SHIELD;
+        this.shield = 0;
     }
 
-    public Player(char id, int playerNumber, String name, int x, int y, Skill skill1, Skill skill2){
-        super(id, x, y);
+    public Player(char id, int playerNumber, String name, int hp, int shield, int x, int y, Skill skill1, Skill skill2){        super(id, x, y);
         this.id = id;
         this.playerNumber = playerNumber;
         this.name = name;
-        this.hp = GameConstants.HP;
-        this.shield = GameConstants.SHIELD;
+        this.hp = hp;
+        this.shield = shield;
         this.skill1 = skill1;
         this.skill2 = skill2;
     }
