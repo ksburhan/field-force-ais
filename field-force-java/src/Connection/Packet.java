@@ -102,12 +102,13 @@ public class Packet {
         for (int i = 0; i < playerCount; i++){
             int playerNumber = readInt();
             String playerName = readString();
+            int hp = readInt();
+            int shield = readInt();
             int xPos = readInt();
             int yPos = readInt();
             Skill skill1 = readSkill();
             Skill skill2 = readSkill();
-            players.add(new Player((char)(playerNumber+'0'), playerNumber, playerName, xPos, yPos, skill1, skill2));
-        }
+            players.add(new Player((char)(playerNumber+'0'), playerNumber, playerName, hp, shield, xPos, yPos, skill1, skill2));        }
         return players;
     }
 
