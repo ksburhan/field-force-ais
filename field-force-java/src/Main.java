@@ -1,12 +1,12 @@
 import AI.AI;
+import AI.Constants;
 import Connection.Client;
 
 public class Main {
     public static void main(String[] args) {
         String ip = "127.0.0.1";
         int port = 26353;
-
-        AI ai = AI.getInstance();
+        AI.getInstance();
         for ( int i = 0; i < args.length; i++ ) {
             switch (args[i]) {
                 case "-i" -> {
@@ -33,14 +33,19 @@ public class Main {
                         return;
                     }
                 }
+                case "-v" -> {
+                    i++;
+                    Constants.VERBOSE = true;
+                }
                 case "-h" -> {
-                    System.out.println("-i <ip>                 Set ip to connect to");
-                    System.out.println("-p <port>               Set port to connect to");
-                    System.out.println("-n <name>               Set playername");
-                    System.out.println("-s1 <skill_id>          Set skill 1");
-                    System.out.println("-s2 <skill_id>          Set skill 2");
-                    System.out.println("-v                      Set verbose on");
-                    System.out.println("-h                      Show help");
+                    System.out.println("-i <ip>                 Set ip to connect to\n" +
+                                       "-p <port>               Set port to connect to" +
+                                       "-n <name>               Set playername" +
+                                       "-s1 <skill_id>          Set skill 1" +
+                                       "-s2 <skill_id>          Set skill 2" +
+                                       "-v                      Set verbose on" +
+                                       "-h                      Show help");
+                    return;
                 }
             }
 

@@ -1,6 +1,7 @@
 package Connection;
 
 import AI.AI;
+import AI.Constants;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -65,7 +66,7 @@ public class Client {
         switch (typeEnum){
             case GAMEMODE: //Server sends gamemode and id
                 try {
-                    System.out.println("Type 2");
+                    if(!Constants.VERBOSE) System.out.println("Type 2");
                     ClientHandle.handleGamemode(packet);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -74,7 +75,7 @@ public class Client {
                 break;
             case PLAYERINFORMATION: //Server sends playerturns and playerinformation (with ids for turnorder and skills)
                 try {
-                    System.out.println("Type 3");
+                    if(!Constants.VERBOSE) System.out.println("Type 3");
                     ClientHandle.handlePlayerinformation(packet);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -83,7 +84,7 @@ public class Client {
                 break;
             case GAMEFIELD: //Server sends initial Gamefield
                 try {
-                    System.out.println("Type 4");
+                    if(!Constants.VERBOSE) System.out.println("Type 4");
                     ClientHandle.handleInitialMap(packet);
                     AI.getInstance().getCurrentState().getCurrentField().printMap();
                 } catch (Exception e) {
@@ -93,7 +94,7 @@ public class Client {
                 break;
             case MOVEREQUEST: //Server sends a moverequest
                 try {
-                    System.out.println("Type 5");
+                    if(!Constants.VERBOSE) System.out.println("Type 5");
                     ClientHandle.handleMoveRequest(packet);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -102,7 +103,7 @@ public class Client {
                 break;
             case NEWGAMESTATE: //Server sends the new gamestate after calculating a move
                 try {
-                    System.out.println("Type 7");
+                    if(!Constants.VERBOSE) System.out.println("Type 7");
                     ClientHandle.handleNewGamestate(packet);
                     AI.getInstance().getCurrentState().getCurrentField().printMap();
                 } catch (Exception e) {
@@ -112,7 +113,7 @@ public class Client {
                 break;
             case MOVEDISTRIBUTION: //Server sends a movereply of player in turn to ALL players
                 try {
-                    System.out.println("Type 8");
+                    if(!Constants.VERBOSE) System.out.println("Type 8");
                     ClientHandle.handleMovedistribution(packet);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -121,7 +122,7 @@ public class Client {
                 break;
             case ERROR: //Server sends an error. Could be illegal moves
                 try {
-                    System.out.println("Type 9");
+                    if(!Constants.VERBOSE) System.out.println("Type 9");
                     ClientHandle.handleErrors(packet);
                     exit(-9);
                 } catch (Exception e) {
@@ -130,7 +131,7 @@ public class Client {
                 break;
             case GAMEOVER: //Server sends players that the game is over and the winners' id
                 try {
-                    System.out.println("Type 10");
+                    if(!Constants.VERBOSE) System.out.println("Type 10");
                     ClientHandle.handleGameover(packet);
                     this.gameIsRunning = false;
                 } catch (Exception e) {
@@ -138,7 +139,7 @@ public class Client {
                 }
                 break;
             default:
-                System.out.println("Error: No type detected: " + type);
+                if(!Constants.VERBOSE) System.out.println("Error: No type detected: " + type);
                 break;
         }
     }

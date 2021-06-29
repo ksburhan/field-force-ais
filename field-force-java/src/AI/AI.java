@@ -34,7 +34,7 @@ public class AI {
             return bestMove;
         }
         catch (TimeoutException te){
-            System.out.println("Time is running out");
+            if(!Constants.VERBOSE) System.out.println("Time is running out");
             return bestMove;
         }
     }
