@@ -1,4 +1,5 @@
 package Board;
+import AI.Constants;
 import Game.GameState;
 
 public class GameField {
@@ -88,9 +89,9 @@ public class GameField {
     public void printMap(){
         for (int y = 0; y < dimension; y++) {
             for (int x = 0; x < dimension; x++) {
-                System.out.print(this.field[x][y].getContent().id + " ");
+                if(!Constants.VERBOSE) System.out.print(this.field[x][y].getContent().id + " ");
             }
-            System.out.println();
+            if(!Constants.VERBOSE) System.out.println();
         }
     }
 

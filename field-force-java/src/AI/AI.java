@@ -44,6 +44,7 @@ public class AI {
             return globalBestMove;
         }
         catch (TimeoutException te){
+<<<<<<< HEAD
             System.out.println("Time is running out");
             return globalBestMove;
         }
@@ -109,6 +110,10 @@ public class AI {
             }
             if(alpha >= beta)
                 return alpha;
+=======
+            if(!Constants.VERBOSE) System.out.println("Time is running out");
+            return bestMove;
+>>>>>>> 69bd98a06daab227fe50001fab833ca73a8b63f5
         }
         return alpha;
     }
