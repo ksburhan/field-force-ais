@@ -12,7 +12,7 @@ import java.util.concurrent.TimeoutException;
 public class AI {
 
     public static AI instance;
-    public static String playername = "playername";
+    public static String playername = "java";
     public static int ownPlayerID;
     public static Player ownPlayer;
     public static int skill1 = 0;

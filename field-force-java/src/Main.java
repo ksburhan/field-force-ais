@@ -39,11 +39,11 @@ public class Main {
                 }
                 case "-h" -> {
                     System.out.println("-i <ip>                 Set ip to connect to\n" +
-                                       "-p <port>               Set port to connect to" +
-                                       "-n <name>               Set playername" +
-                                       "-s1 <skill_id>          Set skill 1" +
-                                       "-s2 <skill_id>          Set skill 2" +
-                                       "-v                      Set verbose on" +
+                                       "-p <port>               Set port to connect to\n" +
+                                       "-n <name>               Set playername\n" +
+                                       "-s1 <skill_id>          Set skill 1\n" +
+                                       "-s2 <skill_id>          Set skill 2\n" +
+                                       "-v                      Set verbose on\n" +
                                        "-h                      Show help");
                     return;
                 }
