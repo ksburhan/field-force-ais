@@ -8,3 +8,4 @@ def handle_gamemode(packet):
         skill1 = packet.read_int()
         skill2 = packet.read_int()
     packet.read_config()
+

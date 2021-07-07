@@ -4,14 +4,14 @@ import sys
 
 from connection.client import Client
 from connection import clientsend
+from connection.packet import Packet, ServerPackets
 
 ip = "127.0.0.1"
 port = 26353
-name = "python"
+playername = "python"
 skill1 = 0
 skill2 = 1
 
-global client
 
 def parse(argv):
     try:
@@ -27,9 +27,9 @@ def parse(argv):
         elif current_argument in ("-p", "--port"):
             global port
             port = current_value
-        elif current_argument in ("-n", "--name"):
-            global name
-            name = current_value
+        elif current_argument in ("-n", "--playername"):
+            global playername
+            playername = current_value
         elif current_argument in ("-s1", "--skill1"):
             global skill1
             skill1 = current_value
@@ -44,7 +44,7 @@ def parse(argv):
         elif current_argument in ("-h", "--help"):
             print("-i <ip>                 Set ip to connect to\n" +
                   "-p <port>               Set port to connect to\n" +
-                  "-n <name>               Set playername\n" +
+                  "-n <playername>         Set playername\n" +
                   "-s1 <skill_id>          Set skill 1\n" +
                   "-s2 <skill_id>          Set skill 2\n" +
                   "-v                      Set verbose on\n" +
@@ -52,9 +52,27 @@ def parse(argv):
             exit(1)
 
 
-if __name__ == '__main__':
+def handle_msg(msgtype, packet):
+    enum_type = ServerPackets(msgtype)
+    print(enum_type)
+
+
+
+def main():
     parse(sys.argv[1:])
     client = Client(ip, port)
     client.connect()
-    clientsend.send_playername()
+    clientsend.send_playername(client, playername, skill1, skill2)
 
+    game_on = True
+    while game_on:
+        length = int.from_bytes(client.client.recv(4), byteorder='little')
+        msgtype = int.from_bytes(client.client.recv(4), byteorder='little')
+        packet = Packet.readfromserver(client.client.recv(length))
+        handle_msg(msgtype, packet)
+
+    client.client.close()
+
+
+if __name__ == '__main__':
+    main()

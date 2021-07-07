@@ -1,29 +1,25 @@
 import main
 
 from connection.packet import *
-from main import client
 
 
-def send_packet(packet):
+def send_packet(client, packet):
     packet.write_length()
-    client = main.client
-    client.client.send(packet)
+    client.client.send(packet.buffer)
 
 
-def send_playername():
+def send_playername(client, playername, skill1, skill2):
     packet = Packet()
     packet.write_int(int(ClientPackets.PLAYERNAME))
-    packet.write_string(main.name)
-    packet.write_int(main.skill1)
-    packet.write_int(main.skill2)
-    send_packet(packet)
+    packet.write_string(playername)
+    packet.write_int(skill1)
+    packet.write_int(skill2)
+    send_packet(client, packet)
 
 
-def send_movereply(id, move):
+def send_movereply(client, playernumber, move):
     packet = Packet()
     packet.write_int(int(ClientPackets.MOVEREPLY))
-    packet.write_int(int(id))
+    packet.write_int(int(playernumber))
     packet.write_move(move)
-    send_packet(packet)
-
-
+    send_packet(client, packet)
