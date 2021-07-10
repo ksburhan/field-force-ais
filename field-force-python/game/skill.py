@@ -1,5 +1,7 @@
 from enum import IntEnum
 
+ALL_SKILLS = []
+
 
 class SkillType(IntEnum):
     MOVEMENT = 0
@@ -11,10 +13,11 @@ class SkillType(IntEnum):
 
 
 class Skill:
-    def __init__(self, id, name, cooldown, range, value, skilltype):
-        self.id = id
+    def __init__(self, identifier, name, cooldown, _range, value, skilltype, cooldown_left):
+        self.identifier = identifier
         self.name = name
         self.cooldown = cooldown
-        self.range = range
+        self.range = _range
         self.value = value
         self.skilltype = skilltype
+        self.cooldown_left = cooldown_left
