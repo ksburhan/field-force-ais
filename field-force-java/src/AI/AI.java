@@ -1,8 +1,5 @@
 package AI;
-import Game.GameState;
-import Game.Move;
-import Game.MoveType;
-import Game.Player;
+import Game.*;
 
 import java.util.List;
 import java.util.Random;
@@ -13,13 +10,10 @@ public class AI {
 
     public static AI instance;
     public static String playername = "java";
-    public static int ownPlayerID;
     public static Player ownPlayer;
     public static int skill1 = 0;
     public static int skill2 = 3;
 
-    public static int gamemode = 0;
-    public static int timelimit = 0;
     public static long time_start = 0;
 
     private GameState currentState;
@@ -28,7 +22,7 @@ public class AI {
         Move bestMove = null;
         try {
             checkTimelimit();
-            List<Move> moves = AI.instance.getCurrentState().getAllMoves(ownPlayerID);
+            List<Move> moves = AI.instance.getCurrentState().getAllMoves(GameConstants.OWN_PLAYER_ID);
             Random rand = new Random();
             bestMove = moves.get(rand.nextInt(moves.size()));
             return bestMove;
@@ -40,7 +34,7 @@ public class AI {
     }
 
     private void checkTimelimit() throws TimeoutException {
-        if (System.currentTimeMillis() - AI.time_start > AI.timelimit - 500) {
+        if (System.currentTimeMillis() - AI.time_start > GameConstants.TIME_LIMIT - 500) {
             throw new TimeoutException();
         }
     }

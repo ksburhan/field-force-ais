@@ -236,7 +236,7 @@ public class GameState {
 
     public Player getOwnPlayer(){
         for (Player p : currentPlayers){
-            if(p.getPlayerNumber() == AI.ownPlayerID)
+            if(p.getPlayerNumber() == GameConstants.OWN_PLAYER_ID)
                 return p;
         }
         return null;

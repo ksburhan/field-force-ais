@@ -20,16 +20,16 @@ public class ClientHandle {
             AI.skill1 = packet.readInt();
             AI.skill2 = packet.readInt();
         }
-        AI.gamemode = gamemode;
-        AI.timelimit = timelimit * 1000;
-        AI.ownPlayerID = ownID;
+        GameConstants.GAMEMODE = gamemode;
+        GameConstants.TIME_LIMIT = timelimit * 1000;
+        GameConstants.OWN_PLAYER_ID = ownID;
         packet.readConfig();
     }
 
     public static void handlePlayerinformation(Packet packet) throws Exception {
         List<Player> players = packet.readPlayers();
         GameState.setPlayers(players);
-        AI.ownPlayer = GameState.getPlayers().get(AI.ownPlayerID-1);
+        AI.ownPlayer = GameState.getPlayers().get(GameConstants.OWN_PLAYER_ID-1);
         AI.ownPlayer.setSkill1(Skill.getSkill(AI.skill1));
         AI.ownPlayer.setSkill2(Skill.getSkill(AI.skill2));
     }
