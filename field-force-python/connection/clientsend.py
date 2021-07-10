@@ -1,6 +1,8 @@
+import ai.ai
 import main
 
 from connection.packet import *
+from game.move import MoveType
 
 
 def send_packet(client, packet):
@@ -22,4 +24,10 @@ def send_movereply(client, playernumber, move):
     packet.write_int(int(ClientPackets.MOVEREPLY))
     packet.write_int(int(playernumber))
     packet.write_move(move)
+    if move.type == MoveType.SKILL:
+        move.skill.set_cd()
+        if move.skill.identifier == ai.ai.skill1:
+            ai.ai.ownplayerobj.skill1.set_cd()
+        if move.skill.identifier == ai.ai.skill2:
+            ai.ai.ownplayerobj.skill2.set_cd()
     send_packet(client, packet)

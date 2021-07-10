@@ -1,4 +1,5 @@
 from board.gamefield import GameField
+from connection import clientsend
 from game import gameconstants, gamestate
 from ai import ai
 from game.gamestate import GameState
@@ -28,8 +29,11 @@ def handle_initialmap(packet):
     consumables = packet.read_consumables()
     ai.current_gamestate = GameState(GameField(dimension, init_map), gamestate.PLAYERS_IN_GAME, player_in_turn, fires, walls, consumables)
 
-def handle_moverequest(packet):
-    pass
+
+def handle_moverequest(packet, client):
+    own_id = packet.read_int()
+    move = ai.get_best_move()
+    clientsend.send_movereply(client, own_id, move)
 
 
 def handle_newgamestate(packet):

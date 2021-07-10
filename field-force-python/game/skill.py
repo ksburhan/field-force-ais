@@ -21,3 +21,6 @@ class Skill:
         self.value = value
         self.skilltype = skilltype
         self.cooldown_left = cooldown_left
+
+    def set_cd(self):
+        self.cooldown_left = self.cooldown

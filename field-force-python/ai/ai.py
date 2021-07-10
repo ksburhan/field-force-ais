@@ -7,3 +7,7 @@ skill2 = -1
 ownplayerobj = Player
 
 current_gamestate = GameState
+
+
+def get_best_move():
+    return None
