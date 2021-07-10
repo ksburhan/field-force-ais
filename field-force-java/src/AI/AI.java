@@ -1,8 +1,5 @@
 package AI;
-import Game.GameState;
-import Game.Move;
-import Game.MoveType;
-import Game.Player;
+import Game.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +11,10 @@ public class AI {
 
     public static AI instance;
     public static String playername = "java";
-    public static int ownPlayerID;
     public static Player ownPlayer;
     public static int skill1 = 0;
     public static int skill2 = 3;
 
-    public static int gamemode = 0;
-    public static int timelimit = 0;
     public static long time_start = 0;
 
     private GameState currentState;
@@ -31,6 +25,7 @@ public class AI {
 
     public Move getBestMove() throws InterruptedException, TimeoutException {
         try {
+<<<<<<< HEAD
             for(int d = 0; d<2; d++){
                 if(d > 0){
                     globalBestMove = bestMove;
@@ -42,6 +37,13 @@ public class AI {
             }
             System.out.println("reached depth" + currentMaxDepth);
             return globalBestMove;
+=======
+            checkTimelimit();
+            List<Move> moves = AI.instance.getCurrentState().getAllMoves(GameConstants.OWN_PLAYER_ID);
+            Random rand = new Random();
+            bestMove = moves.get(rand.nextInt(moves.size()));
+            return bestMove;
+>>>>>>> 153a2ad3024634979dd167e4fa24e633127e4e79
         }
         catch (TimeoutException te){
 <<<<<<< HEAD
@@ -143,7 +145,11 @@ public class AI {
     }
 */
     private void checkTimelimit() throws TimeoutException {
+<<<<<<< HEAD
         if (System.currentTimeMillis() - time_start > timelimit - 500) {
+=======
+        if (System.currentTimeMillis() - AI.time_start > GameConstants.TIME_LIMIT - 500) {
+>>>>>>> 153a2ad3024634979dd167e4fa24e633127e4e79
             throw new TimeoutException();
         }
     }

@@ -9,7 +9,9 @@ public class GameConstants {
     public static char[] VALID_TARGETS = { '1', '2', '3', '4', '-' };
     public static List<Character> VALID_ELEMENTS = Arrays.asList('0', '1', '2', '3', '4', 'x', '-', 'f');
     public static List<Character> VALID_CONSUMEABLES = new ArrayList<Character>();
+    public static int GAMEMODE = 0;
     public static int TIME_LIMIT = 3;
+    public static int OWN_PLAYER_ID = 0;
 
     public static int HP = 150;
     public static int SHIELD = 50;

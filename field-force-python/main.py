@@ -3,7 +3,7 @@ import os
 import sys
 
 from connection.client import Client
-from connection import clientsend
+from connection import clientsend, clienthandle
 from connection.packet import Packet, ServerPackets
 
 ip = "127.0.0.1"
@@ -54,8 +54,18 @@ def parse(argv):
 
 def handle_msg(msgtype, packet):
     enum_type = ServerPackets(msgtype)
-    print(enum_type)
-
+    switcher = {
+            ServerPackets.GAMEMODE: lambda: clienthandle.handle_gamemode(packet),
+            ServerPackets.PLAYERINFORMATION: lambda: clienthandle.handle_playerinformation(packet),
+            ServerPackets.GAMEFIELD: lambda: clienthandle.handle_initialmap(packet),
+            ServerPackets.MOVEREQUEST: lambda: clienthandle.handle_moverequest(packet),
+            ServerPackets.NEWGAMESTATE: lambda: clienthandle.handle_newgamestate(packet),
+            ServerPackets.MOVEDISTRIBUTION: lambda: clienthandle.handle_movedistribution(packet),
+            ServerPackets.ERROR: lambda: clienthandle.handle_error(packet),
+            ServerPackets.GAMEOVER: lambda: clienthandle.handle_gameover(packet)
+        }
+    func = switcher.get(enum_type, lambda: 'Invalid')
+    func()
 
 
 def main():
@@ -68,7 +78,7 @@ def main():
     while game_on:
         length = int.from_bytes(client.client.recv(4), byteorder='little')
         msgtype = int.from_bytes(client.client.recv(4), byteorder='little')
-        packet = Packet.readfromserver(client.client.recv(length))
+        packet = Packet(client.client.recv(length))
         handle_msg(msgtype, packet)
 
     client.client.close()
