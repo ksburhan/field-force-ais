@@ -1,5 +1,7 @@
+from board.gamefield import GameField
 from game import gameconstants, gamestate
 from ai import ai
+from game.gamestate import GameState
 
 
 def handle_gamemode(packet):
@@ -24,7 +26,7 @@ def handle_initialmap(packet):
     fires = packet.read_fires()
     walls = packet.read_walls()
     consumables = packet.read_consumables()
-    ai
+    ai.current_gamestate = GameState(GameField(dimension, init_map), gamestate.PLAYERS_IN_GAME, player_in_turn, fires, walls, consumables)
 
 def handle_moverequest(packet):
     pass
