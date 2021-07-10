@@ -6,6 +6,7 @@ from board.consumable import ALL_CONSUMABLES, Consumable
 from board.fire import Fire
 from board.wall import Wall
 from game import gameconstants
+from game.move import MoveType, Direction, Move
 from game.player import Player
 from game.skill import ALL_SKILLS, Skill
 
@@ -124,6 +125,12 @@ class Packet:
         for i in range(player_count):
             player_in_turn.append(self.read_int())
         return player_in_turn
+
+    def read_move(self):
+        movetype = MoveType(self.read_int())
+        direction = Direction(self.read_int())
+        skill = self.read_skill()
+        return Move(movetype, direction, skill)
 
     def read_fires(self):
         fires = []
