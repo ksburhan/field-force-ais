@@ -3,6 +3,7 @@ from connection import clientsend
 from game import gameconstants, gamestate
 from ai import ai
 from game.gamestate import GameState
+from .. import main
 
 
 def handle_gamemode(packet):
@@ -37,16 +38,31 @@ def handle_moverequest(packet, client):
 
 
 def handle_newgamestate(packet):
-    pass
+    dimension = packet.read_int()
+    new_map = packet.read_map(dimension)
+    players = packet.read_players()
+    player_in_turn = packet.read_player_in_turn()
+    fires = packet.read_fires()
+    walls = packet.read_walls()
+    consumables = packet.read_consumables()
+    ai.current_gamestate = GameState(GameField(dimension, new_map), players, player_in_turn, fires, walls, consumables)
 
 
 def handle_movedistribution(packet):
-    pass
+    last_player_id = packet.read_int()
+    move = packet.read_move()
+    log = packet.read_string()
+    print(log)
+    ai.current_gamestate.lastmove = move
 
 
 def handle_error(packet):
-    pass
+    errormessage = packet.read_string()
+    print(errormessage)
+
 
 
 def handle_gameover(packet):
-    pass
+    message = packet.read_string()
+    print(message)
+    exit(0)

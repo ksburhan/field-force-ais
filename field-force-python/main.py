@@ -12,6 +12,7 @@ playername = "python"
 skill1 = 0
 skill2 = 1
 
+game_on = False
 
 def parse(argv):
     try:
@@ -74,6 +75,7 @@ def main():
     client.connect()
     clientsend.send_playername(client, playername, skill1, skill2)
 
+    global game_on
     game_on = True
     while game_on:
         length = int.from_bytes(client.client.recv(4), byteorder='little')
