@@ -169,7 +169,7 @@ public class Packet {
         Consumable.allConsumables = readConfigConsumables();
 
         // read skills
-        Skill.allSkills = readSkills();
+        Skill.allSkills = readConfigSkills();
     }
 
     public List<Consumable> readConfigConsumables() throws Exception {
@@ -199,7 +199,7 @@ public class Packet {
         return consumables;
     }
 
-    public List<Skill> readSkills() throws Exception {
+    public List<Skill> readConfigSkills() throws Exception {
         List<Skill> skills = new ArrayList<>();
         int skillCount = readInt();
         for (int i = 0; i < skillCount; i++)
