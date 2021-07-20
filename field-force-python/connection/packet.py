@@ -8,7 +8,7 @@ from board.wall import Wall
 from game import gameconstants
 from game.move import MoveType, Direction, Move
 from game.player import Player
-from game.skill import ALL_SKILLS, Skill
+from game.skill import ALL_SKILLS, Skill, SkillType
 
 
 class ClientPackets(IntEnum):
@@ -86,7 +86,7 @@ class Packet:
             cooldown = self.read_int()
             _range = self.read_int()
             value = self.read_int()
-            skilltype = self.read_int()
+            skilltype = SkillType(self.read_int())
             ALL_SKILLS.append(Skill(identifier, s_name, cooldown, _range, value, skilltype, cooldown_left=0))
 
     def read_players(self):
@@ -108,7 +108,7 @@ class Packet:
         skillid = self.read_int()
         if skillid == -1:
             return None
-        cooldown_left = self.read_string()
+        cooldown_left = self.read_int()
         skill = ALL_SKILLS[skillid]
         return Skill(skillid, skill.name, skill.cooldown, skill.range, skill.value, skill.skilltype, cooldown_left=cooldown_left)
 
@@ -180,11 +180,11 @@ class Packet:
     def write_move(self, move):
         self.write_int(int(move.type))
         self.write_int(int(move.direction))
-        self.write_int(int(move.skill))
+        self.write_skill(move.skill)
 
     def write_skill(self, skill):
         if skill is not None:
-            self.write_int(skill.id)
+            self.write_int(skill.identifier)
         else:
             self.write_int(-1)
 

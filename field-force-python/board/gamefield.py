@@ -1,5 +1,6 @@
 from board.fire import Fire
 from board.mapobject import MapObject
+from board.tile import Tile
 from board.wall import Wall
 from game import gamestate
 
@@ -10,7 +11,7 @@ class GameField:
         self.map = self.create_field(_map)
 
     def create_field(self, _map):
-        tilemap = [[[-1 for y in range(self.dimension)] for x in range(self.dimension)]]
+        tilemap = {}
         for y in range(self.dimension):
             for x in range(self.dimension):
                 map_object = MapObject
@@ -32,5 +33,5 @@ class GameField:
                     map_object = Wall('-', x, y, 2)
                 else:
                     map_object = MapObject(_map[x][y], x, y)
-                tilemap[x][y] = map_object
+                tilemap[(x, y)] = Tile(x, y, map_object)
         return tilemap
