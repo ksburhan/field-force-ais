@@ -12,6 +12,8 @@ playername = "python"
 skill1 = 0
 skill2 = 1
 
+game_on = False
+
 
 def parse(argv):
     try:
@@ -52,18 +54,18 @@ def parse(argv):
             exit(1)
 
 
-def handle_msg(msgtype, packet):
+def handle_msg(msgtype, packet, client):
     enum_type = ServerPackets(msgtype)
     switcher = {
-            ServerPackets.GAMEMODE: lambda: clienthandle.handle_gamemode(packet),
-            ServerPackets.PLAYERINFORMATION: lambda: clienthandle.handle_playerinformation(packet),
-            ServerPackets.GAMEFIELD: lambda: clienthandle.handle_initialmap(packet),
-            ServerPackets.MOVEREQUEST: lambda: clienthandle.handle_moverequest(packet),
-            ServerPackets.NEWGAMESTATE: lambda: clienthandle.handle_newgamestate(packet),
-            ServerPackets.MOVEDISTRIBUTION: lambda: clienthandle.handle_movedistribution(packet),
-            ServerPackets.ERROR: lambda: clienthandle.handle_error(packet),
-            ServerPackets.GAMEOVER: lambda: clienthandle.handle_gameover(packet)
-        }
+        ServerPackets.GAMEMODE: lambda: clienthandle.handle_gamemode(packet),
+        ServerPackets.PLAYERINFORMATION: lambda: clienthandle.handle_playerinformation(packet),
+        ServerPackets.GAMEFIELD: lambda: clienthandle.handle_initialmap(packet),
+        ServerPackets.MOVEREQUEST: lambda: clienthandle.handle_moverequest(packet, client),
+        ServerPackets.NEWGAMESTATE: lambda: clienthandle.handle_newgamestate(packet),
+        ServerPackets.MOVEDISTRIBUTION: lambda: clienthandle.handle_movedistribution(packet),
+        ServerPackets.ERROR: lambda: clienthandle.handle_error(packet),
+        ServerPackets.GAMEOVER: lambda: clienthandle.handle_gameover(packet)
+    }
     func = switcher.get(enum_type, lambda: 'Invalid')
     func()
 
@@ -74,12 +76,18 @@ def main():
     client.connect()
     clientsend.send_playername(client, playername, skill1, skill2)
 
+    global game_on
     game_on = True
     while game_on:
         length = int.from_bytes(client.client.recv(4), byteorder='little')
         msgtype = int.from_bytes(client.client.recv(4), byteorder='little')
-        packet = Packet(client.client.recv(length))
-        handle_msg(msgtype, packet)
+        data = bytearray()
+        print(length)
+        while len(data) < length-4:
+            data_rcv = client.client.recv(length - len(data) - 4)
+            data.extend(data_rcv)
+        packet = Packet(data)
+        handle_msg(msgtype, packet, client)
 
     client.client.close()
 
