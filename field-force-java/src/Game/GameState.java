@@ -159,8 +159,8 @@ public class GameState {
         }
         else if (targetCellContent instanceof Player)
         {
-            player.takeDamage(GameConstants.WALK_IN_PLAYER_DAMAGE);
-            ((Player) targetCellContent).takeDamage(GameConstants.PLAYER_WALKED_INTO_DAMAGE);
+            player.takeDamage(GameConstants.WALK_IN_PLAYER_DAMAGE, this);
+            ((Player) targetCellContent).takeDamage(GameConstants.PLAYER_WALKED_INTO_DAMAGE, this);
         }
         else if (targetCellContent instanceof Fire)
         {
@@ -169,19 +169,19 @@ public class GameState {
             this.getCurrentField().getFieldChars()[xTarget][yTarget] = player.id;
             this.getCurrentField().getField()[xTarget][yTarget].setContent(player);
             player.setPos(xTarget, yTarget);
-            player.takeDamage(GameConstants.ON_FIRE_DAMAGE);
+            player.takeDamage(GameConstants.ON_FIRE_DAMAGE, this);
             player.setOnFire();
         }
         else if (targetCellContent instanceof Wall)
         {
-            player.takeDamage(GameConstants.WALK_IN_WALL_DAMAGE);
-            ((Wall) targetCellContent).takeDamage(GameConstants.WALL_TAKE_DAMAGE);
+            player.takeDamage(GameConstants.WALK_IN_WALL_DAMAGE, this);
+            ((Wall) targetCellContent).takeDamage(GameConstants.WALL_TAKE_DAMAGE, this);
         }
         else if (targetCellContent.id == 'x')
         {
             this.getCurrentField().getFieldChars()[x][y] = '0';
             this.getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
-            player.setInactive();
+            player.setInactive(this);
             this.playerInTurn.removeIf(p -> p == player.getPlayerNumber());
         }
         else if (targetCellContent instanceof Consumable)
@@ -194,7 +194,7 @@ public class GameState {
             if(((Consumable) targetCellContent).getHealing() > 0)
                 player.heal(((Consumable) targetCellContent).getHealing());
             else
-                player.takeDamage(((Consumable) targetCellContent).getHealing());
+                player.takeDamage(((Consumable) targetCellContent).getHealing(), this);
             if(((Consumable) targetCellContent).getShield() > 0)
                 player.chargeShield(((Consumable) targetCellContent).getShield());
         }
@@ -204,11 +204,11 @@ public class GameState {
         MapObject targetCellContent = currentField.getField()[xTarget][yTarget].getContent();
         if (targetCellContent instanceof Player)
         {
-            ((Player) targetCellContent).takeDamage(GameConstants.ATTACK_DAMAGE);
+            ((Player) targetCellContent).takeDamage(GameConstants.ATTACK_DAMAGE, this);
         }
         else if (targetCellContent instanceof Wall)
         {
-            ((Wall) targetCellContent).takeDamage(GameConstants.ATTACK_DAMAGE);
+            ((Wall) targetCellContent).takeDamage(GameConstants.ATTACK_DAMAGE, this);
         }
     }
 
@@ -216,13 +216,13 @@ public class GameState {
     {
         for (Player p : this.currentPlayers) {
             if (p.active) {
-                p.prepareForNextRound();
+                p.prepareForNextRound(this);
             }
         }
         for (Fire f : fires)
         {
             if(f != null)
-                f.prepareForNextRound();
+                f.prepareForNextRound(this);
         }
     }
 

@@ -2,6 +2,7 @@ package Board;
 
 import AI.AI;
 import Game.GameConstants;
+import Game.GameState;
 
 public class Fire extends MapObject {
     private int duration = GameConstants.FIRE_DURATION_ON_MAP;
@@ -20,12 +21,12 @@ public class Fire extends MapObject {
         this.duration = other.duration;
     }
 
-    public void prepareForNextRound()
+    public void prepareForNextRound(GameState gameState)
     {
         duration--;
         if (duration <= 0)
         {
-            destroy();
+            destroy(gameState);
         }
     }
 

@@ -162,7 +162,7 @@ public class Skill {
             }
             else if (targetCellContent instanceof Player)
             {
-                ((Player) targetCellContent).takeDamage(skill.value);
+                ((Player) targetCellContent).takeDamage(skill.value, gameState);
             }
             else if (targetCellContent instanceof Wall)
             {
@@ -210,7 +210,7 @@ public class Skill {
                 }
                 else if (targetCellContent instanceof Player)
                 {
-                    ((Player) targetCellContent).takeDamage(skill.value);
+                    ((Player) targetCellContent).takeDamage(skill.value, gameState);
                 }
             }
         }
@@ -305,13 +305,13 @@ public class Skill {
             MapObject targetCellContent = gameState.getCurrentField().getField()[xTarget][yTarget].getContent();
             if (targetCellContent instanceof Player)
             {
-                ((Player) targetCellContent).takeDamage(skill.value);
+                ((Player) targetCellContent).takeDamage(skill.value, gameState);
             }
             else if (targetCellContent instanceof Wall)
             {
                 if(broke)
                     return;
-                ((Wall) targetCellContent).takeDamage(GameConstants.WALL_HP);
+                ((Wall) targetCellContent).takeDamage(GameConstants.WALL_HP, gameState);
                 broke = true;
             }
         }
