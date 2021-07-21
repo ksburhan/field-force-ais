@@ -2,6 +2,7 @@ package Board;
 
 import AI.AI;
 import Game.GameConstants;
+import Game.GameState;
 
 public class Wall extends MapObject {
     private int hp = GameConstants.WALL_HP;
@@ -20,12 +21,12 @@ public class Wall extends MapObject {
         this.hp = other.hp;
     }
 
-    public void takeDamage(int damage)
+    public void takeDamage(int damage, GameState gameState)
     {
         hp -= damage;
         if (hp <= 0)
         {
-            destroy();
+            destroy(gameState);
         }
     }
 

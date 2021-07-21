@@ -16,14 +16,11 @@ public enum MoveType {
     }
 
     public static MoveType fromInt(int id){
-        switch(id){
-            case 1:
-                return MoveType.MOVEMENT;
-            case 2:
-                return MoveType.ATTACK;
-            case 3:
-                return MoveType.SKILL;
-        }
-        return null;
+        return switch (id) {
+            case 1 -> MoveType.MOVEMENT;
+            case 2 -> MoveType.ATTACK;
+            case 3 -> MoveType.SKILL;
+            default -> null;
+        };
     }
 }

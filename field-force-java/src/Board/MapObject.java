@@ -1,6 +1,7 @@
 package Board;
 
 import AI.AI;
+import Game.GameState;
 
 public class MapObject{
     public char id;
@@ -23,11 +24,11 @@ public class MapObject{
         this.yPos = other.yPos;
     }
 
-    public void destroy(){
+    public void destroy(GameState gameState){
         int x = getxPos();
         int y = getyPos();
-        AI.instance.getCurrentState().getCurrentField().getFieldChars()[x][y] = '0';
-        AI.instance.getCurrentState().getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
+        gameState.getCurrentField().getFieldChars()[x][y] = '0';
+        gameState.getCurrentField().getField()[x][y].setContent(new MapObject('0', x, y));
     }
 
     public char getId() {

@@ -47,25 +47,25 @@ public class Player extends MapObject {
         this.skill2 = new Skill(other.skill2);
     }
 
-    public void takeDamage(int damage){
+    public void takeDamage(int damage, GameState gameState){
         if(shield > 0)
         {
-            takeShieldDamage(damage);
+            takeShieldDamage(damage, gameState);
         }
         else
         {
             hp -= damage;
             if (hp <= 0)
-                setInactive();
+                setInactive(gameState);
         }
     }
-    public void takeShieldDamage(int shieldDamage) {
+    public void takeShieldDamage(int shieldDamage, GameState gameState) {
         shield -= shieldDamage;
         if (shield <= 0)
         {
             int damage = shield * (-1);
             shield = 0;
-            takeDamage(damage);
+            takeDamage(damage, gameState);
         }
     }
     public void heal(int heal)
@@ -86,19 +86,19 @@ public class Player extends MapObject {
         onFire = GameConstants.ON_FIRE_EFFECT_DURATION;
     }
 
-    public void setInactive()
+    public void setInactive(GameState gameState)
     {
-        destroy();
+        destroy(gameState);
 		hp = 0;
 		shield = 0;
         active = false;
     }
 
-    public void prepareForNextRound()
+    public void prepareForNextRound(GameState gameState)
     {
         if(onFire > 0)
         {
-            takeDamage(GameConstants.ON_FIRE_DAMAGE);
+            takeDamage(GameConstants.ON_FIRE_DAMAGE, gameState);
             onFire--;
         }
         if(skill1 != null)
