@@ -1,6 +1,6 @@
 import AI.AI;
-import AI.Constants;
 import Connection.Client;
+import Game.GameConstants;
 
 public class Main {
     public static void main(String[] args) {
@@ -35,7 +35,7 @@ public class Main {
                 }
                 case "-v" -> {
                     i++;
-                    Constants.VERBOSE = true;
+                    GameConstants.VERBOSE = true;
                 }
                 case "-h" -> {
                     System.out.println("-i <ip>                 Set ip to connect to\n" +
