@@ -38,7 +38,6 @@ public class AI {
             return globalBestMove;
         }
         catch (TimeoutException te){
-<<<<<<< HEAD
             System.out.println("Time is running out");
             return globalBestMove;
         }
