@@ -25,8 +25,7 @@ public class AI {
 
     public Move getBestMove() throws InterruptedException, TimeoutException {
         try {
-<<<<<<< HEAD
-            for(int d = 0; d<2; d++){
+            for(int d = 0; d<30; d++){
                 if(d > 0){
                     globalBestMove = bestMove;
                 }
@@ -37,16 +36,8 @@ public class AI {
             }
             System.out.println("reached depth" + currentMaxDepth);
             return globalBestMove;
-=======
-            checkTimelimit();
-            List<Move> moves = AI.instance.getCurrentState().getAllMoves(GameConstants.OWN_PLAYER_ID);
-            Random rand = new Random();
-            bestMove = moves.get(rand.nextInt(moves.size()));
-            return bestMove;
->>>>>>> 153a2ad3024634979dd167e4fa24e633127e4e79
         }
         catch (TimeoutException te){
-<<<<<<< HEAD
             System.out.println("Time is running out");
             return globalBestMove;
         }
@@ -55,7 +46,7 @@ public class AI {
     private int minmax(int depth, int alpha, int beta, Player currentplayer, GameState gameState) throws TimeoutException {
         checkTimelimit();
         boolean maximizer;
-        maximizer = currentplayer.getPlayerNumber() == ownPlayerID;
+        maximizer = currentplayer.getPlayerNumber() == GameConstants.OWN_PLAYER_ID;
         if(depth == 0)
             return Evaluator.evaluate(gameState);
 
@@ -145,11 +136,7 @@ public class AI {
     }
 */
     private void checkTimelimit() throws TimeoutException {
-<<<<<<< HEAD
-        if (System.currentTimeMillis() - time_start > timelimit - 500) {
-=======
         if (System.currentTimeMillis() - AI.time_start > GameConstants.TIME_LIMIT - 500) {
->>>>>>> 153a2ad3024634979dd167e4fa24e633127e4e79
             throw new TimeoutException();
         }
     }

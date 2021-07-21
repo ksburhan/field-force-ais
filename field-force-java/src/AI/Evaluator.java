@@ -1,5 +1,6 @@
 package AI;
 
+import Game.GameConstants;
 import Game.GameState;
 import Game.Player;
 
@@ -12,7 +13,7 @@ public class Evaluator {
         for (Player p : gameState.getCurrentPlayers()) {
             int hp = p.getHp();
             int shield = p.getShield();
-            if (p.getPlayerNumber() == AI.ownPlayerID){
+            if (p.getPlayerNumber() == GameConstants.OWN_PLAYER_ID){
                 allyHP += hp;
                 allyHP += shield;
             }else{

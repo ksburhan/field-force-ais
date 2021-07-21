@@ -12,6 +12,7 @@ public class GameConstants {
     public static int GAMEMODE = 0;
     public static int TIME_LIMIT = 3;
     public static int OWN_PLAYER_ID = 0;
+    public static boolean VERBOSE = false;
 
     public static int HP = 150;
     public static int SHIELD = 50;

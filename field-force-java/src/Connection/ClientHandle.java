@@ -1,7 +1,6 @@
 package Connection;
 
 import AI.AI;
-import AI.Constants;
 import Board.Consumable;
 import Board.Fire;
 import Board.GameField;
@@ -66,17 +65,17 @@ public class ClientHandle {
         int lastPlayerID = packet.readInt();
         Move move = packet.readMove();
         String log = packet.readString();
-        if(!Constants.VERBOSE) System.out.println(log);
+        if(!GameConstants.VERBOSE) System.out.println(log);
         AI.instance.getCurrentState().setLastMove(move);
     }
 
     public static void handleErrors(Packet packet) throws Exception {
         String errorMessage = packet.readString();
-        if(!Constants.VERBOSE) System.out.println("CLIENTHANDLE errormessage: " + errorMessage);
+        if(!GameConstants.VERBOSE) System.out.println("CLIENTHANDLE errormessage: " + errorMessage);
     }
 
     public static void handleGameover(Packet packet) throws Exception {
         String message = packet.readString();
-        if(!Constants.VERBOSE) System.out.println("CLIENTHANDLE Gameover: " + message);
+        if(!GameConstants.VERBOSE) System.out.println("CLIENTHANDLE Gameover: " + message);
     }
 }
