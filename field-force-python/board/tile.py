@@ -3,7 +3,7 @@ class Tile:
         self.x = x
         self.y = y
         self.content = content
-        self.nTile = Tile
-        self.eTile = Tile
-        self.sTile = Tile
-        self.wTile = Tile
+        self.nTile = None
+        self.eTile = None
+        self.sTile = None
+        self.wTile = None

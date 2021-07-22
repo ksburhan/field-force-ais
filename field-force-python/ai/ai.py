@@ -1,3 +1,5 @@
+import random
+
 from game import skill
 from game.gamestate import GameState
 from game.move import Move, MoveType, Direction
@@ -13,4 +15,6 @@ current_gamestate = GameState
 
 
 def get_best_move():
-    return Move(MoveType.MOVEMENT, Direction.NORTH, skill.ALL_SKILLS[0])
+    all_moves = current_gamestate.get_all_moves(ownplayerobj.identifier)
+    move = random.choice(all_moves)
+    return move

@@ -101,7 +101,7 @@ class Packet:
             ypos = self.read_int()
             skill1 = self.read_skill()
             skill2 = self.read_skill()
-            players.append(Player(chr(playernumber), playernumber, playername, hp, shield, xpos, ypos, skill1, skill2))
+            players.append(Player(playernumber, playernumber, playername, hp, shield, xpos, ypos, skill1, skill2))
         return players
 
     def read_skill(self):
@@ -171,7 +171,7 @@ class Packet:
         return consumables
 
     def write_int(self, value):
-        self.buffer.extend(value.to_bytes(4, byteorder='little'))
+        self.buffer.extend(value.to_bytes(4, byteorder='little', signed='unsigned'))
 
     def write_string(self, value):
         self.buffer.extend(len(value).to_bytes(4, byteorder='little'))
