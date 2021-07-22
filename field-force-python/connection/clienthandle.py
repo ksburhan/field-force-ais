@@ -6,7 +6,7 @@ from game.gamestate import GameState
 
 
 def handle_gamemode(packet):
-    print("gamemode")
+    print("Type 2")
     gameconstants.GAMEMODE = packet.read_int()
     gameconstants.TIME_LIMIT = packet.read_int()
     gameconstants.OWN_PLAYER_ID = packet.read_int()
@@ -17,13 +17,13 @@ def handle_gamemode(packet):
 
 
 def handle_playerinformation(packet):
-    print("playerinfo")
+    print("Type 3")
     gamestate.PLAYERS_IN_GAME = packet.read_players()
     ai.ownplayerobj = gamestate.PLAYERS_IN_GAME[gameconstants.OWN_PLAYER_ID - 1]
 
 
 def handle_initialmap(packet):
-    print("initmap")
+    print("Type 4")
     dimension = packet.read_int()
     init_map = packet.read_map(dimension)
     player_in_turn = packet.read_player_in_turn()
@@ -35,14 +35,14 @@ def handle_initialmap(packet):
 
 
 def handle_moverequest(packet, client):
-    print("moverequest")
+    print("Type 5")
     own_id = packet.read_int()
     move = ai.get_best_move()
     clientsend.send_movereply(client, own_id, move)
 
 
 def handle_newgamestate(packet):
-    print("newgamestate")
+    print("Type 7")
     dimension = packet.read_int()
     new_map = packet.read_map(dimension)
     players = packet.read_players()
@@ -51,10 +51,11 @@ def handle_newgamestate(packet):
     walls = packet.read_walls()
     consumables = packet.read_consumables()
     ai.current_gamestate = GameState(GameField(dimension, new_map), players, player_in_turn, fires, walls, consumables)
+    ai.current_gamestate.gamefield.print_map()
 
 
 def handle_movedistribution(packet):
-    print("movedistru")
+    print("Type 8")
     last_player_id = packet.read_int()
     move = packet.read_move()
     log = packet.read_string()
@@ -63,14 +64,14 @@ def handle_movedistribution(packet):
 
 
 def handle_error(packet):
-    print("error")
+    print("Type 9")
     errormessage = packet.read_string()
     print(errormessage)
     exit(9)
 
 
 def handle_gameover(packet):
-    print("gameover")
+    print("Type 10")
     message = packet.read_string()
     print(message)
     exit(10)

@@ -34,4 +34,20 @@ class GameField:
                 else:
                     map_object = MapObject(_map[x][y], x, y)
                 tilemap[(x, y)] = Tile(x, y, map_object)
+        for y in range(self.dimension):
+            for x in range(self.dimension):
+                if y > 0:
+                    tilemap[(x, y)].nTile = tilemap[(x, y - 1)]
+                if x is not self.dimension-1:
+                    tilemap[(x, y)].eTile = tilemap[(x + 1, y)]
+                if y is not self.dimension-1:
+                    tilemap[(x, y)].sTile = tilemap[(x, y + 1)]
+                if x > 0:
+                    tilemap[(x, y)].wTile = tilemap[(x - 1, y)]
         return tilemap
+
+    def print_map(self):
+        for y in range(self.dimension):
+            for x in range(self.dimension):
+                print(self.map[(x, y)].content.identifier, end=' ')
+            print()

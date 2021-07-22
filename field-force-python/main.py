@@ -82,7 +82,6 @@ def main():
         length = int.from_bytes(client.client.recv(4), byteorder='little')
         msgtype = int.from_bytes(client.client.recv(4), byteorder='little')
         data = bytearray()
-        print(length)
         while len(data) < length-4:
             data_rcv = client.client.recv(length - len(data) - 4)
             data.extend(data_rcv)
