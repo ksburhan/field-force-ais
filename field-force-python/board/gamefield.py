@@ -9,6 +9,7 @@ class GameField:
     def __init__(self, dimension, _map):
         self.dimension = dimension
         self.map = self.create_field(_map)
+        self.field_chars = _map
 
     def create_field(self, _map):
         tilemap = {}
