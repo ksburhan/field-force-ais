@@ -6,6 +6,7 @@ import ai.ai
 from game.gamestate import GameState
 from game.move import Move, Direction, MoveType
 from game.player import Player
+from sklearn import preprocessing
 
 WALK_NORTH = 0
 WALK_EAST = 1
@@ -92,7 +93,7 @@ class FieldEnv(gym.Env):
         ddist = obs_[0] - obs[0]
         dehp = obs_[1] - obs[1]
         dohp = (obs_[2] - obs[2]) * (-1)
-        reward = 2 * ddist + dehp + 3 * dohp
+        reward = 3 * ddist + 5 * dehp + 10 * dohp
         return reward
 
     def observe(self):
@@ -128,7 +129,7 @@ class FieldEnv(gym.Env):
                 dc = dd
         ret[5] = dc
 
-        return tuple(ret)
+        return tuple(preprocessing.normalize([ret]))[0]
 
     def render(self, mode='human'):
         pass
