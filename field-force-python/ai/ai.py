@@ -1,12 +1,23 @@
 import copy
 import random
 import torch
+from torch import nn
+from gym import Env
+from gym.spaces import Discrete, Box
 
+from ai.agent import Agent
+from ai.customenv.envs import FieldEnv
 from game import skill
 from game.gamestate import GameState
 from game.move import Move, MoveType, Direction
 from game.player import Player
 from game.skill import Skill
+
+import gym
+from board.gamefield import GameField
+from game.gamestate import GameState
+import numpy as np
+import test
 
 skill1 = -1
 skill2 = -1
@@ -15,8 +26,93 @@ ownplayerobj = Player
 
 current_gamestate = GameState
 
+GAMMA = 0.99
+BATCH_SIZE = 32
+BUFFER_SIZE = 50000
+EPSILON_START = 1.0
+EPSILON_END = 0.02
+EPSILON_DECAY = 0.996
+ALPHA = 0.001
+
+
+class AIDQN:
+    def __init__(self):
+        self.env = FieldEnv()
+        gamestate = copy.deepcopy(current_gamestate)
+        self.env.set_gamestate(gamestate)
+        self.agent = Agent(gamma=GAMMA, epsilon=EPSILON_START, batch_size=BATCH_SIZE, n_actions=16, eps_end=EPSILON_END,
+                           input_dims=[6], alpha=ALPHA, eps_dec=EPSILON_DECAY)
+        self.scores, self.eps_history = [], []
+        self.score = 0
+        self.agent.load_model()
+
+
+aidqn = AIDQN
+
 
 def get_best_move():
-    all_moves = current_gamestate.get_all_moves(ownplayerobj.identifier)
-    move = random.choice(all_moves)
+    gamestate = copy.deepcopy(current_gamestate)
+    aidqn.env.set_gamestate(gamestate)
+    observation = aidqn.env.reset()
+    print('obs', observation)
+    action = aidqn.agent.choose_action(observation)
+    while current_gamestate.is_valid_move(get_move(action), ownplayerobj.identifier) is not True:
+        action = aidqn.agent.choose_action(observation)
+    observation_, reward, done, info = aidqn.env.step(action)
+    print('reward', reward)
+    aidqn.score += reward
+    aidqn.agent.store_transition(observation, action, reward,
+                                 observation_, done)
+    aidqn.agent.learn()
+    observation = observation_
+    aidqn.scores.append(aidqn.score)
+    aidqn.eps_history.append(aidqn.agent.EPSILON)
+
+    avg_score = np.mean(aidqn.scores[-100:])
+
+    print('score %.2f' % aidqn.score,
+          'average score %.2f' % avg_score,
+          'epsilon %.2f' % aidqn.agent.EPSILON)
+    # x = [i + 1 for i in range(n_games)]
+    # filename = 'lunar_lander.png'
+    # plotLearning(x, scores, eps_history, filename)
+    mov = get_move(action)
+    print(mov.type, mov.direction, mov.skill)
+    return mov
+
+
+def get_move(action):
+    move = Move
+    if action == 0:
+        move = Move(MoveType.MOVEMENT, Direction.NORTH, None)
+    elif action == 1:
+        move = Move(MoveType.MOVEMENT, Direction.EAST, None)
+    elif action == 2:
+        move = Move(MoveType.MOVEMENT, Direction.SOUTH, None)
+    elif action == 3:
+        move = Move(MoveType.MOVEMENT, Direction.WEST, None)
+    elif action == 4:
+        move = Move(MoveType.ATTACK, Direction.NORTH, None)
+    elif action == 5:
+        move = Move(MoveType.ATTACK, Direction.EAST, None)
+    elif action == 6:
+        move = Move(MoveType.ATTACK, Direction.SOUTH, None)
+    elif action == 7:
+        move = Move(MoveType.ATTACK, Direction.WEST, None)
+    elif action == 8:
+        move = Move(MoveType.SKILL, Direction.NORTH, ownplayerobj.skill1)
+    elif action == 9:
+        move = Move(MoveType.SKILL, Direction.EAST, ownplayerobj.skill1)
+    elif action == 10:
+        move = Move(MoveType.SKILL, Direction.SOUTH, ownplayerobj.skill1)
+    elif action == 11:
+        move = Move(MoveType.SKILL, Direction.WEST, ownplayerobj.skill1)
+    elif action == 12:
+        move = Move(MoveType.SKILL, Direction.NORTH, ownplayerobj.skill2)
+    elif action == 13:
+        move = Move(MoveType.SKILL, Direction.EAST, ownplayerobj.skill2)
+    elif action == 14:
+        move = Move(MoveType.SKILL, Direction.SOUTH, ownplayerobj.skill2)
+    elif action == 15:
+        move = Move(MoveType.SKILL, Direction.WEST, ownplayerobj.skill2)
     return move

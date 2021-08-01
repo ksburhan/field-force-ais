@@ -32,6 +32,7 @@ def handle_initialmap(packet):
     consumables = packet.read_consumables()
     ai.current_gamestate = GameState(GameField(dimension, init_map), gamestate.PLAYERS_IN_GAME, player_in_turn, fires,
                                      walls, consumables)
+    ai.aidqn = ai.AIDQN()
 
 
 def handle_moverequest(packet, client):
@@ -74,4 +75,5 @@ def handle_gameover(packet):
     print("Type 10")
     message = packet.read_string()
     print(message)
+    ai.aidqn.agent.save_model()
     exit(10)

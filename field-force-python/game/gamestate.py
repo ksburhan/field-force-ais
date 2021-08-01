@@ -11,7 +11,9 @@ PLAYERS_IN_GAME = []
 
 def is_valid_target(c):
     for x in gameconstants.VALID_TARGETS:
-        return x == c
+        if x == c:
+            return True
+    return False
 
 
 class GameState:
@@ -141,3 +143,34 @@ class GameState:
                 p.prepare_for_next_round(self)
         for f in self.fires:
             f.prepare_for_next_round(self)
+
+    def is_valid_move(self, move, player_id):
+        player = self.players[player_id - 1]
+        tile = self.gamefield.map[(player.x, player.y)]
+        if move.type == MoveType.MOVEMENT:
+            if tile.nTile is not None and move.direction == Direction.NORTH:
+                return True
+            if tile.eTile is not None and move.direction == Direction.EAST:
+                return True
+            if tile.sTile is not None and move.direction == Direction.SOUTH:
+                return True
+            if tile.wTile is not None and move.direction == Direction.WEST:
+                return True
+        elif move.type == MoveType.ATTACK:
+            if tile.nTile is not None and is_valid_target(tile.nTile.content) and move.direction == Direction.NORTH:
+                return True
+            if tile.eTile is not None and is_valid_target(tile.eTile.content) and move.direction == Direction.EAST:
+                return True
+            if tile.sTile is not None and is_valid_target(tile.sTile.content) and move.direction == Direction.SOUTH:
+                return True
+            if tile.wTile is not None and is_valid_target(tile.wTile.content) and move.direction == Direction.WEST:
+                return True
+        elif move.type == MoveType.SKILL:
+            if player.skill1 is not None and player.skill1.cooldown_left == 0:
+                return True
+            if player.skill2 is not None and player.skill2.cooldown_left == 0:
+                return True
+        return False
+
+    def is_game_over(self):
+        return len(self.playerinturn) <= 1

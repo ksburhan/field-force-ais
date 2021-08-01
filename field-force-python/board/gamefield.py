@@ -52,3 +52,9 @@ class GameField:
             for x in range(self.dimension):
                 print(self.map[(x, y)].content.identifier, end=' ')
             print()
+
+    def to_string(self):
+        string = ''
+        for y in range(self.dimension):
+            for x in range(self.dimension):
+                string += str(self.field_chars[x][y])
