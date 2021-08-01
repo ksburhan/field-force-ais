@@ -226,6 +226,10 @@ public class GameState {
         }
     }
 
+    public boolean isGameOver(){
+        return playerInTurn.size() <= 1;
+    }
+
     public Player getNextPlayer(){
         for (Player p : currentPlayers){
             if(p.getPlayerNumber() == playerInTurn.get(0))
