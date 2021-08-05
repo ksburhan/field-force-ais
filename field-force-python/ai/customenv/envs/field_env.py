@@ -133,9 +133,9 @@ class FieldEnv(gym.Env):
 
     def reward(self, obs_, obs):
         reward = 0
-        dehp = obs_[1] - obs[1]
-        dohp = (obs_[2] - obs[2]) * (-1)
-        reward = 5 * dehp + 10 * dohp
+        dehp = obs_[0] - obs[0]
+        dohp = (obs_[1] - obs[1]) * (-1)
+        reward = 10 * dehp + 10 * dohp
         return reward
 
     def observe(self):

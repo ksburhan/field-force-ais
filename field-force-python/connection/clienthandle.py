@@ -76,4 +76,6 @@ def handle_gameover(packet):
     message = packet.read_string()
     print(message)
     ai.aidqn.agent.save_model()
+    with open("rewards.txt", "a") as myfile:
+        myfile.write(",".join(str(e) for e in ai.aidqn.scores) + "\n")
     exit(10)
