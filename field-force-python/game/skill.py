@@ -211,6 +211,8 @@ class Skill:
                     x_target -= i
                 else:
                     return
+            if 0 <= x_target < gamestate.gamefield.dimension and 0 <= y_target < gamestate.gamefield.dimension:
+                return
             target_object = gamestate.gamefield.map[(x_target, y_target)].content
             if isinstance(target_object, Player):
                 target_object.take_damage(self.value, gamestate)

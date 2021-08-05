@@ -33,7 +33,7 @@ class DQN(nn.Module):
 
 class Agent:
     def __init__(self, gamma, epsilon, alpha, input_dims, batch_size, n_actions,
-                 max_mem_size=100000, eps_end=0.01, eps_dec=0.996):
+                 max_mem_size=100000, eps_end=0.01, eps_dec=0.997):
         self.GAMMA = gamma
         self.EPSILON = epsilon
         self.EPS_MIN = eps_end

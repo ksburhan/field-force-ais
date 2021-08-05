@@ -41,7 +41,7 @@ class AIDQN:
         gamestate = copy.deepcopy(current_gamestate)
         self.env.set_gamestate(gamestate)
         self.agent = Agent(gamma=GAMMA, epsilon=EPSILON_START, batch_size=BATCH_SIZE, n_actions=16, eps_end=EPSILON_END,
-                           input_dims=[6], alpha=ALPHA, eps_dec=EPSILON_DECAY)
+                           input_dims=[4 + (12*12)], alpha=ALPHA, eps_dec=EPSILON_DECAY)
         self.scores, self.eps_history = [], []
         self.score = 0
         self.agent.load_model()
@@ -54,7 +54,6 @@ def get_best_move():
     gamestate = copy.deepcopy(current_gamestate)
     aidqn.env.set_gamestate(gamestate)
     observation = aidqn.env.reset()
-    print('obs', observation)
     action = aidqn.agent.choose_action(observation)
     while current_gamestate.is_valid_move(get_move(action), ownplayerobj.identifier) is not True:
         action = aidqn.agent.choose_action(observation)
@@ -67,17 +66,7 @@ def get_best_move():
     observation = observation_
     aidqn.scores.append(aidqn.score)
     aidqn.eps_history.append(aidqn.agent.EPSILON)
-
-    avg_score = np.mean(aidqn.scores[-100:])
-
-    print('score %.2f' % aidqn.score,
-          'average score %.2f' % avg_score,
-          'epsilon %.2f' % aidqn.agent.EPSILON)
-    # x = [i + 1 for i in range(n_games)]
-    # filename = 'lunar_lander.png'
-    # plotLearning(x, scores, eps_history, filename)
     mov = get_move(action)
-    print(mov.type, mov.direction, mov.skill)
     return mov
 
 
