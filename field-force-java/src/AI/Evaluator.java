@@ -21,7 +21,9 @@ public class Evaluator {
                 enemyHP += shield;
             }
         }
-        return allyHP - enemyHP*2;
+        int rating = allyHP - enemyHP*2;
+        //System.out.println(rating);
+        return rating;
     }
 
 }
