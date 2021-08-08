@@ -10,32 +10,26 @@ import java.util.concurrent.TimeoutException;
 public class AI {
 
     public static AI instance;
-    public static String playername = "java";
+    public static String playername = "alpha";
     public static Player ownPlayer;
     public static int skill1 = 0;
-    public static int skill2 = 3;
+    public static int skill2 = 4;
 
     public static long time_start = 0;
 
     private GameState currentState;
 
-    private int currentMaxDepth;
-    private Move bestMove;
+    private int maxDepth = 5;
     private Move globalBestMove;
 
     public Move getBestMove() throws InterruptedException, TimeoutException {
         try {
-            for(int d = 0; d<10; d++){
-                if(d > 0){
-                    globalBestMove = bestMove;
-                }
-                currentMaxDepth = 1 + d;
-                checkTimelimit();
-                int rating = minmax(currentMaxDepth, Integer.MIN_VALUE, Integer.MAX_VALUE, currentState.getOwnPlayer(), currentState);
-                //System.out.println("rating" + rating);
+            Move move = minmax_first(1, Float.MIN_VALUE, Float.MAX_VALUE, currentState.getOwnPlayer(), currentState);
+            for(int d = 2; d <= maxDepth; d++) {
+                System.out.println("Looking from start to depth: " + d);
+                move = minmax_first(d, Integer.MIN_VALUE, Integer.MAX_VALUE, currentState.getOwnPlayer(), currentState);
             }
-            System.out.println("reached depth" + currentMaxDepth);
-            return globalBestMove;
+            return move;
         }
         catch (TimeoutException te){
             System.out.println("Time is running out");
@@ -43,17 +37,75 @@ public class AI {
         }
     }
 
-    private int minmax(int depth, int alpha, int beta, Player currentplayer, GameState gameState) throws TimeoutException {
+    private Move minmax_first(int depth, float alpha, float beta, Player currentplayer, GameState gameState) throws TimeoutException {
+        boolean maximizer;
+        maximizer = currentplayer.getPlayerNumber() == GameConstants.OWN_PLAYER_ID;
+        float bestRating = Float.MIN_VALUE;
+        if(!maximizer)
+            bestRating = Integer.MAX_VALUE;
+
+        List<Move> moves = gameState.getAllMoves(currentplayer.getPlayerNumber());
+        Move gmove = moves.get(0);
+
+        for(Move m : moves){
+            GameState copy = new GameState(gameState);
+            copy.simulateNextGamestate(currentplayer.getPlayerNumber(), m);
+            float rating = minmax(depth - 1, alpha, beta, copy.getNextPlayer(), copy);
+            if(maximizer && rating >= bestRating){
+                bestRating = rating;
+                gmove = m;
+                globalBestMove = m;
+            } else if (!maximizer && rating <= bestRating){
+                bestRating = rating;
+                gmove = m;
+                globalBestMove = m;
+            }
+        }
+        return gmove;
+    }
+
+    private float minmax(int depth, float alpha, float beta, Player currentplayer, GameState gameState) throws TimeoutException {
         checkTimelimit();
         boolean maximizer;
         maximizer = currentplayer.getPlayerNumber() == GameConstants.OWN_PLAYER_ID;
         if(depth == 0 || gameState.isGameOver())
             return Evaluator.evaluate(gameState);
 
-        int rating;
-        List<Move> moves = gameState.getAllMoves(currentplayer.getPlayerNumber());
+        if(maximizer) {
+            float maxScore = Float.MIN_VALUE;
+            List<Move> moves = gameState.getAllMoves(currentplayer.getPlayerNumber());
+            for(Move m : moves){
+                GameState copy = new GameState(gameState);
+                copy.simulateNextGamestate(currentplayer.getPlayerNumber(), m);
 
-        for (Move m : moves){
+                float rating = minmax(depth - 1, alpha, beta, copy.getNextPlayer(), copy);
+                maxScore = Math.max(maxScore, rating);
+                alpha = Math.max(alpha, rating);
+                if(beta <= alpha){
+                    System.out.println("cutoff");
+                    break;
+                }
+            }
+            return maxScore;
+        } else {
+            float minScore = Integer.MAX_VALUE;
+            List<Move> moves = gameState.getAllMoves(currentplayer.getPlayerNumber());
+            for(Move m : moves){
+                GameState copy = new GameState(gameState);
+                copy.simulateNextGamestate(currentplayer.getPlayerNumber(), m);
+
+                float rating = minmax(depth - 1, alpha, beta, copy.getNextPlayer(), copy);
+                minScore = Math.min(minScore, rating);
+                beta = Math.min(beta, rating);
+                if(beta < alpha){
+                    System.out.println("cutoff");
+                    break;
+                }
+            }
+            return minScore;
+        }
+
+        /*for (Move m : moves){
             GameState copy = new GameState(gameState);
             copy.simulateNextGamestate(currentplayer.getPlayerNumber(), m);
             rating = minmax(depth - 1, alpha, beta, copy.getNextPlayer(), copy);
@@ -79,7 +131,7 @@ public class AI {
         if(maximizer)
             return alpha;
         else
-            return beta;
+            return beta;*/
     }
 /*
     private int maximizer(int depth, int alpha, int beta, Player player, GameState gameState){
