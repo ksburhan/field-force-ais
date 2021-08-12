@@ -8,7 +8,7 @@ from connection.packet import Packet, ServerPackets
 
 ip = "127.0.0.1"
 port = 26353
-playername = "python"
+playername = "dqn"
 skill1 = 0
 skill2 = 1
 
