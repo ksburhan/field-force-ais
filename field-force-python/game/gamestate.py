@@ -166,10 +166,12 @@ class GameState:
             if tile.wTile is not None and is_valid_target(tile.wTile.content) and move.direction == Direction.WEST:
                 return True
         elif move.type == MoveType.SKILL:
-            if player.skill1 is not None and player.skill1.cooldown_left == 0:
-                return True
-            if player.skill2 is not None and player.skill2.cooldown_left == 0:
-                return True
+            if player.skill1.identifier == move.skill.identifier:
+                if player.skill1 is not None and player.skill1.cooldown_left == 0:
+                    return True
+            elif player.skill2.identifier == move.skill.identifier:
+                if player.skill2 is not None and player.skill2.cooldown_left == 0:
+                    return True
         return False
 
     def is_game_over(self):
