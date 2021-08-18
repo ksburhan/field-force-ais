@@ -71,11 +71,15 @@ public class ClientHandle {
 
     public static void handleErrors(Packet packet) throws Exception {
         String errorMessage = packet.readString();
-        if(!GameConstants.VERBOSE) System.out.println("CLIENTHANDLE errormessage: " + errorMessage);
+        if(!GameConstants.VERBOSE) System.out.println("Errormessage: " + errorMessage);
     }
 
     public static void handleGameover(Packet packet) throws Exception {
         String message = packet.readString();
-        if(!GameConstants.VERBOSE) System.out.println("CLIENTHANDLE Gameover: " + message);
+        int winner_id = packet.readInt();
+        boolean won = false;
+        if (winner_id == AI.ownPlayer.getPlayerNumber())
+            won = true;
+        if(!GameConstants.VERBOSE) System.out.println(message + " Won?: " + won);
     }
 }
