@@ -2,6 +2,7 @@ import getopt
 import os
 import sys
 
+import ai.ai
 from connection.client import Client
 from connection import clientsend, clienthandle
 from connection.packet import Packet, ServerPackets
@@ -17,8 +18,8 @@ game_on = False
 
 def parse(argv):
     try:
-        opts, args = getopt.getopt(argv, "i:p:n:s1:s2:vh",
-                                   ["ip=", "port=", "name=", "skill1=", "skill2=", "verbose", "help"])
+        opts, args = getopt.getopt(argv, "i:p:n:s1:s2:b:lvh",
+                                   ["ip=", "port=", "name=", "skill1=", "skill2=", "brain=", "learn", "verbose", "help"])
     except getopt.error as err:
         print(str(err))
         sys.exit(2)
@@ -41,6 +42,10 @@ def parse(argv):
                 print("You can't have the same skill twice")
                 exit(-1)
             skill2 = current_value
+        elif current_argument in ("-b", "--brain"):
+            ai.ai.model_path = current_value
+        elif current_argument in ("-l", "--learn"):
+            ai.ai.train = True
         elif current_argument in ("-v", "--verbose"):
             sys.stdout = open(os.devnull, 'w')
         elif current_argument in ("-h", "--help"):
@@ -49,6 +54,8 @@ def parse(argv):
                   "-n <playername>         Set playername\n" +
                   "-s1 <skill_id>          Set skill 1\n" +
                   "-s2 <skill_id>          Set skill 2\n" +
+                  "-b <*.pth path>         Set path to model\n" +
+                  "-l                      Set if the model should train\n" +
                   "-v                      Set verbose on\n" +
                   "-h                      Show help")
             exit(1)

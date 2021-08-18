@@ -5,6 +5,7 @@ from torch import nn
 from gym import Env
 from gym.spaces import Discrete, Box
 
+import main
 from ai.agent import Agent
 from ai.customenv.envs import FieldEnv
 from game import skill
@@ -26,6 +27,8 @@ ownplayerobj = Player
 
 current_gamestate = GameState
 
+model_path = 'model_weights.pth'
+train = False
 GAMMA = 0.99
 BATCH_SIZE = 32
 BUFFER_SIZE = 50000
@@ -62,7 +65,8 @@ def get_best_move():
     aidqn.score += reward
     aidqn.agent.store_transition(observation, action, reward,
                                  observation_, done)
-    aidqn.agent.learn()
+    if train:
+        aidqn.agent.learn()
     observation = observation_
     aidqn.scores.append(aidqn.score)
     aidqn.eps_history.append(aidqn.agent.EPSILON)

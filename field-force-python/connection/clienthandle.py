@@ -1,3 +1,4 @@
+import main
 from board.gamefield import GameField
 from connection import clientsend
 from game import gameconstants, gamestate
@@ -74,8 +75,11 @@ def handle_error(packet):
 def handle_gameover(packet):
     print("Type 10")
     message = packet.read_string()
+    winner_id = packet.read_int()
+    won = True if winner_id == ai.ownplayerobj.playernumber else False
     print(message)
-    ai.aidqn.agent.save_model()
+    if ai.train:
+        ai.aidqn.agent.save_model()
     with open("rewards.txt", "a") as myfile:
-        myfile.write(",".join(str(e) for e in ai.aidqn.scores) + "\n")
+        myfile.write("{}, {}\n".format(ai.aidqn.scores[len(ai.aidqn.scores)-1], str(won)))
     exit(10)

@@ -1,3 +1,5 @@
+import os
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -5,6 +7,9 @@ import torch.optim as optim
 import torch.onnx as onnx
 import torchvision.models as models
 import numpy as np
+
+import ai
+import main
 
 
 class DQN(nn.Module):
@@ -108,8 +113,11 @@ class Agent:
             self.Q_eval.optimizer.step()
 
     def save_model(self):
-        torch.save(self.Q_eval.state_dict(), 'model_weights.pth')
+        torch.save(self.Q_eval.state_dict(), ai.ai.model_path)
 
     def load_model(self):
-        self.Q_eval.load_state_dict(torch.load('model_weights.pth'))
-        self.Q_eval.eval()
+        if os.path.exists(ai.ai.model_path):
+            self.Q_eval.load_state_dict(torch.load(ai.ai.model_path))
+            self.Q_eval.eval()
+        else:
+            print("Model {} does not exist. Creating new one".format(ai.ai.model_path))
