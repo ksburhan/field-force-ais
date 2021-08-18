@@ -73,5 +73,8 @@ def handle_error(packet):
 def handle_gameover(packet):
     print("Type 10")
     message = packet.read_string()
+    winner_id = packet.read_int()
+    won = True if winner_id == ai.ownplayerobj.playernumber else False
     print(message)
+    print(won)
     exit(10)
