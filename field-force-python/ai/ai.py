@@ -28,6 +28,7 @@ ownplayerobj = Player
 current_gamestate = GameState
 
 model_path = 'model_weights.pth'
+reward_path = 'rewards.txt'
 train = False
 GAMMA = 0.99
 BATCH_SIZE = 32

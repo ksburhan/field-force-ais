@@ -18,8 +18,8 @@ game_on = False
 
 def parse(argv):
     try:
-        opts, args = getopt.getopt(argv, "i:p:n:s1:s2:b:lvh",
-                                   ["ip=", "port=", "name=", "skill1=", "skill2=", "brain=", "learn", "verbose", "help"])
+        opts, args = getopt.getopt(argv, "i:p:n:s1:s2:b:r:lvh",
+                                   ["ip=", "port=", "name=", "skill1=", "skill2=", "brain=", "reward=", "learn", "verbose", "help"])
     except getopt.error as err:
         print(str(err))
         sys.exit(2)
@@ -44,6 +44,8 @@ def parse(argv):
             skill2 = current_value
         elif current_argument in ("-b", "--brain"):
             ai.ai.model_path = current_value
+        elif current_argument in ("-r", "--reward"):
+            ai.ai.reward_path = current_value
         elif current_argument in ("-l", "--learn"):
             ai.ai.train = True
         elif current_argument in ("-v", "--verbose"):
@@ -55,6 +57,7 @@ def parse(argv):
                   "-s1 <skill_id>          Set skill 1\n" +
                   "-s2 <skill_id>          Set skill 2\n" +
                   "-b <*.pth path>         Set path to model\n" +
+                  "-r <reward path>        Set path for reward file\n" +
                   "-l                      Set if the model should train\n" +
                   "-v                      Set verbose on\n" +
                   "-h                      Show help")

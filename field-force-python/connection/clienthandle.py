@@ -80,6 +80,6 @@ def handle_gameover(packet):
     print(message)
     if ai.train:
         ai.aidqn.agent.save_model()
-    with open("rewards.txt", "a") as myfile:
+    with open(ai.reward_path, "a") as myfile:
         myfile.write("{}, {}\n".format(ai.aidqn.scores[len(ai.aidqn.scores)-1], str(won)))
     exit(10)
