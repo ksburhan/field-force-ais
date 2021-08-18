@@ -2,17 +2,16 @@
 #include <string>
 
 #include "connection/client.h"
-using namespace std;
 int main(int argc, char* argv[])
 {
-	string ip = "127.0.0.1";
+	std::string ip = "127.0.0.1";
     int port = 26353;
-    string name = "c++";
+    std::string name = "c++";
     int skill1 = 0;
     int skill2 = 1;
     bool verbose = false;
     for (int i = 1; i < argc; ++i) {
-        string arg = argv[i];
+        std::string arg = argv[i];
         if (arg == "-i") 
         {
             i++;
@@ -31,15 +30,15 @@ int main(int argc, char* argv[])
         else if (arg == "-s1")
         {
             i++;
-            skill1 = stoi(argv[i]);
+            skill1 = std::stoi(argv[i]);
         }
         else if (arg == "-s2")
         {
             i++;
-            skill2 = stoi(argv[i]);
+            skill2 = std::stoi(argv[i]);
             if (skill1 == skill2)
             {
-                cerr << "You can't use the same skill twice!" << endl;
+                std::cerr << "You can't use the same skill twice!" << std::endl;
                 return -1;
             }
         }
@@ -47,15 +46,17 @@ int main(int argc, char* argv[])
             verbose = true;
         else if (arg == "-h")
         {
-            cout << "-i <ip>                  Set ip to connect to" << endl
-                 << "-p <port>                Set port to connect to" << endl
-                 << "-n <name>                Set playername" << endl
-                 << "-s1 <skill_id>           Set skill 1" << endl
-                 << "-s2 <skill_id>           Set skill 2" << endl
-                 << "-v                       Set verbose on" << endl
-                 << "-h                       Show help" << endl;
+            std::cout << "-i <ip>                  Set ip to connect to" << std::endl
+					  << "-p <port>                Set port to connect to" << std::endl
+					  << "-n <name>                Set playername" << std::endl
+					  << "-s1 <skill_id>           Set skill 1" << std::endl
+					  << "-s2 <skill_id>           Set skill 2" << std::endl
+					  << "-v                       Set verbose on" << std::endl
+					  << "-h                       Show help" << std::endl;
             return 0;
         }
-        Client client;
     }
+    Client client;
+    client.conn(ip, port);
+    return 0;
 }
