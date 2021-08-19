@@ -24,4 +24,4 @@ public:
 	Player(char, int, std::string, int, int, int, int, Skill, Skill);
 };
 
-static std::vector<Player> ALL_PLAYERS;
+inline std::vector<Player> ALL_PLAYERS;

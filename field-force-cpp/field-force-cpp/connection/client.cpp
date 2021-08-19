@@ -1,5 +1,6 @@
 #include "client.h"
 #include "clientsend.h"
+#include "clienthandle.h"
 
 #include <iostream>
 
@@ -88,8 +89,9 @@ void Client::win_conn()
 			disconnect();
 			return;
 		}
-		uint8_t* data = new uint8_t[length-4];
-		bytesReceived = recv(sock, (char*)data, length - 4, MSG_WAITALL);
+		std::vector<uint8_t> data;
+		data.resize(length - 4);
+		bytesReceived = recv(sock, (char *)&data[0], length - 4, MSG_WAITALL);
 		std::cout << bytesReceived << std::endl;
 		if (bytesReceived <= 0)
 		{
@@ -118,6 +120,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cerr << "Type 2" << std::endl;
+			handleGamemode(packet);
 		} catch( std::exception &e)
 		{
 			std::cerr << e.what() << std::endl;
@@ -129,6 +132,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cerr << "Type 3" << std::endl;
+			handlePlayerinformation(packet);
 		}
 		catch (std::exception& e)
 		{
@@ -141,6 +145,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cerr << "Type 4" << std::endl;
+			handleInitialMap(packet);
 		}
 		catch (std::exception& e)
 		{
@@ -153,6 +158,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cerr << "Type 5" << std::endl;
+			handleMoveRequest(packet);
 		}
 		catch (std::exception& e)
 		{
@@ -165,6 +171,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cerr << "Type 7" << std::endl;
+			handleNewGamestate(packet);
 		}
 		catch (std::exception& e)
 		{
@@ -177,6 +184,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cerr << "Type 8" << std::endl;
+			handleMovedistribution(packet);
 		}
 		catch (std::exception& e)
 		{
@@ -189,6 +197,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cerr << "Type 9" << std::endl;
+			handleError(packet);
 		}
 		catch (std::exception& e)
 		{
@@ -201,6 +210,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cerr << "Type 10" << std::endl;
+			handleGameover(packet);
 		}
 		catch (std::exception& e)
 		{

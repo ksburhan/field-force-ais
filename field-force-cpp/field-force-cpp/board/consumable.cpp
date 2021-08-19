@@ -7,7 +7,7 @@ Consumable::Consumable(char _id, int _x_pos, int _y_pos)
 	id = _id;
 	x_pos = _x_pos;
 	y_pos = _y_pos;
-	Consumable c = ALL_CONSUMABLES.at(_id);
+	Consumable c = getConsumable(_id);
 	con_name = c.con_name;
 	healing = c.healing;
 	shield = c.shield;
@@ -19,4 +19,15 @@ Consumable::Consumable(char _id, std::string _con_name, int _healing, int _shiel
 	con_name = _con_name;
 	healing = _healing;
 	shield = _shield;
+}
+
+Consumable Consumable::getConsumable(char _id)
+{
+	for (auto c : ALL_CONSUMABLES)
+	{
+		if(c.id == _id)
+		{
+			return c;
+		}
+	}
 }

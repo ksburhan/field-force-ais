@@ -10,10 +10,10 @@
 
 Packet::Packet() { }
 
-Packet::Packet(uint8_t* data)
+Packet::Packet(std::vector<uint8_t> data)
 {
-	write(data);
-	readbuf = toByteArray();
+	buffer = data;
+	//write(data);
 }
 
 int Packet::readInt()
@@ -22,7 +22,7 @@ int Packet::readInt()
 	{
 
 		int value;
-		std::memcpy(&value, readbuf + read_pos, sizeof(int));
+		std::memcpy(&value, &buffer[read_pos], sizeof(int));
 		read_pos += 4;
 		return value;
 	}
@@ -37,13 +37,14 @@ std::string Packet::readString()
 	try
 	{
 		int length = readInt();
-		std::string message;
-		std::memcpy(&message, readbuf + read_pos, length);
-		if (message.length() > 0)
+		char* msg = new char[length+1];
+		for(int i = 0; i < length; i++)
 		{
-			read_pos += length;
+			msg[i] = buffer[read_pos + i];
 		}
-		return message;
+		msg[length] = '\0';
+		read_pos += length;
+		return msg;
 	}
 	catch (...)
 	{
@@ -138,8 +139,11 @@ Skill Packet::readSkill()
 std::vector<std::vector<char>> Packet::readMap(int dimension)
 {
 	std::vector<std::vector<char>> map;
-	for (int y = 0; dimension; y++)
-		for (int x = 0; dimension; x++)
+	map.resize(dimension);
+	for (int i = 0; i < dimension; i++)
+		map[i].resize(dimension);
+	for (int y = 0; y < dimension; y++) 
+		for (int x = 0; x < dimension; x++)
 			map[x][y] = (char)readInt();
 	return map;
 }
@@ -148,6 +152,7 @@ std::vector<int> Packet::readPlayerInTurn()
 {
 	std::vector<int> player_in_turn;
 	int player_count = readInt();
+	player_in_turn.resize(player_count);
 	for(int i = 0; i < player_count; i++)
 	{
 		int player_number = readInt();
@@ -160,6 +165,7 @@ std::vector<Fire> Packet::readFires()
 {
 	std::vector<Fire> fires;
 	int fires_count = readInt();
+	fires.resize(fires_count);
 	for (int i = 0; i < fires_count; i++)
 	{
 		int x = readInt();
@@ -174,6 +180,7 @@ std::vector<Wall> Packet::readWalls()
 {
 	std::vector<Wall> walls;
 	int walls_count = readInt();
+	walls.resize(walls_count);
 	for (int i = 0; i < walls_count; i++)
 	{
 		int x = readInt();
@@ -188,6 +195,7 @@ std::vector<Consumable> Packet::readConsumables()
 {
 	std::vector<Consumable> consumables;
 	int cons_count = readInt();
+	consumables.resize(cons_count);
 	for (int i = 0; i < cons_count; i++)
 	{
 		char id = (char)readInt();
@@ -198,9 +206,9 @@ std::vector<Consumable> Packet::readConsumables()
 	return consumables;
 }
 
-void Packet::write(uint8_t* value)
+void Packet::write(std::vector<uint8_t> value)
 {
-	for (int i = 0; i < sizeof(value)/sizeof(uint8_t); i++)
+	for (int i = 0; i < sizeof(value); i++)
 	{
 		buffer.push_back(value[i]);
 	}
