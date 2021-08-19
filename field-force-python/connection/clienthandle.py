@@ -1,3 +1,4 @@
+import game.player
 from board.gamefield import GameField
 from connection import clientsend
 from game import gameconstants, gamestate
@@ -18,8 +19,8 @@ def handle_gamemode(packet):
 
 def handle_playerinformation(packet):
     print("Type 3")
-    gamestate.PLAYERS_IN_GAME = packet.read_players()
-    ai.ownplayerobj = gamestate.PLAYERS_IN_GAME[gameconstants.OWN_PLAYER_ID - 1]
+    game.player.PLAYERS_IN_GAME = packet.read_players()
+    ai.ownplayerobj = game.player.PLAYERS_IN_GAME[gameconstants.OWN_PLAYER_ID - 1]
 
 
 def handle_initialmap(packet):
@@ -30,7 +31,7 @@ def handle_initialmap(packet):
     fires = packet.read_fires()
     walls = packet.read_walls()
     consumables = packet.read_consumables()
-    ai.current_gamestate = GameState(GameField(dimension, init_map), gamestate.PLAYERS_IN_GAME, player_in_turn, fires,
+    ai.current_gamestate = GameState(GameField(dimension, init_map), game.player.PLAYERS_IN_GAME, player_in_turn, fires,
                                      walls, consumables)
 
 

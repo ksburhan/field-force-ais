@@ -1,3 +1,4 @@
+import game.player
 from board.fire import Fire
 from board.mapobject import MapObject
 from board.tile import Tile
@@ -17,16 +18,16 @@ class GameField:
             for x in range(self.dimension):
                 map_object = MapObject
                 if _map[x][y] == '1':
-                    map_object = gamestate.PLAYERS_IN_GAME[0]
+                    map_object = game.player.PLAYERS_IN_GAME[0]
                     map_object.set_pos(x, y)
                 elif _map[x][y] == '2':
-                    map_object = gamestate.PLAYERS_IN_GAME[1]
+                    map_object = game.player.PLAYERS_IN_GAME[1]
                     map_object.set_pos(x, y)
                 elif _map[x][y] == '3':
-                    map_object = gamestate.PLAYERS_IN_GAME[2]
+                    map_object = game.player.PLAYERS_IN_GAME[2]
                     map_object.set_pos(x, y)
                 elif _map[x][y] == '4':
-                    map_object = gamestate.PLAYERS_IN_GAME[3]
+                    map_object = game.player.PLAYERS_IN_GAME[3]
                     map_object.set_pos(x, y)
                 elif _map[x][y] == 'f':
                     map_object = Fire('f', x, y, 2)

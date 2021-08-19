@@ -1,6 +1,8 @@
 from board.mapobject import MapObject
 from game import gameconstants
 
+PLAYERS_IN_GAME = []
+
 
 class Player(MapObject):
 
