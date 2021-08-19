@@ -103,6 +103,38 @@ std::vector<Skill> Packet::readConfigSkills()
 	return skills;
 }
 
+std::vector<Player> Packet::readPlayers()
+{
+	std::vector<Player> players;
+	int player_count = readInt();
+	for (int i = 0; i < player_count; i++)
+	{
+		int player_number = readInt();
+		std::string player_name = readString();
+		int hp = readInt();
+		int shield = readInt();
+		int x_pos = readInt();
+		int y_pos = readInt();
+		Skill skill1 = readSkill();
+		Skill skill2 = readSkill();
+		players.push_back(Player((char)player_number, player_number, player_name, hp, shield, x_pos, y_pos, skill1, skill2));
+	}
+	return players;
+}
+
+Skill Packet::readSkill()
+{
+	int skill_id = readInt();
+	if(skill_id == -1)
+	{
+		return;
+	}
+	int cooldown_left = readInt();
+	return Skill(skill_id, cooldown_left);
+}
+
+
+
 void Packet::write(uint8_t* value)
 {
 	for (int i = 0; i < sizeof(value)/sizeof(uint8_t); i++)

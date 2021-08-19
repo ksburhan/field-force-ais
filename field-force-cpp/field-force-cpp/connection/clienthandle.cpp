@@ -1,5 +1,6 @@
 #include "clienthandle.h"
 #include "../game/gameconstants.h"
+#include "../game/player.h"
 
 void handleGamemode(Packet packet)
 {
@@ -19,7 +20,9 @@ void handleGamemode(Packet packet)
 
 void handlePlayerinformation(Packet packet)
 {
-	
+	std::vector<Player> players = packet.readPlayers();
+	Player::ALL_PLAYERS = players;
+	// TODO: SET OWN PLAYER OBJECT AND SKILLS
 }
 
 void handleInitialMap(Packet packet)

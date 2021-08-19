@@ -4,6 +4,7 @@
 #include <vector>
 #include "../game/move.h"
 #include "../game/skill.h"
+#include "../game/player.h"
 #include "../board/consumable.h"
 
 enum ServerPackets
@@ -38,6 +39,8 @@ public:
 	int readInt();
 	std::string readString();
 	void readConfig();
+	std::vector<Player> readPlayers();
+	Skill readSkill();
 
 	void write(uint8_t*);
 	void write(int);
