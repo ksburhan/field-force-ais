@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include "../game/move.h"
+#include "../game/skill.h"
+#include "../board/consumable.h"
 
 enum ServerPackets
 {
@@ -35,6 +37,7 @@ public:
 
 	int readInt();
 	std::string readString();
+	void readConfig();
 
 	void write(uint8_t*);
 	void write(int);
@@ -46,6 +49,8 @@ public:
 	static int reverseIntByteArray(int);
 	static int convertByteArrayToInt(uint8_t*);
 private:
+	std::vector<Consumable> readConfigConsumables();
+	std::vector<Skill> readConfigSkills();
 	uint8_t* intToByteArray(int);
 	uint8_t* toByteArray();
 };

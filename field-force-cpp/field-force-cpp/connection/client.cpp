@@ -115,31 +115,104 @@ void Client::handleMessage(int type, Packet packet)
 	switch (type)
 	{
 	case GAMEMODE:
-		std::cout << "GAMEMODE" << std::endl;
+		try
+		{
+			std::cerr << "Type 2" << std::endl;
+		} catch( std::exception &e)
+		{
+			std::cerr << e.what() << std::endl;
+			disconnect();
+			exit(-2);
+		}
 		break;
 	case PLAYERINFORMATION:
-		std::cout << "PLAYERINFO" << std::endl;
+		try
+		{
+			std::cerr << "Type 3" << std::endl;
+		}
+		catch (std::exception& e)
+		{
+			std::cerr << e.what() << std::endl;
+			disconnect();
+			exit(-3);
+		}
 		break;
 	case GAMEFIELD:
-		std::cout << "GAMEFIELD" << std::endl;
+		try
+		{
+			std::cerr << "Type 4" << std::endl;
+		}
+		catch (std::exception& e)
+		{
+			std::cerr << e.what() << std::endl;
+			disconnect();
+			exit(-4);
+		}
 		break;
 	case MOVEREQUEST:
-		std::cout << "MOVEREQUEST" << std::endl;
+		try
+		{
+			std::cerr << "Type 5" << std::endl;
+		}
+		catch (std::exception& e)
+		{
+			std::cerr << e.what() << std::endl;
+			disconnect();
+			exit(-5);
+		}
 		break;
 	case NEWGAMESTATE:
-		std::cout << "NEWGAMESTATE" << std::endl;
+		try
+		{
+			std::cerr << "Type 7" << std::endl;
+		}
+		catch (std::exception& e)
+		{
+			std::cerr << e.what() << std::endl;
+			disconnect();
+			exit(-7);
+		}
 		break;
 	case MOVEDISTRIBUTION:
-		std::cout << "MOVEDISTRIBUTION" << std::endl;
+		try
+		{
+			std::cerr << "Type 8" << std::endl;
+		}
+		catch (std::exception& e)
+		{
+			std::cerr << e.what() << std::endl;
+			disconnect();
+			exit(-8);
+		}
 		break;
 	case GAMEERROR:
-		std::cout << "GAMEERROR" << std::endl;
+		try
+		{
+			std::cerr << "Type 9" << std::endl;
+		}
+		catch (std::exception& e)
+		{
+			std::cerr << e.what() << std::endl;
+			disconnect();
+			exit(-9);
+		}
 		break;
 	case GAMEOVER:
-		std::cout << "GAMEOVER" << std::endl;
+		try
+		{
+			std::cerr << "Type 10" << std::endl;
+		}
+		catch (std::exception& e)
+		{
+			std::cerr << e.what() << std::endl;
+			disconnect();
+			exit(-10);
+		}
 		break;
 	default:
 		std::cerr << "ERROR: No valid packet type detected " << type << std::endl;
+		disconnect();
+		exit(-11);
 		break;
 	}
 }
