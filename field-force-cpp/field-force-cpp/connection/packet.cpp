@@ -2,6 +2,8 @@
 #include "../game/gameconstants.h"
 #include "../game/skill.h"
 #include "../board/consumable.h"
+#include "../board/fire.h"
+#include "../board/wall.h"
 
 #include <iostream>
 #include <algorithm>
@@ -66,9 +68,9 @@ void Packet::readConfig()
 	WALK_IN_WALL_DAMAGE = readInt();
 	WALL_TAKE_DAMAGE = readInt();
 
-	Consumable::ALL_CONSUMABLES = readConfigConsumables();
+	ALL_CONSUMABLES = readConfigConsumables();
 
-	Skill::ALL_SKILLS = readConfigSkills();
+	ALL_SKILLS = readConfigSkills();
 }
 
 std::vector<Consumable> Packet::readConfigConsumables()
@@ -127,13 +129,74 @@ Skill Packet::readSkill()
 	int skill_id = readInt();
 	if(skill_id == -1)
 	{
-		return;
+		return Skill();
 	}
 	int cooldown_left = readInt();
 	return Skill(skill_id, cooldown_left);
 }
 
+std::vector<std::vector<char>> Packet::readMap(int dimension)
+{
+	std::vector<std::vector<char>> map;
+	for (int y = 0; dimension; y++)
+		for (int x = 0; dimension; x++)
+			map[x][y] = (char)readInt();
+	return map;
+}
 
+std::vector<int> Packet::readPlayerInTurn()
+{
+	std::vector<int> player_in_turn;
+	int player_count = readInt();
+	for(int i = 0; i < player_count; i++)
+	{
+		int player_number = readInt();
+		player_in_turn.push_back(player_number);
+	}
+	return player_in_turn;
+}
+
+std::vector<Fire> Packet::readFires()
+{
+	std::vector<Fire> fires;
+	int fires_count = readInt();
+	for (int i = 0; i < fires_count; i++)
+	{
+		int x = readInt();
+		int y = readInt();
+		int duration = readInt();
+		fires.push_back(Fire('f', x, y, duration));
+	}
+	return fires;
+}
+
+std::vector<Wall> Packet::readWalls()
+{
+	std::vector<Wall> walls;
+	int walls_count = readInt();
+	for (int i = 0; i < walls_count; i++)
+	{
+		int x = readInt();
+		int y = readInt();
+		int hp = readInt();
+		walls.push_back(Wall('-', x, y, hp));
+	}
+	return walls;
+}
+
+std::vector<Consumable> Packet::readConsumables()
+{
+	std::vector<Consumable> consumables;
+	int cons_count = readInt();
+	for (int i = 0; i < cons_count; i++)
+	{
+		char id = (char)readInt();
+		int x = readInt();
+		int y = readInt();
+		consumables.push_back(Consumable(id, x, y));
+	}
+	return consumables;
+}
 
 void Packet::write(uint8_t* value)
 {

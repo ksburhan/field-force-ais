@@ -6,6 +6,8 @@
 #include "../game/skill.h"
 #include "../game/player.h"
 #include "../board/consumable.h"
+#include "../board/fire.h"
+#include "../board/wall.h"
 
 enum ServerPackets
 {
@@ -41,6 +43,11 @@ public:
 	void readConfig();
 	std::vector<Player> readPlayers();
 	Skill readSkill();
+	std::vector<std::vector<char>> readMap(int);
+	std::vector<int> readPlayerInTurn();
+	std::vector<Fire> readFires();
+	std::vector<Wall> readWalls();
+	std::vector<Consumable> readConsumables();
 
 	void write(uint8_t*);
 	void write(int);

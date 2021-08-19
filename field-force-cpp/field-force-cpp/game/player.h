@@ -7,7 +7,6 @@
 class Player: public MapObject
 {
 public:
-	static std::vector<Player> ALL_PLAYERS;
 
 	int player_number;
 	std::string playername;
@@ -24,3 +23,5 @@ public:
 	Player(char, int, std::string, int, int);
 	Player(char, int, std::string, int, int, int, int, Skill, Skill);
 };
+
+static std::vector<Player> ALL_PLAYERS;

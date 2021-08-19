@@ -15,7 +15,6 @@ enum SkillType
 class Skill
 {
 public:
-	static std::vector<Skill> ALL_SKILLS;
 
 	int id;
 	std::string name;
@@ -30,3 +29,5 @@ public:
 	Skill(int, int);
 	Skill(int, std::string, int, int, int, SkillType);
 };
+
+static std::vector<Skill> ALL_SKILLS;

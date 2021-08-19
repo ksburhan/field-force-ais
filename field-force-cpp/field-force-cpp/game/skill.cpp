@@ -6,7 +6,7 @@ Skill::Skill(int _id, int _cooldown_left)
 {
 	id = _id;
 	cooldown_left = _cooldown_left;
-	Skill s = Skill::ALL_SKILLS.at(id);
+	Skill s = ALL_SKILLS.at(id);
 	name = s.name;
 	cooldown = s.cooldown;
 	range = s.range;
