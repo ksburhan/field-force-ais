@@ -30,7 +30,8 @@ public class Player extends MapObject {
         this.shield = 0;
     }
 
-    public Player(char id, int playerNumber, String name, int hp, int shield, int x, int y, Skill skill1, Skill skill2){        super(id, x, y);
+    public Player(char id, int playerNumber, String name, int hp, int shield, int x, int y, Skill skill1, Skill skill2){
+        super(id, x, y);
         this.id = id;
         this.playerNumber = playerNumber;
         this.name = name;
