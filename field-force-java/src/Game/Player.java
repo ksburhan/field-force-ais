@@ -3,7 +3,13 @@ package Game;
 import AI.AI;
 import Board.MapObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Player extends MapObject {
+
+    public static List<Player> ALL_PLAYERS = new ArrayList<>();
+
     private int playerNumber;
     private String name;
     private int hp;

@@ -1,14 +1,11 @@
 package Game;
 
-import AI.AI;
 import Board.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameState {
-
-    private static List<Player> players = new ArrayList<>();
 
     private List<Integer> playerInTurn = new ArrayList<>();
     private List<Player> currentPlayers = new ArrayList<>();
@@ -42,7 +39,7 @@ public class GameState {
 
     public GameState(GameField gameField, List<Integer> playerInTurn, List<Fire> fires, List<Wall> walls, List<Consumable> consumables){
         this.currentField = gameField;
-        this.currentPlayers = GameState.players;
+        this.currentPlayers = Player.ALL_PLAYERS;
         this.playerInTurn = playerInTurn;
         this.fires = fires;
         this.walls = walls;
@@ -244,14 +241,6 @@ public class GameState {
                 return p;
         }
         return null;
-    }
-
-    public static List<Player> getPlayers() {
-        return players;
-    }
-
-    public static void setPlayers(List<Player> players) {
-        GameState.players = players;
     }
 
     public List<Player> getCurrentPlayers() {

@@ -111,7 +111,7 @@ public class Client {
                     exit(-8);
                 }
                 break;
-            case MOVEDISTRIBUTION: //Server sends a movereply of player in turn to ALL players
+            case MOVEDISTRIBUTION: //Server sends a movereply of player in turn to ALL ALL_PLAYERS
                 try {
                     if(!GameConstants.VERBOSE) System.out.println("Type 8");
                     ClientHandle.handleMovedistribution(packet);
@@ -129,7 +129,7 @@ public class Client {
                     e.printStackTrace();
                 }
                 break;
-            case GAMEOVER: //Server sends players that the game is over and the winners' id
+            case GAMEOVER: //Server sends ALL_PLAYERS that the game is over and the winners' id
                 try {
                     if(!GameConstants.VERBOSE) System.out.println("Type 10");
                     ClientHandle.handleGameover(packet);
