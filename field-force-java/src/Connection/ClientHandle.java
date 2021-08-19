@@ -27,8 +27,8 @@ public class ClientHandle {
 
     public static void handlePlayerinformation(Packet packet) throws Exception {
         List<Player> players = packet.readPlayers();
-        GameState.setPlayers(players);
-        AI.ownPlayer = GameState.getPlayers().get(GameConstants.OWN_PLAYER_ID-1);
+        Player.ALL_PLAYERS = players;
+        AI.ownPlayer = Player.ALL_PLAYERS.get(GameConstants.OWN_PLAYER_ID-1);
         AI.ownPlayer.setSkill1(Skill.getSkill(AI.skill1));
         AI.ownPlayer.setSkill2(Skill.getSkill(AI.skill2));
     }
@@ -40,7 +40,7 @@ public class ClientHandle {
         List<Fire> fires = packet.readFires();
         List<Wall> walls = packet.readWalls();
         List<Consumable> consumables = packet.readConsumables();
-        AI.instance.setCurrentState(new GameState(new GameField(dimension, map), GameState.getPlayers(), playerInTurn, fires, walls, consumables));
+        AI.instance.setCurrentState(new GameState(new GameField(dimension, map), Player.ALL_PLAYERS, playerInTurn, fires, walls, consumables));
     }
 
     public static void handleMoveRequest(Packet packet) throws Exception {

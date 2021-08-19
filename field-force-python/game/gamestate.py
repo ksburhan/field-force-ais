@@ -6,8 +6,6 @@ from game import gameconstants
 from game.move import MoveType, Move, Direction
 from game.player import Player
 
-PLAYERS_IN_GAME = []
-
 
 def is_valid_target(c):
     for x in gameconstants.VALID_TARGETS:

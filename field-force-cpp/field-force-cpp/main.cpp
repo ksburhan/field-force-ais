@@ -2,14 +2,11 @@
 #include <string>
 
 #include "connection/client.h"
+#include "game/gameconstants.h"
 int main(int argc, char* argv[])
 {
 	std::string ip = "127.0.0.1";
     int port = 26353;
-    std::string name = "c++";
-    int skill1 = 0;
-    int skill2 = 1;
-    bool verbose = false;
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
         if (arg == "-i") 
@@ -25,7 +22,7 @@ int main(int argc, char* argv[])
         else if (arg == "-n")
         {
             i++;
-            name = argv[i];
+            playername = argv[i];
         }
         else if (arg == "-s1")
         {
@@ -43,7 +40,7 @@ int main(int argc, char* argv[])
             }
         }
         else if (arg == "-v")
-            verbose = true;
+            VERBOSE = true;
         else if (arg == "-h")
         {
             std::cout << "-i <ip>                  Set ip to connect to" << std::endl
@@ -56,7 +53,7 @@ int main(int argc, char* argv[])
             return 0;
         }
     }
-    Client client;
-    client.conn(ip, port);
+    Client& client = Client::getInstance();
+	client.conn(ip, port);
     return 0;
 }

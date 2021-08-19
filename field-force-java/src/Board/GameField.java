@@ -1,6 +1,6 @@
 package Board;
 import Game.GameConstants;
-import Game.GameState;
+import Game.Player;
 
 public class GameField {
 
@@ -47,19 +47,19 @@ public class GameField {
                 MapObject mapObject;
                 switch (map[x][y]) {
                     case '1' -> {
-                        mapObject = GameState.getPlayers().get(0);
+                        mapObject = Player.ALL_PLAYERS.get(0);
                         mapObject.setPos(x, y);
                     }
                     case '2' -> {
-                        mapObject = GameState.getPlayers().get(1);
+                        mapObject = Player.ALL_PLAYERS.get(1);
                         mapObject.setPos(x, y);
                     }
                     case '3' -> {
-                        mapObject = GameState.getPlayers().get(2);
+                        mapObject = Player.ALL_PLAYERS.get(2);
                         mapObject.setPos(x, y);
                     }
                     case '4' -> {
-                        mapObject = GameState.getPlayers().get(3);
+                        mapObject = Player.ALL_PLAYERS.get(3);
                         mapObject.setPos(x, y);
                     }
                     case 'f' -> mapObject = new Fire(map[x][y], x, y);
