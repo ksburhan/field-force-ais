@@ -33,10 +33,9 @@ class Packet
 public:
 	int read_pos = 0;
 	std::vector<uint8_t> buffer;
-	uint8_t* readbuf;
 
 	Packet();
-	Packet(uint8_t*);
+	Packet(std::vector<uint8_t>);
 
 	int readInt();
 	std::string readString();
@@ -49,7 +48,7 @@ public:
 	std::vector<Wall> readWalls();
 	std::vector<Consumable> readConsumables();
 
-	void write(uint8_t*);
+	void write(std::vector<uint8_t>);
 	void write(int);
 	void write(float);
 	void write(std::string);

@@ -16,6 +16,9 @@ GameField::GameField(int _dimension, std::vector<std::vector<char>> _map)
 std::vector<std::vector<Tile>> GameField::createField(std::vector<std::vector<char>> map)
 {
 	std::vector<std::vector<Tile>> field;
+    field.resize(dimension);
+    for (int i = 0; i < dimension; i++)
+        field[i].resize(dimension);
     for (int y = 0; y < dimension; y++)
     {
         for (int x = 0; x < dimension; x++)

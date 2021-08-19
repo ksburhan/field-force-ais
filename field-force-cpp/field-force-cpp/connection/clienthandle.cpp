@@ -44,7 +44,7 @@ void handleInitialMap(Packet packet)
 
 void handleMoveRequest(Packet packet)
 {
-
+	int own_id = packet.readInt();
 }
 
 void handleNewGamestate(Packet packet)

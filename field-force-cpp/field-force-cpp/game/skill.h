@@ -30,4 +30,4 @@ public:
 	Skill(int, std::string, int, int, int, SkillType);
 };
 
-static std::vector<Skill> ALL_SKILLS;
+inline std::vector<Skill> ALL_SKILLS;

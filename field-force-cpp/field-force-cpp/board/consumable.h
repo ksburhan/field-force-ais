@@ -14,6 +14,8 @@ public:
 	Consumable();
 	Consumable(char, int, int);
 	Consumable(char, std::string, int, int);
+
+	Consumable getConsumable(char);
 };
 
-static std::vector<Consumable> ALL_CONSUMABLES;
+inline std::vector<Consumable> ALL_CONSUMABLES;

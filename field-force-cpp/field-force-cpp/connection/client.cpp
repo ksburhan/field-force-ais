@@ -89,8 +89,9 @@ void Client::win_conn()
 			disconnect();
 			return;
 		}
-		uint8_t* data = new uint8_t[length-4];
-		bytesReceived = recv(sock, (char*)data, length - 4, MSG_WAITALL);
+		std::vector<uint8_t> data;
+		data.resize(length - 4);
+		bytesReceived = recv(sock, (char *)&data[0], length - 4, MSG_WAITALL);
 		std::cout << bytesReceived << std::endl;
 		if (bytesReceived <= 0)
 		{
