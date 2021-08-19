@@ -1,4 +1,5 @@
 #include "client.h"
+#include "clientsend.h"
 
 #include <iostream>
 
@@ -12,10 +13,12 @@
 #include<netdb.h>
 #include<arpa/inet.h>
 #endif
-Client::Client()
+
+Client& Client::getInstance()
 {
-    ip = "";
-    port = 0;
+	static Client instance;
+
+	return instance;
 }
 
 void Client::conn(std::string _ip, int _port)
@@ -39,7 +42,7 @@ void Client::win_conn()
 		return;
 	}
 
-	SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == INVALID_SOCKET)
 	{
 		std::cerr << "Couldn't create socket, Errorcode: " << WSAGetLastError() << std::endl;
@@ -56,47 +59,94 @@ void Client::win_conn()
 	if (connResult == SOCKET_ERROR)
 	{
 		std::cerr << "Couldn't connect to server, Errorcode: " << WSAGetLastError() << std::endl;
-		closesocket(sock);
-		WSACleanup();
+		disconnect();
 		return;
 	}
 
-	char buf[4096];
-	std::string userInput;
+	sendPlayername();
+	game_is_running = true;
 
-	bool game_is_running = true;
-
-	/*while (game_is_running)
+	while (game_is_running)
 	{
-		int length;
-		recv(sock, (char *)length, sizeof(int), 0);
-		int type;
-		recv(sock, (char *)type, sizeof(int), 0);
-	}*/
-
-	do
-	{
-		std::cout << "> ";
-		getline(std::cin, userInput);
-
-		if (userInput.size() > 0)
+		uint8_t* lengthB = new uint8_t[4];
+		int bytesReceived = recv(sock, (char*)lengthB, sizeof(int), MSG_WAITALL);
+		int length = Packet::convertByteArrayToInt(lengthB);
+		std::cout << length << std::endl;
+		if (bytesReceived <= 0)
 		{
-			int sendResult = send(sock, userInput.c_str(), userInput.size() + 1, 0);
-			if (sendResult != SOCKET_ERROR)
-			{
-				ZeroMemory(buf, 4096);
-				int bytesReceived = recv(sock, buf, 4096, 0);
-				if (bytesReceived > 0)
-				{
-					std::cout << std::string(buf, 0, bytesReceived) << std::endl;
-				}
-			}
+			std::cerr << "Couldn't read message length!" << WSAGetLastError() << std::endl;
+			disconnect();
+			return;
 		}
-
-	} while (userInput.size() > 0);
-
-	closesocket(sock);
-	WSACleanup();
+		uint8_t* typeB = new uint8_t[4];
+		bytesReceived = recv(sock, (char*)typeB, sizeof(int), MSG_WAITALL);
+		int type = Packet::convertByteArrayToInt(typeB);
+		std::cout << type << std::endl;
+		if (bytesReceived <= 0)
+		{
+			std::cerr << "Couldn't read message type!" << std::endl;
+			disconnect();
+			return;
+		}
+		uint8_t* data = new uint8_t[length-4];
+		bytesReceived = recv(sock, (char*)data, length - 4, MSG_WAITALL);
+		std::cout << bytesReceived << std::endl;
+		if (bytesReceived <= 0)
+		{
+			std::cerr << "Couldn't read packet data!" << std::endl;
+			disconnect();
+			return;
+		}
+		Packet packet(data);
+		handleMessage(type, packet);
+	}
+	disconnect();
 }
 #endif
 
+void Client::disconnect()
+{
+	closesocket(sock);
+	WSACleanup();
+}
+
+void Client::handleMessage(int type, Packet packet)
+{
+	switch (type)
+	{
+	case GAMEMODE:
+		std::cout << "GAMEMODE" << std::endl;
+		break;
+	case PLAYERINFORMATION:
+		std::cout << "PLAYERINFO" << std::endl;
+		break;
+	case GAMEFIELD:
+		std::cout << "GAMEFIELD" << std::endl;
+		break;
+	case MOVEREQUEST:
+		std::cout << "MOVEREQUEST" << std::endl;
+		break;
+	case NEWGAMESTATE:
+		std::cout << "NEWGAMESTATE" << std::endl;
+		break;
+	case MOVEDISTRIBUTION:
+		std::cout << "MOVEDISTRIBUTION" << std::endl;
+		break;
+	case GAMEERROR:
+		std::cout << "GAMEERROR" << std::endl;
+		break;
+	case GAMEOVER:
+		std::cout << "GAMEOVER" << std::endl;
+		break;
+	default:
+		std::cerr << "ERROR: No valid packet type detected " << type << std::endl;
+		break;
+	}
+}
+
+
+void Client::sendPacket(Packet packet)
+{
+	int sendResult = send(sock, reinterpret_cast<const char*>(packet.buffer.data()), packet.buffer.size(), 0);
+	std::cout << sendResult << std::endl;
+}
