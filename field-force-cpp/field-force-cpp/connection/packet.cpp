@@ -212,7 +212,7 @@ Move Packet::readMove()
 	MoveType type = (MoveType)readInt();
 	Direction dir = (Direction)readInt();
 	Skill skill = readSkill();
-	return Move(type, dir, &skill);
+	return Move(type, dir, skill);
 }
 
 
@@ -249,15 +249,9 @@ void Packet::write(Move move)
 	write(move.skill);
 }
 
-void Packet::write(Skill* skill)
+void Packet::write(Skill skill)
 {
-	if(skill != nullptr)
-	{
-		write(skill->id);
-	}else
-	{
-		write(-1);
-	}
+	write(skill.id);
 }
 
 

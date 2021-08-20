@@ -9,7 +9,7 @@ Move::Move(MoveType _type, Direction _direction)
 }
 
 
-Move::Move(MoveType _type, Direction _direction, Skill* _skill)
+Move::Move(MoveType _type, Direction _direction, Skill _skill)
 {
 	type = _type;
 	direction = _direction;

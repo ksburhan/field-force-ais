@@ -54,7 +54,7 @@ public:
 	void write(float);
 	void write(std::string);
 	void write(Move);
-	void write(Skill*);
+	void write(Skill);
 	void writeLength();
 
 	static int reverseIntByteArray(int);

@@ -2,6 +2,8 @@
 #include "mapobject.h"
 #include "../game/gameconstants.h"
 
+class GameState;
+
 class Fire: public MapObject
 {
 public:
@@ -10,4 +12,6 @@ public:
 	Fire();
 	Fire(char, int, int);
 	Fire(char, int, int, int);
+
+	void prepareForNextRound(GameState*);
 };

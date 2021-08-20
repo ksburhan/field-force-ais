@@ -22,4 +22,15 @@ public:
 	GameState();
 	GameState(GameField, std::vector<int>);
 	GameState(GameField, std::vector<Player>, std::vector<int>, std::vector<Fire>, std::vector<Wall>, std::vector<Consumable>);
+
+	std::vector<Move> getAllMoves(int);
+	void simulateNextGamestate(int, Move);
+	void moveToTile(Player, int, int);
+	void attackTile(Player, int, int);
+	void prepareForNextRound();
+	bool isGameOver();
+	Player getNextPlayer();
+	Player getOwnPlayer();
+private:
+	bool isValidTarget(char);
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+class GameState;
+
 class MapObject
 {
 public:
@@ -11,4 +13,5 @@ public:
 	MapObject(char, int, int);
 
 	void setPos(int, int);
+	void destroy(GameState*);
 };

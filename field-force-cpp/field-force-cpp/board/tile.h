@@ -6,7 +6,7 @@ class Tile
 public:
 	int x_pos = 0;
 	int y_pos = 0;
-	MapObject* content = nullptr;
+	MapObject content;
 
 	Tile* nTile = nullptr;
 	Tile* eTile = nullptr;
@@ -14,5 +14,7 @@ public:
 	Tile* wTile = nullptr;
 
 	Tile();
-	Tile(int, int, MapObject*);
+	Tile(int, int, MapObject);
+
+	void setPos(int, int);
 };

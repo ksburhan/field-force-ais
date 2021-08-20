@@ -16,3 +16,10 @@ Fire::Fire(char _id, int _x_pos, int _y_pos, int _duration)
 	y_pos = _y_pos;
 	duration = _duration;
 }
+
+void Fire::prepareForNextRound(GameState* game_state)
+{
+	duration--;
+	if (duration <= 0)
+		destroy(game_state);
+}

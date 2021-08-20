@@ -3,17 +3,19 @@
 
 enum MoveType
 {
-	M_MOVEMENT = 1,
-	ATTACK,
-	SKILL,
+	MT_MOVEMENT = 1,
+	MT_ATTACK,
+	MT_SKILL,
+	MT_LAST,
 };
 
 enum Direction
 {
-	NORTH = 1,
-	EAST,
-	SOUTH,
-	WEST,
+	DIR_NORTH = 1,
+	DIR_EAST,
+	DIR_SOUTH,
+	DIR_WEST,
+	DIR_LAST,
 };
 
 class Move
@@ -21,10 +23,10 @@ class Move
 public:
 	MoveType type;
 	Direction direction;
-	Skill* skill;
+	Skill skill;
 
 	Move();
 	Move(MoveType, Direction);
-	Move(MoveType, Direction, Skill*);
+	Move(MoveType, Direction, Skill);
 
 };

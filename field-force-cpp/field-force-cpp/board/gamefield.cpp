@@ -1,5 +1,7 @@
 #include "gamefield.h"
 
+#include <iostream>
+
 #include "fire.h"
 #include "wall.h"
 #include "../game/player.h"
@@ -51,7 +53,7 @@ std::vector<std::vector<Tile>> GameField::createField(std::vector<std::vector<ch
                 mapObject = MapObject(map[x][y], x, y);
             	break;
             }
-            field[x][y] = Tile(x, y, &mapObject);
+            field[x][y] = Tile(x, y, mapObject);
         }
     }
 
@@ -70,3 +72,11 @@ std::vector<std::vector<Tile>> GameField::createField(std::vector<std::vector<ch
 	return field;
 }
 
+void GameField::printMap()
+{
+    for (int y = 0; y < dimension; y++) {
+        for (int x = 0; x < dimension; x++)
+            std::cout << field_chars[x][y] << " ";
+        std::cout << std::endl;
+    }
+}

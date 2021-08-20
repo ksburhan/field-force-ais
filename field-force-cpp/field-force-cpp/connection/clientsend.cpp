@@ -27,9 +27,9 @@ void sendMovereply(int id, Move move)
 	packet.write(MOVEREPLY);
 	packet.write(id);
 	packet.write(move);
-	if(move.type == SKILL)
+	if(move.type == MT_SKILL)
 	{
-		move.skill->setOnCooldown();
+		move.skill.setOnCooldown();
 	}
 	sendPacket(packet);
 }
