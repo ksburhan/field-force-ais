@@ -4,7 +4,7 @@
 #include "../board/fire.h"
 #include "../board/wall.h"
 #include "../board/consumable.h"
-#include "../game//move.h"
+#include "../game/move.h"
 
 class GameState
 {

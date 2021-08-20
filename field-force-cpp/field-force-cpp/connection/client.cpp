@@ -1,3 +1,12 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
 #include "client.h"
 #include "clientsend.h"
 #include "clienthandle.h"
@@ -72,6 +81,7 @@ void Client::win_conn()
 		uint8_t* lengthB = new uint8_t[4];
 		int bytesReceived = recv(sock, (char*)lengthB, sizeof(int), MSG_WAITALL);
 		int length = Packet::convertByteArrayToInt(lengthB);
+		delete[] lengthB;
 		std::cout << length << std::endl;
 		if (bytesReceived <= 0)
 		{
@@ -92,6 +102,7 @@ void Client::win_conn()
 		std::vector<uint8_t> data;
 		data.resize(length - 4);
 		bytesReceived = recv(sock, (char *)&data[0], length - 4, MSG_WAITALL);
+		delete[] typeB;
 		std::cout << bytesReceived << std::endl;
 		if (bytesReceived <= 0)
 		{

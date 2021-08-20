@@ -1,8 +1,19 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
 #include "gamestate.h"
 #include "player.h"
 #include "../board/fire.h"
 #include "../board/wall.h"
 #include "../board/consumable.h"
+
+#include <typeinfo>
 
 GameState::GameState() { }
 
@@ -87,6 +98,14 @@ void GameState::moveToTile(Player player, int x_target, int y_target)
 
 void GameState::attackTile(Player player, int x_target, int y_target)
 {
+	MapObject* target = &current_field.field[x_target][y_target].content;
+	if (typeid(target).name() == "Player")
+	{
+	}
+	else
+	{
+		
+	}
 
 }
 

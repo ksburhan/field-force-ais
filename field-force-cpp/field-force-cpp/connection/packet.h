@@ -62,6 +62,6 @@ public:
 private:
 	std::vector<Consumable> readConfigConsumables();
 	std::vector<Skill> readConfigSkills();
-	uint8_t* intToByteArray(int);
-	uint8_t* toByteArray();
+	std::vector<uint8_t> intToByteArray(int);
+	std::vector<uint8_t> toByteArray();
 };

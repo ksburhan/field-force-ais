@@ -1,3 +1,12 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
 #include <iostream>
 #include <string>
 
@@ -5,6 +14,7 @@
 #include "game/gameconstants.h"
 int main(int argc, char* argv[])
 {
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	std::string ip = "127.0.0.1";
     int port = 26353;
     for (int i = 1; i < argc; ++i) {
@@ -55,5 +65,6 @@ int main(int argc, char* argv[])
     }
     Client& client = Client::getInstance();
 	client.conn(ip, port);
+    _CrtDumpMemoryLeaks();
     return 0;
 }
