@@ -37,11 +37,7 @@ void Client::conn(std::string _ip, int _port)
 {
 	ip = _ip;
 	port = _port;
-	win_conn();
-}
 
-void Client::win_conn()
-{
 #ifdef _WIN32
 	WSADATA wsaData;
 	WORD ver = MAKEWORD(2, 2);
@@ -65,12 +61,8 @@ void Client::win_conn()
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
 	{
-		return 1;
+		return;
 	}
-	sockaddr_in hint;
-	hint.sin_family = AF_INET;
-	hint.sin_port = htons(port);
-	inet_pton(AF_INET, ipAddress.c_str(), &hint.sin_addr);
 #endif
 
 	sockaddr_in hint;
@@ -98,7 +90,7 @@ void Client::win_conn()
 		std::cout << length << std::endl;
 		if (bytesReceived <= 0)
 		{
-			std::cerr << "Couldn't read message length!" << WSAGetLastError() << std::endl;
+			std::cerr << "Couldn't read message length!" << std::endl;
 			disconnect();
 			return;
 		}
@@ -135,7 +127,7 @@ void Client::disconnect()
 	closesocket(sock);
 	WSACleanup();
 #else
-	close(socket);
+	close(sock);
 #endif
 }
 

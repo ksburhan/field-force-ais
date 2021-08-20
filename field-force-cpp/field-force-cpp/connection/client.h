@@ -36,9 +36,7 @@ public:
 	void operator=(Client const&) = delete;
 #ifdef _WIN32
 	SOCKET sock = NULL;
-	void win_conn();
 #else
 	int sock;
-	void lin_conn();
 #endif
 };
