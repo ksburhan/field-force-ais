@@ -27,5 +27,9 @@ void sendMovereply(int id, Move move)
 	packet.write(MOVEREPLY);
 	packet.write(id);
 	packet.write(move);
-	// TODO: Add if move is skill
+	if(move.type == SKILL)
+	{
+		move.skill->setOnCooldown();
+	}
+	sendPacket(packet);
 }

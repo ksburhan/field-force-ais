@@ -47,12 +47,14 @@ public:
 	std::vector<Fire> readFires();
 	std::vector<Wall> readWalls();
 	std::vector<Consumable> readConsumables();
+	Move readMove();
 
 	void write(std::vector<uint8_t>);
 	void write(int);
 	void write(float);
 	void write(std::string);
 	void write(Move);
+	void write(Skill*);
 	void writeLength();
 
 	static int reverseIntByteArray(int);
