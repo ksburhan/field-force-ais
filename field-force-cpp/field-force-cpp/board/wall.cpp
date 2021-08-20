@@ -1,5 +1,8 @@
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
+#ifdef _WIN32
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
 #include <crtdbg.h>
 #ifdef _DEBUG
 #ifndef DBG_NEW
@@ -7,6 +10,7 @@
 #define new DBG_NEW
 #endif
 #endif  // _DEBUG
+#endif
 #include "wall.h"
 
 Wall::Wall() { }

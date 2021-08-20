@@ -1,3 +1,4 @@
+#ifdef _WIN32
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
@@ -7,6 +8,7 @@
 #define new DBG_NEW
 #endif
 #endif  // _DEBUG
+#endif
 #include "client.h"
 #include "clientsend.h"
 #include "clienthandle.h"
@@ -17,11 +19,11 @@
 #include <WS2tcpip.h>
 #pragma comment (lib, "ws2_32.lib")
 #else
-#include<unistd.h>
-#include<sys/socket.h>
-#include<sys/types.h>
-#include<netdb.h>
-#include<arpa/inet.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
 #endif
 
 Client& Client::getInstance()
@@ -35,14 +37,8 @@ void Client::conn(std::string _ip, int _port)
 {
 	ip = _ip;
 	port = _port;
-#ifdef _WIN32
-	win_conn();
-#endif
-}
 
 #ifdef _WIN32
-void Client::win_conn()
-{
 	WSADATA wsaData;
 	WORD ver = MAKEWORD(2, 2);
 	int wsResult = WSAStartup(ver, &wsaData);
@@ -60,15 +56,24 @@ void Client::win_conn()
 		return;
 	}
 
+
+#else
+	sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (sock == -1)
+	{
+		return;
+	}
+#endif
+
 	sockaddr_in hint;
 	hint.sin_family = AF_INET;
 	hint.sin_port = htons(port);
 	inet_pton(AF_INET, ip.c_str(), &hint.sin_addr);
 
 	int connResult = connect(sock, (sockaddr*)&hint, sizeof(hint));
-	if (connResult == SOCKET_ERROR)
+	if (connResult == -1)
 	{
-		std::cerr << "Couldn't connect to server, Errorcode: " << WSAGetLastError() << std::endl;
+		std::cerr << "Couldn't connect to server!" << std::endl;
 		disconnect();
 		return;
 	}
@@ -85,7 +90,7 @@ void Client::win_conn()
 		std::cout << length << std::endl;
 		if (bytesReceived <= 0)
 		{
-			std::cerr << "Couldn't read message length!" << WSAGetLastError() << std::endl;
+			std::cerr << "Couldn't read message length!" << std::endl;
 			disconnect();
 			return;
 		}
@@ -115,12 +120,15 @@ void Client::win_conn()
 	}
 	disconnect();
 }
-#endif
 
 void Client::disconnect()
 {
+#ifdef _WIN32
 	closesocket(sock);
 	WSACleanup();
+#else
+	close(sock);
+#endif
 }
 
 void Client::handleMessage(int type, Packet packet)
