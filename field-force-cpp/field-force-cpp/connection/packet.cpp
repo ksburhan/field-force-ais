@@ -49,6 +49,7 @@ std::string Packet::readString()
 	catch (...)
 	{
 		std::cerr << "Couldn't read string!" << std::endl;
+		return "";
 	}
 }
 
@@ -206,6 +207,15 @@ std::vector<Consumable> Packet::readConsumables()
 	return consumables;
 }
 
+Move Packet::readMove()
+{
+	MoveType type = (MoveType)readInt();
+	Direction dir = (Direction)readInt();
+	Skill skill = readSkill();
+	return Move(type, dir, &skill);
+}
+
+
 void Packet::write(std::vector<uint8_t> value)
 {
 	for (int i = 0; i < sizeof(value); i++)
@@ -232,9 +242,22 @@ void Packet::write(std::string value)
 	}
 }
 
-void Packet::write(Move)
+void Packet::write(Move move)
 {
-	write(1);
+	write(move.type);
+	write(move.direction);
+	write(move.skill);
+}
+
+void Packet::write(Skill* skill)
+{
+	if(skill != nullptr)
+	{
+		write(skill->id);
+	}else
+	{
+		write(-1);
+	}
 }
 
 

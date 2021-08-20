@@ -23,3 +23,16 @@ Skill::Skill(int _id, std::string _name, int _cooldown, int _range, int _value, 
 	value = _value;
 	type = _type;
 }
+
+void Skill::setOnCooldown()
+{
+	cooldown_left = cooldown;
+}
+
+void Skill::prepareForNextRound()
+{
+	if(cooldown_left > 0)
+	{
+		cooldown_left--;
+	}
+}

@@ -119,7 +119,7 @@ void Client::handleMessage(int type, Packet packet)
 	case GAMEMODE:
 		try
 		{
-			std::cerr << "Type 2" << std::endl;
+			std::cout << "Type 2" << std::endl;
 			handleGamemode(packet);
 		} catch( std::exception &e)
 		{
@@ -131,7 +131,7 @@ void Client::handleMessage(int type, Packet packet)
 	case PLAYERINFORMATION:
 		try
 		{
-			std::cerr << "Type 3" << std::endl;
+			std::cout << "Type 3" << std::endl;
 			handlePlayerinformation(packet);
 		}
 		catch (std::exception& e)
@@ -144,7 +144,7 @@ void Client::handleMessage(int type, Packet packet)
 	case GAMEFIELD:
 		try
 		{
-			std::cerr << "Type 4" << std::endl;
+			std::cout << "Type 4" << std::endl;
 			handleInitialMap(packet);
 		}
 		catch (std::exception& e)
@@ -157,7 +157,7 @@ void Client::handleMessage(int type, Packet packet)
 	case MOVEREQUEST:
 		try
 		{
-			std::cerr << "Type 5" << std::endl;
+			std::cout << "Type 5" << std::endl;
 			handleMoveRequest(packet);
 		}
 		catch (std::exception& e)
@@ -170,7 +170,7 @@ void Client::handleMessage(int type, Packet packet)
 	case NEWGAMESTATE:
 		try
 		{
-			std::cerr << "Type 7" << std::endl;
+			std::cout << "Type 7" << std::endl;
 			handleNewGamestate(packet);
 		}
 		catch (std::exception& e)
@@ -183,7 +183,7 @@ void Client::handleMessage(int type, Packet packet)
 	case MOVEDISTRIBUTION:
 		try
 		{
-			std::cerr << "Type 8" << std::endl;
+			std::cout << "Type 8" << std::endl;
 			handleMovedistribution(packet);
 		}
 		catch (std::exception& e)
@@ -196,8 +196,10 @@ void Client::handleMessage(int type, Packet packet)
 	case GAMEERROR:
 		try
 		{
-			std::cerr << "Type 9" << std::endl;
+			std::cout << "Type 9" << std::endl;
 			handleError(packet);
+			disconnect();
+			exit(-9);
 		}
 		catch (std::exception& e)
 		{
@@ -209,8 +211,9 @@ void Client::handleMessage(int type, Packet packet)
 	case GAMEOVER:
 		try
 		{
-			std::cerr << "Type 10" << std::endl;
+			std::cout << "Type 10" << std::endl;
 			handleGameover(packet);
+			game_is_running = false;
 		}
 		catch (std::exception& e)
 		{
