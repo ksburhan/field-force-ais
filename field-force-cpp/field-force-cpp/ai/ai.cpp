@@ -1,3 +1,12 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
 #include "ai.h"
 
 AI& AI::getInstance()
@@ -9,5 +18,6 @@ AI& AI::getInstance()
 
 Move AI::getBestMove()
 {
-	return Move(MoveType(1), Direction(1));
+	std::vector<Move> moves = current_gamestate.getAllMoves(OWN_PLAYER_ID);
+	return moves.at(std::rand() % moves.size() + 0);
 }

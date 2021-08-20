@@ -10,4 +10,6 @@ public:
 	Wall();
 	Wall(char, int, int);
 	Wall(char, int, int, int);
+
+	void takeDamage(int, GameState*);
 };

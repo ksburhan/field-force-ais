@@ -1,3 +1,12 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
 #include "clientsend.h"
 
 #include "client.h"
@@ -27,9 +36,9 @@ void sendMovereply(int id, Move move)
 	packet.write(MOVEREPLY);
 	packet.write(id);
 	packet.write(move);
-	if(move.type == SKILL)
+	if(move.type == MT_SKILL)
 	{
-		move.skill->setOnCooldown();
+		move.skill.setOnCooldown();
 	}
 	sendPacket(packet);
 }

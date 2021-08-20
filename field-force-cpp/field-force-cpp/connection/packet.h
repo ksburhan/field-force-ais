@@ -54,7 +54,7 @@ public:
 	void write(float);
 	void write(std::string);
 	void write(Move);
-	void write(Skill*);
+	void write(Skill);
 	void writeLength();
 
 	static int reverseIntByteArray(int);
@@ -62,6 +62,6 @@ public:
 private:
 	std::vector<Consumable> readConfigConsumables();
 	std::vector<Skill> readConfigSkills();
-	uint8_t* intToByteArray(int);
-	uint8_t* toByteArray();
+	std::vector<uint8_t> intToByteArray(int);
+	std::vector<uint8_t> toByteArray();
 };

@@ -5,6 +5,8 @@ inline std::string playername = "c++";
 inline int skill1 = 0;
 inline int skill2 = 1;
 
+inline char VALID_TARGETS[] = { '1', '2', '3', '4', '-' };
+
 inline bool VERBOSE = false;
 
 inline int GAME_MODE = 0;

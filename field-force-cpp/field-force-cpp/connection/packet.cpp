@@ -1,3 +1,12 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
 #include "packet.h"
 #include "../game/gameconstants.h"
 #include "../game/skill.h"
@@ -37,7 +46,8 @@ std::string Packet::readString()
 	try
 	{
 		int length = readInt();
-		char* msg = new char[length+1];
+		std::string msg;
+		msg.resize(length + 1);
 		for(int i = 0; i < length; i++)
 		{
 			msg[i] = buffer[read_pos + i];
@@ -212,7 +222,7 @@ Move Packet::readMove()
 	MoveType type = (MoveType)readInt();
 	Direction dir = (Direction)readInt();
 	Skill skill = readSkill();
-	return Move(type, dir, &skill);
+	return Move(type, dir, skill);
 }
 
 
@@ -226,8 +236,8 @@ void Packet::write(std::vector<uint8_t> value)
 
 void Packet::write(int value)
 {
-	uint8_t* data = intToByteArray(value);
-	for (int i = 0; i < sizeof(data) / sizeof(uint8_t); i++)
+	std::vector<uint8_t> data = intToByteArray(value);
+	for (int i = 0; i < data.size()-1; i++)
 	{
 		buffer.push_back(data[i]);
 	}
@@ -249,40 +259,36 @@ void Packet::write(Move move)
 	write(move.skill);
 }
 
-void Packet::write(Skill* skill)
+void Packet::write(Skill skill)
 {
-	if(skill != nullptr)
-	{
-		write(skill->id);
-	}else
-	{
-		write(-1);
-	}
+	write(skill.id);
 }
 
 
 void Packet::writeLength()
 {
-	uint8_t* length = intToByteArray(buffer.size());
-	for (int i = 0; i < sizeof(length) / sizeof(uint8_t); i++)
+	std::vector<uint8_t> length = intToByteArray(buffer.size());
+	for (int i = 0; i < length.size()-1; i++)
 	{
 		buffer.insert(buffer.begin() + i, length[i]);
 	}
 }
 
-uint8_t* Packet::intToByteArray(int value)
+std::vector<uint8_t> Packet::intToByteArray(int value)
 {
 	value = reverseIntByteArray(value);
-	uint8_t* ret = new uint8_t[5];
+	std::vector<uint8_t> ret;
+	ret.resize(5);
 	for (int i = 0; i < 4; i++)
 		ret[3 - i] = (value >> (i * 8));
 	return ret;
 }
 
-uint8_t* Packet::toByteArray()
+std::vector<uint8_t> Packet::toByteArray()
 {
 	int n = buffer.size();
-	uint8_t* ret = new uint8_t[n];
+	std::vector<uint8_t> ret;
+	ret.resize(n);
 	for (int i = 0; i < n; i++)
 	{
 		ret[i] = buffer.at(i);

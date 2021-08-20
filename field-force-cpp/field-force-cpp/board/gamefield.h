@@ -13,6 +13,7 @@ public:
 	GameField();
 	GameField(int, std::vector<std::vector<char>>);
 
+	void printMap();
 private:
 	std::vector<std::vector<Tile>> createField(std::vector<std::vector<char>>);
 };

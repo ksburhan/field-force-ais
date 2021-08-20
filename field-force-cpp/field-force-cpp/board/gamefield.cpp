@@ -1,4 +1,15 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#ifdef _DEBUG
+#ifndef DBG_NEW
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#endif
+#endif  // _DEBUG
 #include "gamefield.h"
+
+#include <iostream>
 
 #include "fire.h"
 #include "wall.h"
@@ -51,7 +62,7 @@ std::vector<std::vector<Tile>> GameField::createField(std::vector<std::vector<ch
                 mapObject = MapObject(map[x][y], x, y);
             	break;
             }
-            field[x][y] = Tile(x, y, &mapObject);
+            field[x][y] = Tile(x, y, mapObject);
         }
     }
 
@@ -70,3 +81,11 @@ std::vector<std::vector<Tile>> GameField::createField(std::vector<std::vector<ch
 	return field;
 }
 
+void GameField::printMap()
+{
+    for (int y = 0; y < dimension; y++) {
+        for (int x = 0; x < dimension; x++)
+            std::cout << field_chars[x][y] << " ";
+        std::cout << std::endl;
+    }
+}
