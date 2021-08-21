@@ -19,10 +19,10 @@ public class AI {
     private GameState currentState;
 
     public Move getBestMove() throws InterruptedException, TimeoutException {
-        Move bestMove = null;
+        List<Move> moves = AI.instance.getCurrentState().getAllMoves(GameConstants.OWN_PLAYER_ID);
+        Move bestMove = moves.get(0);
         try {
             checkTimelimit();
-            List<Move> moves = AI.instance.getCurrentState().getAllMoves(GameConstants.OWN_PLAYER_ID);
             Random rand = new Random();
             bestMove = moves.get(rand.nextInt(moves.size()));
             return bestMove;
