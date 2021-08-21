@@ -44,7 +44,7 @@ public class GameField {
         {
             for (int x = 0; x < dimension; x++)
             {
-                MapObject mapObject;
+                MapObject mapObject = null;
                 switch (map[x][y]) {
                     case '1' -> {
                         mapObject = Player.ALL_PLAYERS.get(0);
@@ -64,7 +64,15 @@ public class GameField {
                     }
                     case 'f' -> mapObject = new Fire(map[x][y], x, y);
                     case '-' -> mapObject = new Wall(map[x][y], x, y);
-                    default -> mapObject = new MapObject(map[x][y], x, y);
+                    case '0' -> mapObject = new MapObject(map[x][y], x, y);
+                    default -> {
+                        for (char c : GameConstants.VALID_CONSUMEABLES) {
+                            if (map[x][y] == c) {
+                                mapObject = new Consumable(map[x][y], x, y);
+                                break;
+                            }
+                        }
+                    }
                 }
                 field[x][y] = new Tile(x,y, mapObject);
             }
