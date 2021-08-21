@@ -26,7 +26,7 @@ class GameState:
 
     def get_all_moves(self, player_id):
         moves = []
-        player = self.players[player_id - 1]
+        player = self.get_player(player_id)
         tile = self.gamefield.map[(player.x, player.y)]
         for m in MoveType:
             if m == MoveType.MOVEMENT:
@@ -56,7 +56,7 @@ class GameState:
         return moves
 
     def simulate_next_gamestate(self, player_id, move):
-        player = self.players[player_id - 1]
+        player = self.get_player(player_id)
         if move.type == MoveType.MOVEMENT:
             if move.direction == Direction.NORTH:
                 self.move_to_tile(player, player.x, player.y - 1)
@@ -174,3 +174,8 @@ class GameState:
 
     def is_game_over(self):
         return len(self.playerinturn) <= 1
+
+    def get_player(self, player_id):
+        for p in self.players:
+            if p.playernumber == player_id:
+                return p

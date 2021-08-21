@@ -57,7 +57,7 @@ public class GameState {
 
     public List<Move> getAllMoves(int playerID){
         List<Move> moves = new ArrayList<>();
-        Player player = currentPlayers.get(playerID-1);
+        Player player = getPlayer(playerID);
         Tile tile = currentField.getField()[player.getxPos()][player.getyPos()];
         for (MoveType t : MoveType.values()){
             switch (t){
@@ -104,7 +104,7 @@ public class GameState {
     }
 
     public void simulateNextGamestate(int playerID, Move move){
-        Player player = currentPlayers.get(playerID-1);
+        Player player = getPlayer(playerID);
         switch (move.getType()) {
             // MOVEMENT
             case MOVEMENT -> {
@@ -238,6 +238,14 @@ public class GameState {
     public Player getOwnPlayer(){
         for (Player p : currentPlayers){
             if(p.getPlayerNumber() == GameConstants.OWN_PLAYER_ID)
+                return p;
+        }
+        return null;
+    }
+
+    public Player getPlayer(int id){
+        for (Player p : currentPlayers){
+            if(p.getPlayerNumber() == id)
                 return p;
         }
         return null;
