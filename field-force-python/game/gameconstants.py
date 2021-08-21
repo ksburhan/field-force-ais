@@ -1,6 +1,6 @@
 VALID_TARGETS = {'1', '2', '3', '4', '-'}
 VALID_ELEMENTS = ('0', '1', '2', '3', '4', 'x', '-', 'f')
-VALID_CONSUMABLES = 0
+VALID_CONSUMABLES = []
 
 GAMEMODE = 0
 TIME_LIMIT = 3
