@@ -69,18 +69,18 @@ public class Skill {
 
     public void useSkill(Player player, Direction direction, GameState gameState){
         switch (this.type) {
-            case MOVEMENT -> movementType(player, this, direction, gameState);
-            case REGENERATE -> regenerateType(player, this, direction, gameState);
-            case FIRE -> fireType(player, this, direction, gameState);
-            case ROCKET -> rocketType(player, this, direction, gameState);
-            case PUSH -> pushType(player, this, direction, gameState);
-            case BREAK -> breakType(player, this, direction, gameState);
+            case MOVEMENT -> movementType(player, direction, gameState);
+            case REGENERATE -> regenerateType(player, direction, gameState);
+            case FIRE -> fireType(player, direction, gameState);
+            case ROCKET -> rocketType(player, direction, gameState);
+            case PUSH -> pushType(player, direction, gameState);
+            case BREAK -> breakType(player, direction, gameState);
         }
         setOnCooldown();
     }
 
-    public static void movementType(Player player, Skill skill, Direction direction, GameState gameState){
-        for (int i = 0; i < skill.range; i++){
+    private void movementType(Player player, Direction direction, GameState gameState){
+        for (int i = 0; i < range; i++){
             Tile tile = gameState.getCurrentField().getField()[player.getxPos()][player.getyPos()];
             if(direction == Direction.NORTH){
                 if (tile.getnTile() != null){
@@ -114,15 +114,15 @@ public class Skill {
         }
     }
 
-    public static void regenerateType(Player player, Skill skill, Direction direction, GameState gameState){
-        player.heal(skill.value);
+    public void regenerateType(Player player, Direction direction, GameState gameState){
+        player.heal(value);
     }
 
-    public static void fireType(Player player, Skill skill, Direction direction, GameState gameState){
+    public void fireType(Player player, Direction direction, GameState gameState){
         int xTarget = player.getxPos();
         int yTarget = player.getyPos();
         Tile tile;
-        for (int i = 0; i < skill.range; i++){
+        for (int i = 0; i < range; i++){
             tile = gameState.getCurrentField().getField()[xTarget][yTarget];
             if(direction == Direction.NORTH){
                 if (tile.getnTile() != null){
@@ -162,7 +162,7 @@ public class Skill {
             }
             else if (targetCellContent instanceof Player)
             {
-                ((Player) targetCellContent).takeDamage(skill.value, gameState);
+                ((Player) targetCellContent).takeDamage(value, gameState);
             }
             else if (targetCellContent instanceof Wall)
             {
@@ -171,20 +171,20 @@ public class Skill {
         }
     }
 
-    public static void rocketType(Player player, Skill skill, Direction direction, GameState gameState){
+    public void rocketType(Player player, Direction direction, GameState gameState){
         List<int[]> targets = new ArrayList<>();
         int[] target = new int[2];
         if(direction == Direction.NORTH){
             target[0] = player.getxPos();
-            target[1] = player.getyPos() - skill.range;
+            target[1] = player.getyPos() - range;
         } else if(direction == Direction.EAST){
-            target[0] = player.getxPos() + skill.range;
+            target[0] = player.getxPos() + range;
             target[1] = player.getyPos();
         } else if(direction == Direction.SOUTH){
             target[0] = player.getxPos();
-            target[1] = player.getyPos() + skill.range;
+            target[1] = player.getyPos() + range;
         } else if(direction == Direction.WEST){
-            target[0] = player.getxPos() - skill.range;
+            target[0] = player.getxPos() - range;
             target[1] = player.getyPos();
         }
         targets.add(target);
@@ -210,26 +210,26 @@ public class Skill {
                 }
                 else if (targetCellContent instanceof Player)
                 {
-                    ((Player) targetCellContent).takeDamage(skill.value, gameState);
+                    ((Player) targetCellContent).takeDamage(value, gameState);
                 }
             }
         }
     }
 
-    public static void pushType(Player player, Skill skill, Direction direction, GameState gameState){
+    public void pushType(Player player, Direction direction, GameState gameState){
         int xTarget = 0;
         int yTarget = 0;
         if(direction == Direction.NORTH){
             xTarget = player.getxPos();
-            yTarget = player.getyPos() - skill.range;
+            yTarget = player.getyPos() - range;
         } else if(direction == Direction.EAST){
-            xTarget = player.getxPos() + skill.range;
+            xTarget = player.getxPos() + range;
             yTarget = player.getyPos();
         } else if(direction == Direction.SOUTH){
             xTarget = player.getxPos();
-            yTarget = player.getyPos() + skill.range;
+            yTarget = player.getyPos() + range;
         } else if(direction == Direction.WEST){
-            xTarget = player.getxPos() - skill.range;
+            xTarget = player.getxPos() - range;
             yTarget = player.getyPos();
         }
         if(xTarget >= 0 && xTarget < gameState.getCurrentField().getDimension() &&
@@ -266,12 +266,12 @@ public class Skill {
         }
     }
 
-    public static void breakType(Player player, Skill skill, Direction direction, GameState gameState){
+    public void breakType(Player player, Direction direction, GameState gameState){
         int xTarget = player.getxPos();
         int yTarget = player.getyPos();
         Tile tile;
         boolean broke = false;
-        for (int i = 0; i < skill.range; i++){
+        for (int i = 0; i < range; i++){
             tile = gameState.getCurrentField().getField()[xTarget][yTarget];
             if(direction == Direction.NORTH){
                 if (tile.getnTile() != null){
@@ -305,7 +305,7 @@ public class Skill {
             MapObject targetCellContent = gameState.getCurrentField().getField()[xTarget][yTarget].getContent();
             if (targetCellContent instanceof Player)
             {
-                ((Player) targetCellContent).takeDamage(skill.value, gameState);
+                ((Player) targetCellContent).takeDamage(value, gameState);
             }
             else if (targetCellContent instanceof Wall)
             {
