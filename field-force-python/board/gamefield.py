@@ -1,9 +1,12 @@
+import board
 import game.player
+from board import consumable
+from board.consumable import Consumable
 from board.fire import Fire
 from board.mapobject import MapObject
 from board.tile import Tile
 from board.wall import Wall
-from game import gamestate
+from game import gamestate, gameconstants
 
 
 class GameField:
@@ -30,9 +33,16 @@ class GameField:
                     map_object = game.player.PLAYERS_IN_GAME[3]
                     map_object.set_pos(x, y)
                 elif _map[x][y] == 'f':
-                    map_object = Fire('f', x, y, 2)
+                    map_object = Fire('f', x, y, gameconstants.FIRE_DURATION_ON_MAP)
                 elif _map[x][y] == '-':
-                    map_object = Wall('-', x, y, 2)
+                    map_object = Wall('-', x, y, gameconstants.WALL_HP)
+                elif _map[x][y] in gameconstants.VALID_CONSUMABLES:
+                    c = Consumable
+                    for co in consumable.ALL_CONSUMABLES:
+                        if co.identifier == _map[x][y]:
+                            c = co
+                            break
+                    map_object = Consumable(_map[x][y], c.name, c.healing, c.shield, x, y)
                 else:
                     map_object = MapObject(_map[x][y], x, y)
                 tilemap[(x, y)] = Tile(x, y, map_object)

@@ -77,6 +77,7 @@ class Packet:
             healing = self.read_int()
             shield = self.read_int()
             ALL_CONSUMABLES.append(Consumable(c, c_name, healing, shield, x=-1, y=-1))
+            gameconstants.VALID_CONSUMABLES.append(c)
 
     def read_config_skills(self):
         skill_count = self.read_int()

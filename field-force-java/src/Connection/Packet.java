@@ -182,6 +182,7 @@ public class Packet {
             int healing = readInt();
             int shield = readInt();
             consumables.add(new Consumable(id, conName, healing, shield));
+            GameConstants.VALID_CONSUMEABLES.add(id);
         }
         return consumables;
     }
