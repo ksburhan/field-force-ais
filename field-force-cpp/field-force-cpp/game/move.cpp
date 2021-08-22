@@ -17,6 +17,7 @@ Move::Move(MoveType _type, Direction _direction)
 {
 	type = _type;
 	direction = _direction;
+	skill = Skill();
 }
 
 

@@ -2,6 +2,11 @@
 #include <string>
 #include <vector>
 
+
+enum class Direction;
+class GameState;
+class Player;
+
 enum SkillType
 {
 	MOVEMENT = 0,
@@ -31,6 +36,14 @@ public:
 
 	void setOnCooldown();
 	void prepareForNextRound();
+	void useSkill(Player*, Direction, GameState*);
+private:
+	void movementType(Player*, Direction, GameState*);
+	void regenerateType(Player*, Direction, GameState*);
+	void fireType(Player*, Direction, GameState*);
+	void rocketType(Player*, Direction, GameState*);
+	void pushType(Player*, Direction, GameState*);
+	void breakType(Player*, Direction, GameState*);
 };
 
 inline std::vector<Skill> ALL_SKILLS;

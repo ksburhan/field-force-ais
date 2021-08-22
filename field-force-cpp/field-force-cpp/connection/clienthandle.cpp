@@ -45,7 +45,7 @@ void handlePlayerinformation(Packet packet)
 	std::vector<Player> players = packet.readPlayers();
 	ALL_PLAYERS = players;
 	AI& ai = AI::getInstance();
-	ai.own_player = ALL_PLAYERS.at(OWN_PLAYER_ID-1);
+	ai.own_player = &ALL_PLAYERS.at(OWN_PLAYER_ID-1);
 	// TODO: SET OWN PLAYER OBJECT AND SKILLS | SHOULD BE FINE NOW
 }
 
@@ -65,7 +65,7 @@ void handleMoveRequest(Packet packet)
 {
 	int own_id = packet.readInt();
 	Move move = AI::getInstance().getBestMove();
-	sendMovereply(own_id, move);
+	sendMovereply(own_id, &move);
 }
 
 void handleNewGamestate(Packet packet)

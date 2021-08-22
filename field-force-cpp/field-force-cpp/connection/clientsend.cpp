@@ -32,15 +32,15 @@ void sendPlayername()
 	sendPacket(packet);
 }
 
-void sendMovereply(int id, Move move)
+void sendMovereply(int id, Move* move)
 {
 	Packet packet;
 	packet.write(MOVEREPLY);
 	packet.write(id);
-	packet.write(move);
-	if(move.type == MT_SKILL)
+	packet.write(*move);
+	if(move->type == MoveType::MT_SKILL)
 	{
-		move.skill.setOnCooldown();
+		move->skill.setOnCooldown();
 	}
 	sendPacket(packet);
 }

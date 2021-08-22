@@ -13,6 +13,7 @@
 
 #include <iostream>
 
+#include "consumable.h"
 #include "fire.h"
 #include "wall.h"
 #include "../game/player.h"
@@ -60,9 +61,17 @@ std::vector<std::vector<Tile>> GameField::createField(std::vector<std::vector<ch
             case '-':
                 mapObject = Wall(map[x][y], x, y);
                 break;
-            default:
+            case '0':
                 mapObject = MapObject(map[x][y], x, y);
-            	break;
+                break;
+            default:
+                for (auto c : ALL_CONSUMABLES)
+                {
+                    if (c.id == map[x][y])
+                        mapObject = Consumable(map[x][y], x, y);
+                    break;
+                }
+                break;
             }
             field[x][y] = Tile(x, y, mapObject);
         }

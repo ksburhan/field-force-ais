@@ -256,8 +256,8 @@ void Packet::write(std::string value)
 
 void Packet::write(Move move)
 {
-	write(move.type);
-	write(move.direction);
+	write(static_cast<int>(move.type));
+	write(static_cast<int>(move.direction));
 	write(move.skill);
 }
 

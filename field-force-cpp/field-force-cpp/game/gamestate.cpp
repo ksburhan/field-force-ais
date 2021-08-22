@@ -38,40 +38,42 @@ GameState::GameState(GameField _gamefield, std::vector<Player> _players, std::ve
 std::vector<Move> GameState::getAllMoves(int player_id)
 {
 	std::vector<Move> moves;
-	Player* player = &current_players.at(player_id - 1);
+	Player* player = getPlayer(player_id);
 	Tile* tile = &current_field.field[player->x_pos][player->y_pos];
-	for (int t = MT_MOVEMENT; t != MT_LAST; t++)
+	for (int t = static_cast<int>(MoveType::MT_MOVEMENT); t != static_cast<int>(MoveType::MT_LAST); t++)
 	{
 		switch (MoveType(t))
 		{
-		case MT_MOVEMENT:
+		case MoveType::MT_MOVEMENT:
 			if (tile->nTile != nullptr)
-				moves.push_back(Move(MT_MOVEMENT, DIR_NORTH));
+				moves.emplace_back(Move(MoveType::MT_MOVEMENT, Direction::DIR_NORTH));
 			if (tile->eTile != nullptr)
-				moves.push_back(Move(MT_MOVEMENT, DIR_EAST));
+				moves.emplace_back(Move(MoveType::MT_MOVEMENT, Direction::DIR_EAST));
 			if (tile->sTile != nullptr)
-				moves.push_back(Move(MT_MOVEMENT, DIR_SOUTH));
+				moves.emplace_back(Move(MoveType::MT_MOVEMENT, Direction::DIR_SOUTH));
 			if (tile->wTile != nullptr)
-				moves.push_back(Move(MT_MOVEMENT, DIR_WEST));
+				moves.emplace_back(Move(MoveType::MT_MOVEMENT, Direction::DIR_WEST));
 			break;
-		case MT_ATTACK:
+		case MoveType::MT_ATTACK:
 			if (tile->nTile != nullptr && isValidTarget(tile->nTile->content.id))
-				moves.push_back(Move(MT_ATTACK, DIR_NORTH));
+				moves.emplace_back(Move(MoveType::MT_ATTACK, Direction::DIR_NORTH));
 			if (tile->eTile != nullptr && isValidTarget(tile->eTile->content.id))
-				moves.push_back(Move(MT_ATTACK, DIR_EAST));
+				moves.emplace_back(Move(MoveType::MT_ATTACK, Direction::DIR_EAST));
 			if (tile->sTile != nullptr && isValidTarget(tile->sTile->content.id))
-				moves.push_back(Move(MT_ATTACK, DIR_SOUTH));
+				moves.emplace_back(Move(MoveType::MT_ATTACK, Direction::DIR_SOUTH));
 			if (tile->wTile != nullptr && isValidTarget(tile->wTile->content.id))
-				moves.push_back(Move(MT_ATTACK, DIR_WEST));
+				moves.emplace_back(Move(MoveType::MT_ATTACK, Direction::DIR_WEST));
 			break;
-		case MT_SKILL:
-			for (int d = DIR_NORTH; d != DIR_LAST; d++)
+		case MoveType::MT_SKILL:
+			for (int d = static_cast<int>(Direction::DIR_NORTH); d != static_cast<int>(Direction::DIR_LAST); d++)
 			{
 				if (player->skill1.cooldown_left == 0)
-					moves.push_back(Move(MT_SKILL, Direction(d), player->skill1));
+					moves.emplace_back(Move(MoveType::MT_SKILL, Direction(d), player->skill1));
 				if (player->skill2.cooldown_left == 0)
-					moves.push_back(Move(MT_SKILL, Direction(d), player->skill2));
+					moves.emplace_back(Move(MoveType::MT_SKILL, Direction(d), player->skill2));
 			}
+			break;
+		default:
 			break;
 		}
 	}
@@ -88,17 +90,46 @@ bool GameState::isValidTarget(char c)
 	return false;
 }
 
-void GameState::simulateNextGamestate(int player_id, Move move)
+void GameState::simulateNextGamestate(int player_id, Move* move)
+{
+	Player* player = getPlayer(player_id);
+	switch (move->type)
+	{
+	case MoveType::MT_MOVEMENT:
+		if (move->direction == Direction::DIR_NORTH)
+			moveToTile(player, player->x_pos, player->y_pos - 1);
+		if (move->direction == Direction::DIR_EAST)
+			moveToTile(player, player->x_pos + 1, player->y_pos);
+		if (move->direction == Direction::DIR_SOUTH)
+			moveToTile(player, player->x_pos, player->y_pos + 1);
+		if (move->direction == Direction::DIR_WEST)
+			moveToTile(player, player->x_pos - 1, player->y_pos);
+		break;
+	case MoveType::MT_ATTACK:
+		if (move->direction == Direction::DIR_NORTH)
+			attackTile(player, player->x_pos, player->y_pos - 1);
+		if (move->direction == Direction::DIR_EAST)
+			attackTile(player, player->x_pos + 1, player->y_pos);
+		if (move->direction == Direction::DIR_SOUTH)
+			attackTile(player, player->x_pos, player->y_pos + 1);
+		if (move->direction == Direction::DIR_WEST)
+			attackTile(player, player->x_pos - 1, player->y_pos);
+		break;
+	case MoveType::MT_SKILL:
+		Skill* skill = &player->skill1;
+		if (move->skill.id == player->skill2.id)
+			skill = &player->skill2;
+		skill->useSkill(player, move->direction, this);
+		break;
+	}
+}
+
+void GameState::moveToTile(Player* player, int x_target, int y_target)
 {
 
 }
 
-void GameState::moveToTile(Player player, int x_target, int y_target)
-{
-
-}
-
-void GameState::attackTile(Player player, int x_target, int y_target)
+void GameState::attackTile(Player* player, int x_target, int y_target)
 {
 	MapObject* target = &current_field.field[x_target][y_target].content;
 	if (typeid(target).name() == "Player")
@@ -127,20 +158,29 @@ bool GameState::isGameOver()
 	return player_in_turn.size() <= 1;
 }
 
-Player GameState::getNextPlayer()
+Player* GameState::getNextPlayer()
 {
 	for (auto p : current_players)
 	{
 		if (p.player_number == player_in_turn.at(0))
-			return p;
+			return &p;
 	}
 }
 
-Player GameState::getOwnPlayer()
+Player* GameState::getOwnPlayer()
 {
 	for (auto p : current_players)
 	{
 		if (p.player_number == OWN_PLAYER_ID)
-			return p;
+			return &p;
+	}
+}
+
+Player* GameState::getPlayer(int id)
+{
+	for (auto p : current_players)
+	{
+		if (p.player_number == id)
+			return &p;
 	}
 }

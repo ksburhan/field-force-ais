@@ -7,7 +7,7 @@
 class AI
 {
 public:
-	Player own_player;
+	Player* own_player;
 	GameState current_gamestate;
 
 	static AI& getInstance();
