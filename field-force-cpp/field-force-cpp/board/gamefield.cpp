@@ -68,8 +68,9 @@ std::vector<std::vector<Tile>> GameField::createField(std::vector<std::vector<ch
                 for (auto c : ALL_CONSUMABLES)
                 {
                     if (c.id == map[x][y])
+                    {
                         mapObject = Consumable(map[x][y], x, y);
-                    break;
+                    }
                 }
                 break;
             }

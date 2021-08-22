@@ -12,6 +12,7 @@
 #include "client.h"
 #include "clientsend.h"
 #include "clienthandle.h"
+#include "../ai/ai.h"
 
 #include <iostream>
 
@@ -165,6 +166,8 @@ void Client::handleMessage(int type, Packet packet)
 		{
 			std::cout << "Type 4" << std::endl;
 			handleInitialMap(packet);
+			AI& ai = AI::getInstance();
+			ai.current_gamestate.current_field.printMap();
 		}
 		catch (std::exception& e)
 		{
@@ -191,6 +194,8 @@ void Client::handleMessage(int type, Packet packet)
 		{
 			std::cout << "Type 7" << std::endl;
 			handleNewGamestate(packet);
+			AI& ai = AI::getInstance();
+			ai.current_gamestate.current_field.printMap();
 		}
 		catch (std::exception& e)
 		{
