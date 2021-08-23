@@ -30,6 +30,6 @@ void MapObject::setPos(int _x_pos, int _y_pos)
 
 void MapObject::destroy(GameState* game_state)
 {
-	game_state->current_field.field_chars[x_pos][y_pos] = '0';
-	game_state->current_field.field[x_pos][y_pos].content = MapObject('0', x_pos, y_pos);
+	game_state->current_field->field_chars[x_pos][y_pos] = '0';
+	game_state->current_field->field[x_pos][y_pos]->content = new MapObject('0', x_pos, y_pos);
 }

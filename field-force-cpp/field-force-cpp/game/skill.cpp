@@ -82,7 +82,7 @@ void Skill::movementType(Player* player, Direction direction, GameState* game_st
 {
     for (int i = 0; i < range; i++)
     {
-        Tile* tile = &game_state->current_field.field[player->x_pos][player->y_pos];
+        Tile* tile = game_state->current_field->field[player->x_pos][player->y_pos];
         if (direction == Direction::DIR_NORTH)
         {
             if (tile->nTile == nullptr)
@@ -134,7 +134,7 @@ void Skill::fireType(Player* player, Direction direction, GameState* game_state)
     Tile* tile;
     for (int i = 0; i < range; i++)
     {
-        tile = &game_state->current_field.field[x_target][y_target];
+        tile = game_state->current_field->field[x_target][y_target];
         if (direction == Direction::DIR_NORTH)
         {
             if (tile->nTile == nullptr)
@@ -171,12 +171,12 @@ void Skill::fireType(Player* player, Direction direction, GameState* game_state)
             else
                 return;
         }
-        MapObject* targetCellContent = &game_state->current_field.field[x_target][y_target].content;
+        MapObject* targetCellContent = game_state->current_field->field[x_target][y_target]->content;
         if (targetCellContent->id == '0') // TODO: INSTANCE OF FIRE OR CONSUMABLE
         {
             Fire fire('f', x_target, y_target);
-            game_state->current_field.field_chars[x_target][y_target] = fire.id;
-            game_state->current_field.field[x_target][y_target].content = fire;
+            game_state->current_field->field_chars[x_target][y_target] = fire.id;
+            game_state->current_field->field[x_target][y_target]->content = &fire;
         }
         else if (targetCellContent->id == '1') // TODO: INSTANCE OF PLAYER
         {
@@ -202,4 +202,9 @@ void Skill::pushType(Player* player, Direction direction, GameState* game_state)
 void Skill::breakType(Player* player, Direction direction, GameState* game_state)
 {
 
+}
+
+Skill::~Skill()
+{
+	
 }

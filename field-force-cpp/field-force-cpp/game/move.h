@@ -29,4 +29,5 @@ public:
 	Move(MoveType, Direction);
 	Move(MoveType, Direction, Skill);
 
+	~Move();
 };

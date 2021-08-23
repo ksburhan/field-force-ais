@@ -20,16 +20,16 @@
 
 GameField::GameField() { }
 
-GameField::GameField(int _dimension, std::vector<std::vector<char>> _map)
+GameField::GameField(int _dimension, std::vector<std::vector<char>> _map, std::vector<Player>* current_players)
 {
 	dimension = _dimension;
 	field_chars = _map;
-	field = createField(_map);
+	field = createField(_map, *current_players);
 }
 
-std::vector<std::vector<Tile>> GameField::createField(std::vector<std::vector<char>> map)
+std::vector<std::vector<Tile*>> GameField::createField(std::vector<std::vector<char>> map, const std::vector<Player> &current_players)
 {
-	std::vector<std::vector<Tile>> field;
+	std::vector<std::vector<Tile*>> field;
     field.resize(dimension);
     for (int i = 0; i < dimension; i++)
         field[i].resize(dimension);
@@ -37,61 +37,76 @@ std::vector<std::vector<Tile>> GameField::createField(std::vector<std::vector<ch
     {
         for (int x = 0; x < dimension; x++)
         {
-            MapObject mapObject;
+            MapObject* mapObject = nullptr;
+            Player p;
             switch (map[x][y]) {
             case '1':
-                mapObject = ALL_PLAYERS.at(0);
-                mapObject.setPos(x, y);
+                p = getPlayer(1, current_players);
+                mapObject = new Player(p.id, p.player_number, p.playername, p.hp, p.shield, p.x_pos, p.y_pos, p.skill1, p.skill2);
+                mapObject->setPos(x, y);
                 break;
             case '2':
-                mapObject = ALL_PLAYERS.at(0);
-                mapObject.setPos(x, y);
+                p = getPlayer(2, current_players);
+                mapObject = new Player(p.id, p.player_number, p.playername, p.hp, p.shield, p.x_pos, p.y_pos, p.skill1, p.skill2);
+                mapObject->setPos(x, y);
                 break;
             case '3':
-                mapObject = ALL_PLAYERS.at(0);
-                mapObject.setPos(x, y);
+                p = getPlayer(3, current_players);
+                mapObject = new Player(p.id, p.player_number, p.playername, p.hp, p.shield, p.x_pos, p.y_pos, p.skill1, p.skill2);
+                mapObject->setPos(x, y);
                 break;
             case '4':
-                mapObject = ALL_PLAYERS.at(0);
-                mapObject.setPos(x, y);
+                p = getPlayer(4, current_players);
+                mapObject = new Player(p.id, p.player_number, p.playername, p.hp, p.shield, p.x_pos, p.y_pos, p.skill1, p.skill2);
+                mapObject->setPos(x, y);
                 break;
             case 'f':
-                mapObject = Fire(map[x][y], x, y);
+                mapObject = new Fire(map[x][y], x, y);
                 break;
             case '-':
-                mapObject = Wall(map[x][y], x, y);
+                mapObject = new Wall(map[x][y], x, y);
                 break;
             case '0':
-                mapObject = MapObject(map[x][y], x, y);
+                mapObject = new MapObject(map[x][y], x, y);
                 break;
             default:
                 for (auto c : ALL_CONSUMABLES)
                 {
                     if (c.id == map[x][y])
                     {
-                        mapObject = Consumable(map[x][y], x, y);
+                        mapObject = new Consumable(map[x][y], x, y);
                     }
                 }
                 break;
             }
-            field[x][y] = Tile(x, y, mapObject);
+            field[x][y] = new Tile(x, y, mapObject);
         }
     }
 
     for (int y = 0; y < dimension; y++) {
         for (int x = 0; x < dimension; x++) {
             if (y > 0)
-                field[x][y].nTile = &field[x][y - 1];
+                field[x][y]->nTile = field[x][y - 1];
             if (x != dimension - 1)
-                field[x][y].eTile = &field[x + 1][y];
+                field[x][y]->eTile = field[x + 1][y];
             if (y != dimension - 1)
-                field[x][y].sTile = &field[x][y + 1];
+                field[x][y]->sTile = field[x][y + 1];
             if (x > 0)
-                field[x][y].wTile = &field[x - 1][y];
+                field[x][y]->wTile = field[x - 1][y];
         }
     }
 	return field;
 }
+
+Player GameField::getPlayer(int id, const std::vector<Player>& current_player)
+{
+	for (const auto& p : current_player)
+	{
+        if (id == p.player_number)
+            return p;
+	}
+}
+
 
 void GameField::printMap()
 {
@@ -100,4 +115,11 @@ void GameField::printMap()
             std::cout << field_chars[x][y] << " ";
         std::cout << std::endl;
     }
+}
+
+GameField::~GameField()
+{
+    for (int y = 0; y < dimension; y++)
+        for (int x = 0; x < dimension; x++)
+            delete field[x][y];
 }

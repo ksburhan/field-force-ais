@@ -215,12 +215,12 @@ std::vector<Consumable> Packet::readConsumables()
 	return consumables;
 }
 
-Move Packet::readMove()
+Move* Packet::readMove()
 {
 	MoveType type = (MoveType)readInt();
 	Direction dir = (Direction)readInt();
 	Skill skill = readSkill();
-	return Move(type, dir, skill);
+	return new Move(type, dir, skill);
 }
 
 

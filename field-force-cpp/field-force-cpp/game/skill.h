@@ -37,6 +37,8 @@ public:
 	void setOnCooldown();
 	void prepareForNextRound();
 	void useSkill(Player*, Direction, GameState*);
+
+	~Skill();
 private:
 	void movementType(Player*, Direction, GameState*);
 	void regenerateType(Player*, Direction, GameState*);

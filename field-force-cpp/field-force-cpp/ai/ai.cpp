@@ -20,6 +20,6 @@ AI& AI::getInstance()
 
 Move AI::getBestMove()
 {
-	std::vector<Move> moves = current_gamestate.getAllMoves(OWN_PLAYER_ID);
+	std::vector<Move> moves = current_gamestate->getAllMoves(OWN_PLAYER_ID);
 	return moves.at(std::rand() % moves.size() + 0);
 }

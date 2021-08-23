@@ -31,7 +31,7 @@ def handle_initialmap(packet):
     fires = packet.read_fires()
     walls = packet.read_walls()
     consumables = packet.read_consumables()
-    ai.current_gamestate = GameState(GameField(dimension, init_map), game.player.PLAYERS_IN_GAME, player_in_turn, fires,
+    ai.current_gamestate = GameState(GameField(dimension, init_map, game.player.PLAYERS_IN_GAME), game.player.PLAYERS_IN_GAME, player_in_turn, fires,
                                      walls, consumables)
 
 
@@ -51,7 +51,7 @@ def handle_newgamestate(packet):
     fires = packet.read_fires()
     walls = packet.read_walls()
     consumables = packet.read_consumables()
-    ai.current_gamestate = GameState(GameField(dimension, new_map), players, player_in_turn, fires, walls, consumables)
+    ai.current_gamestate = GameState(GameField(dimension, new_map, players), players, player_in_turn, fires, walls, consumables)
     ai.current_gamestate.gamefield.print_map()
 
 
