@@ -2,15 +2,17 @@ package Board;
 import Game.GameConstants;
 import Game.Player;
 
+import java.util.List;
+
 public class GameField {
 
     private int dimension;
     private Tile[][] field;
     private char[][] fieldChars;
 
-    public GameField(int dimension, char[][] map){
+    public GameField(int dimension, char[][] map, List<Player> currentPlayers){
         this.dimension = dimension;
-        this.field = createField(map);
+        this.field = createField(map, currentPlayers);
         this.fieldChars = map;
     }
 
@@ -38,7 +40,7 @@ public class GameField {
                 this.fieldChars[x][y] = other.fieldChars[x][y];
     }
 
-    private Tile[][] createField(char[][] map) {
+    private Tile[][] createField(char[][] map, List<Player> currentPlayers) {
         Tile[][] field = new Tile[dimension][dimension];
         for (int y = 0; y < dimension; y++)
         {
@@ -47,19 +49,19 @@ public class GameField {
                 MapObject mapObject = null;
                 switch (map[x][y]) {
                     case '1' -> {
-                        mapObject = Player.ALL_PLAYERS.get(0);
+                        mapObject = getPlayer(currentPlayers, 1);
                         mapObject.setPos(x, y);
                     }
                     case '2' -> {
-                        mapObject = Player.ALL_PLAYERS.get(1);
+                        mapObject = getPlayer(currentPlayers, 2);
                         mapObject.setPos(x, y);
                     }
                     case '3' -> {
-                        mapObject = Player.ALL_PLAYERS.get(2);
+                        mapObject = getPlayer(currentPlayers, 3);
                         mapObject.setPos(x, y);
                     }
                     case '4' -> {
-                        mapObject = Player.ALL_PLAYERS.get(3);
+                        mapObject = getPlayer(currentPlayers, 4);
                         mapObject.setPos(x, y);
                     }
                     case 'f' -> mapObject = new Fire(map[x][y], x, y);
@@ -125,5 +127,13 @@ public class GameField {
 
     public void setFieldChars(char[][] fieldChars) {
         this.fieldChars = fieldChars;
+    }
+
+    private Player getPlayer(List<Player> currentPlayers, int number){
+        for (Player p : currentPlayers) {
+            if (number == p.getPlayerNumber())
+                return p;
+        }
+        return null;
     }
 }

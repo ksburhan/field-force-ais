@@ -7,7 +7,7 @@
 class Consumable: public MapObject
 {
 public:
-	std::string con_name = "";
+	std::string con_name;
 	int healing = 0;
 	int shield = 0;
 

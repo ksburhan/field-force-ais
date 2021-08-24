@@ -126,28 +126,28 @@ public class Skill {
             tile = gameState.getCurrentField().getField()[xTarget][yTarget];
             if(direction == Direction.NORTH){
                 if (tile.getnTile() != null){
-                    yTarget -= i;
+                    yTarget -= 1;
                 }
                 else {
                     return;
                 }
             } else if(direction == Direction.EAST){
                 if (tile.geteTile() != null){
-                    xTarget += i;
+                    xTarget += 1;
                 }
                 else {
                     return;
                 }
             } else if(direction == Direction.SOUTH){
                 if (tile.getsTile() != null){
-                    yTarget += i;
+                    yTarget += 1;
                 }
                 else {
                     return;
                 }
             } else if(direction == Direction.WEST){
                 if (tile.getwTile() != null){
-                    xTarget -= i;
+                    xTarget -= 1;
                 }
                 else {
                     return;

@@ -7,8 +7,8 @@
 class AI
 {
 public:
-	Player own_player;
-	GameState current_gamestate;
+	Player* own_player;
+	GameState* current_gamestate;
 
 	static AI& getInstance();
 	Move getBestMove();

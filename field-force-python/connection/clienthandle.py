@@ -31,9 +31,8 @@ def handle_initialmap(packet):
     fires = packet.read_fires()
     walls = packet.read_walls()
     consumables = packet.read_consumables()
-    ai.current_gamestate = GameState(GameField(dimension, init_map), game.player.PLAYERS_IN_GAME, player_in_turn, fires,
+    ai.current_gamestate = GameState(GameField(dimension, init_map, game.player.PLAYERS_IN_GAME), game.player.PLAYERS_IN_GAME, player_in_turn, fires,
                                      walls, consumables)
-    ai.aidqn = ai.AIDQN()
 
 
 def handle_moverequest(packet, client):
@@ -52,7 +51,7 @@ def handle_newgamestate(packet):
     fires = packet.read_fires()
     walls = packet.read_walls()
     consumables = packet.read_consumables()
-    ai.current_gamestate = GameState(GameField(dimension, new_map), players, player_in_turn, fires, walls, consumables)
+    ai.current_gamestate = GameState(GameField(dimension, new_map, players), players, player_in_turn, fires, walls, consumables)
     ai.current_gamestate.gamefield.print_map()
 
 
@@ -78,8 +77,5 @@ def handle_gameover(packet):
     winner_id = packet.read_int()
     won = True if winner_id == ai.ownplayerobj.playernumber else False
     print(message)
-    if ai.train:
-        ai.aidqn.agent.save_model()
-    with open(ai.reward_path, "a") as myfile:
-        myfile.write("{}, {}\n".format(ai.aidqn.scores[len(ai.aidqn.scores)-1], str(won)))
+    print(won)
     exit(10)

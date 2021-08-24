@@ -45,7 +45,7 @@ void handlePlayerinformation(Packet packet)
 	std::vector<Player> players = packet.readPlayers();
 	ALL_PLAYERS = players;
 	AI& ai = AI::getInstance();
-	ai.own_player = ALL_PLAYERS.at(OWN_PLAYER_ID-1);
+	ai.own_player = &ALL_PLAYERS.at(OWN_PLAYER_ID-1);
 	// TODO: SET OWN PLAYER OBJECT AND SKILLS | SHOULD BE FINE NOW
 }
 
@@ -58,14 +58,14 @@ void handleInitialMap(Packet packet)
 	std::vector<Wall> walls = packet.readWalls();
 	std::vector<Consumable> consumables = packet.readConsumables();
 	AI& ai = AI::getInstance();
-	ai.current_gamestate = GameState(GameField(dimension, map), ALL_PLAYERS, player_in_turn, fires, walls, consumables);
+	ai.current_gamestate = new GameState(new GameField(dimension, map, &ALL_PLAYERS), ALL_PLAYERS, player_in_turn, fires, walls, consumables);
 }
 
 void handleMoveRequest(Packet packet)
 {
 	int own_id = packet.readInt();
 	Move move = AI::getInstance().getBestMove();
-	sendMovereply(own_id, move);
+	sendMovereply(own_id, &move);
 }
 
 void handleNewGamestate(Packet packet)
@@ -78,17 +78,19 @@ void handleNewGamestate(Packet packet)
 	std::vector<Wall> walls = packet.readWalls();
 	std::vector<Consumable> consumables = packet.readConsumables();
 	AI& ai = AI::getInstance();
-	ai.current_gamestate = GameState(GameField(dimension, map), current_players, player_in_turn, fires, walls, consumables);
+	delete ai.current_gamestate;
+	ai.current_gamestate = new GameState(new GameField(dimension, map, &current_players), current_players, player_in_turn, fires, walls, consumables);
 }
 
 void handleMovedistribution(Packet packet)
 {
 	int last_player_id = packet.readInt();
-	Move move = packet.readMove();
+	Move* move = packet.readMove();
 	std::string log = packet.readString();
 	std::cout << log << std::endl;
 	AI& ai = AI::getInstance();
-	ai.current_gamestate.last_move = move;
+	delete ai.current_gamestate->last_move;
+	ai.current_gamestate->last_move = move;
 }
 
 void handleError(Packet packet)
@@ -105,4 +107,6 @@ void handleGameover(Packet packet)
 	if (winnder_id == OWN_PLAYER_ID)
 		won = true;
 	std::cout << message << " Won?: " << won << std::endl;
+	AI& ai = AI::getInstance();
+	delete ai.current_gamestate;
 }

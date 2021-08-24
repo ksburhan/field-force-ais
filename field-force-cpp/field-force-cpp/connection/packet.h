@@ -47,7 +47,7 @@ public:
 	std::vector<Fire> readFires();
 	std::vector<Wall> readWalls();
 	std::vector<Consumable> readConsumables();
-	Move readMove();
+	Move* readMove();
 
 	void write(std::vector<uint8_t>);
 	void write(int);

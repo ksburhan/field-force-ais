@@ -1,7 +1,7 @@
 #pragma once
 #include "skill.h"
 
-enum MoveType
+enum class MoveType
 {
 	MT_MOVEMENT = 1,
 	MT_ATTACK,
@@ -9,7 +9,7 @@ enum MoveType
 	MT_LAST,
 };
 
-enum Direction
+enum class Direction
 {
 	DIR_NORTH = 1,
 	DIR_EAST,
@@ -29,4 +29,5 @@ public:
 	Move(MoveType, Direction);
 	Move(MoveType, Direction, Skill);
 
+	~Move();
 };

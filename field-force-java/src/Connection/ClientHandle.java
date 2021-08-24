@@ -40,7 +40,7 @@ public class ClientHandle {
         List<Fire> fires = packet.readFires();
         List<Wall> walls = packet.readWalls();
         List<Consumable> consumables = packet.readConsumables();
-        AI.instance.setCurrentState(new GameState(new GameField(dimension, map), Player.ALL_PLAYERS, playerInTurn, fires, walls, consumables));
+        AI.instance.setCurrentState(new GameState(new GameField(dimension, map, Player.ALL_PLAYERS), Player.ALL_PLAYERS, playerInTurn, fires, walls, consumables));
     }
 
     public static void handleMoveRequest(Packet packet) throws Exception {
@@ -58,7 +58,7 @@ public class ClientHandle {
         List<Fire> fires = packet.readFires();
         List<Wall> walls = packet.readWalls();
         List<Consumable> consumables = packet.readConsumables();
-        AI.instance.setCurrentState(new GameState(new GameField(dimension, map), currentPlayers, playerInTurn, fires, walls, consumables));
+        AI.instance.setCurrentState(new GameState(new GameField(dimension, map, currentPlayers), currentPlayers, playerInTurn, fires, walls, consumables));
     }
 
     public static void handleMovedistribution(Packet packet) throws Exception {

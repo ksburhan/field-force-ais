@@ -10,27 +10,27 @@ from game import gamestate, gameconstants
 
 
 class GameField:
-    def __init__(self, dimension, _map):
+    def __init__(self, dimension, _map, current_players):
         self.dimension = dimension
-        self.map = self.create_field(_map)
+        self.map = self.create_field(_map, current_players)
         self.field_chars = _map
 
-    def create_field(self, _map):
+    def create_field(self, _map, current_players):
         tilemap = {}
         for y in range(self.dimension):
             for x in range(self.dimension):
                 map_object = MapObject
                 if _map[x][y] == '1':
-                    map_object = game.player.PLAYERS_IN_GAME[0]
+                    map_object = self.get_player(1, current_players)
                     map_object.set_pos(x, y)
                 elif _map[x][y] == '2':
-                    map_object = game.player.PLAYERS_IN_GAME[1]
+                    map_object = self.get_player(2, current_players)
                     map_object.set_pos(x, y)
                 elif _map[x][y] == '3':
-                    map_object = game.player.PLAYERS_IN_GAME[2]
+                    map_object = self.get_player(3, current_players)
                     map_object.set_pos(x, y)
                 elif _map[x][y] == '4':
-                    map_object = game.player.PLAYERS_IN_GAME[3]
+                    map_object = self.get_player(4, current_players)
                     map_object.set_pos(x, y)
                 elif _map[x][y] == 'f':
                     map_object = Fire('f', x, y, gameconstants.FIRE_DURATION_ON_MAP)
@@ -64,8 +64,7 @@ class GameField:
                 print(self.map[(x, y)].content.identifier, end=' ')
             print()
 
-    def to_string(self):
-        string = ''
-        for y in range(self.dimension):
-            for x in range(self.dimension):
-                string += str(self.field_chars[x][y])
+    def get_player(self, number, current_players):
+        for p in current_players:
+            if p.playernumber == number:
+                return p

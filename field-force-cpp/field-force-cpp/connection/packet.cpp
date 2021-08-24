@@ -165,7 +165,6 @@ std::vector<int> Packet::readPlayerInTurn()
 {
 	std::vector<int> player_in_turn;
 	int player_count = readInt();
-	player_in_turn.resize(player_count);
 	for(int i = 0; i < player_count; i++)
 	{
 		int player_number = readInt();
@@ -178,7 +177,6 @@ std::vector<Fire> Packet::readFires()
 {
 	std::vector<Fire> fires;
 	int fires_count = readInt();
-	fires.resize(fires_count);
 	for (int i = 0; i < fires_count; i++)
 	{
 		int x = readInt();
@@ -193,7 +191,6 @@ std::vector<Wall> Packet::readWalls()
 {
 	std::vector<Wall> walls;
 	int walls_count = readInt();
-	walls.resize(walls_count);
 	for (int i = 0; i < walls_count; i++)
 	{
 		int x = readInt();
@@ -208,7 +205,6 @@ std::vector<Consumable> Packet::readConsumables()
 {
 	std::vector<Consumable> consumables;
 	int cons_count = readInt();
-	consumables.resize(cons_count);
 	for (int i = 0; i < cons_count; i++)
 	{
 		char id = (char)readInt();
@@ -219,12 +215,12 @@ std::vector<Consumable> Packet::readConsumables()
 	return consumables;
 }
 
-Move Packet::readMove()
+Move* Packet::readMove()
 {
 	MoveType type = (MoveType)readInt();
 	Direction dir = (Direction)readInt();
 	Skill skill = readSkill();
-	return Move(type, dir, skill);
+	return new Move(type, dir, skill);
 }
 
 
@@ -256,8 +252,8 @@ void Packet::write(std::string value)
 
 void Packet::write(Move move)
 {
-	write(move.type);
-	write(move.direction);
+	write(static_cast<int>(move.type));
+	write(static_cast<int>(move.direction));
 	write(move.skill);
 }
 
