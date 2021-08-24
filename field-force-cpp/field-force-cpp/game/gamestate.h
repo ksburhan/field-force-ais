@@ -32,6 +32,7 @@ public:
 	Player getNextPlayer();
 	Player getOwnPlayer();
 	Player getPlayer(int);
+	bool isConsumable(char);
 
 	~GameState();
 private:

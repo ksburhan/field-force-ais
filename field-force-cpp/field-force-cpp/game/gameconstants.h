@@ -2,8 +2,8 @@
 #include <string>
 
 inline std::string playername = "c++";
-inline int skill1 = 0;
-inline int skill2 = 1;
+inline int skill1 = 4;
+inline int skill2 = 3;
 
 inline char VALID_TARGETS[] = { '1', '2', '3', '4', '-' };
 

@@ -11,6 +11,8 @@
 #endif
 #include "ai.h"
 
+#include <ctime>
+
 AI& AI::getInstance()
 {
 	static AI instance;
@@ -20,6 +22,10 @@ AI& AI::getInstance()
 
 Move AI::getBestMove()
 {
+	srand(time(NULL));
 	std::vector<Move> moves = current_gamestate->getAllMoves(OWN_PLAYER_ID);
-	return moves.at(std::rand() % moves.size() + 0);
+	Move move = moves.at(std::rand() % moves.size() + 0);
+	current_gamestate->simulateNextGamestate(OWN_PLAYER_ID, &move);
+	
+	return move;
 }
