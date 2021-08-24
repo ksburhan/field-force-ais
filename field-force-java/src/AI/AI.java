@@ -25,6 +25,7 @@ public class AI {
             checkTimelimit();
             Random rand = new Random();
             bestMove = moves.get(rand.nextInt(moves.size()));
+            currentState.simulateNextGamestate(ownPlayer.getPlayerNumber(), bestMove);
             return bestMove;
         }
         catch (TimeoutException te){
