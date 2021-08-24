@@ -86,22 +86,22 @@ class Skill:
             tile = gamestate.gamefield.map[(x_target, y_target)]
             if direction == Direction.NORTH:
                 if tile.nTile is not None:
-                    y_target -= i
+                    y_target -= 1
                 else:
                     return
             elif direction == Direction.EAST:
                 if tile.eTile is not None:
-                    x_target += i
+                    x_target += 1
                 else:
                     return
             elif direction == Direction.SOUTH:
                 if tile.sTile is not None:
-                    y_target += i
+                    y_target += 1
                 else:
                     return
             elif direction == Direction.WEST:
                 if tile.wTile is not None:
-                    x_target -= i
+                    x_target -= 1
                 else:
                     return
             target_object = gamestate.gamefield.map[(x_target, y_target)].content
@@ -193,22 +193,22 @@ class Skill:
             tile = gamestate.gamefield.map[(x_target, y_target)]
             if direction == Direction.NORTH:
                 if tile.nTile is not None:
-                    y_target -= i
+                    y_target -= 1
                 else:
                     return
             elif direction == Direction.EAST:
                 if tile.eTile is not None:
-                    x_target += i
+                    x_target += 1
                 else:
                     return
             elif direction == Direction.SOUTH:
                 if tile.sTile is not None:
-                    y_target += i
+                    y_target += 1
                 else:
                     return
             elif direction == Direction.WEST:
                 if tile.wTile is not None:
-                    x_target -= i
+                    x_target -= 1
                 else:
                     return
             target_object = gamestate.gamefield.map[(x_target, y_target)].content
