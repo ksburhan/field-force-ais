@@ -12,6 +12,6 @@ public:
 	MapObject();
 	MapObject(char, int, int);
 
-	void setPos(int, int);
+	void set_pos(int, int);
 	void destroy(GameState*);
 };

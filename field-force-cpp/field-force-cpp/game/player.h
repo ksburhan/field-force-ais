@@ -23,13 +23,13 @@ public:
 	Player(char, int, std::string, int, int);
 	Player(char, int, std::string, int, int, int, int, Skill, Skill);
 
-	void takeDamage(int, GameState*);
-	void takeShieldDamage(int, GameState*);
+	void take_damage(int, GameState*);
+	void take_shield_damage(int, GameState*);
 	void heal(int);
-	void chargeShield(int);
-	void setOnFire();
-	void setInactive(GameState*);
-	void prepareForNextRound(GameState*);
+	void charge_shield(int);
+	void set_on_fire();
+	void set_inactive(GameState*);
+	void prepare_for_next_round(GameState*);
 };
 
 inline std::vector<Player> ALL_PLAYERS;

@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
             return 0;
         }
     }
-    Client& client = Client::getInstance();
+    Client& client = Client::get_instance();
 	client.conn(ip, port);
 #ifdef _WIN32
     _CrtDumpMemoryLeaks();

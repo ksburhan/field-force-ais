@@ -34,18 +34,18 @@ public:
 	Skill(int, int);
 	Skill(int, std::string, int, int, int, SkillType);
 
-	void setOnCooldown();
-	void prepareForNextRound();
-	void useSkill(Player*, Direction, GameState*);
+	void set_on_cooldown();
+	void prepare_for_next_round();
+	void use_skill(Player*, Direction, GameState*);
 
 	~Skill();
 private:
-	void movementType(Player*, Direction, GameState*);
-	void regenerateType(Player*, Direction, GameState*);
-	void fireType(Player*, Direction, GameState*);
-	void rocketType(Player*, Direction, GameState*);
-	void pushType(Player*, Direction, GameState*);
-	void breakType(Player*, Direction, GameState*);
+	void movement_type(Player*, Direction, GameState*);
+	void regenerate_type(Player*, Direction, GameState*);
+	void fire_type(Player*, Direction, GameState*);
+	void rocket_type(Player*, Direction, GameState*);
+	void push_type(Player*, Direction, GameState*);
+	void break_type(Player*, Direction, GameState*);
 };
 
 inline std::vector<Skill> ALL_SKILLS;

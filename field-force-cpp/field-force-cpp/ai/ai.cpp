@@ -13,19 +13,19 @@
 
 #include <ctime>
 
-AI& AI::getInstance()
+AI& AI::get_instance()
 {
 	static AI instance;
 
 	return instance;
 }
 
-Move AI::getBestMove()
+Move AI::get_best_move()
 {
 	srand(time(NULL));
-	std::vector<Move> moves = current_gamestate->getAllMoves(OWN_PLAYER_ID);
+	std::vector<Move> moves = current_gamestate->get_all_moves(OWN_PLAYER_ID);
 	Move move = moves.at(std::rand() % moves.size() + 0);
-	current_gamestate->simulateNextGamestate(OWN_PLAYER_ID, &move);
+	current_gamestate->simulate_next_gamestate(OWN_PLAYER_ID, &move);
 	
 	return move;
 }

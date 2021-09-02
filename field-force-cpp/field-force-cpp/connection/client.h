@@ -17,7 +17,7 @@
 class Client
 {
 public:
-	static Client& getInstance();
+	static Client& get_instance();
 private:
 	Client() {}
 
@@ -29,8 +29,8 @@ private:
 	void disconnect();
 public:
 	void conn(std::string, int);
-	void sendPacket(Packet);
-	void handleMessage(int, Packet);
+	void send_packet(Packet);
+	void handle_message(int, Packet);
 
 	Client(Client const&) = delete;
 	void operator=(Client const&) = delete;

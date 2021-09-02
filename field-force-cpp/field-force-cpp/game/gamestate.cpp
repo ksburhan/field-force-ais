@@ -39,33 +39,33 @@ GameState::GameState(GameField* _gamefield, std::vector<Player> _players, std::v
 	last_move = new Move();
 }
 
-std::vector<Move> GameState::getAllMoves(int player_id)
+std::vector<Move> GameState::get_all_moves(int player_id)
 {
 	std::vector<Move> moves;
-	Player player = getPlayer(player_id);
+	Player player = get_player(player_id);
 	Tile* tile = current_field->field[player.x_pos][player.y_pos];
 	for (int t = static_cast<int>(MoveType::MT_MOVEMENT); t != static_cast<int>(MoveType::MT_LAST); t++)
 	{
 		switch (MoveType(t))
 		{
 		case MoveType::MT_MOVEMENT:
-			if (tile->nTile != nullptr)
+			if (tile->n_tile != nullptr)
 				moves.emplace_back(Move(MoveType::MT_MOVEMENT, Direction::DIR_NORTH));
-			if (tile->eTile != nullptr)
+			if (tile->e_tile != nullptr)
 				moves.emplace_back(Move(MoveType::MT_MOVEMENT, Direction::DIR_EAST));
-			if (tile->sTile != nullptr)
+			if (tile->s_tile != nullptr)
 				moves.emplace_back(Move(MoveType::MT_MOVEMENT, Direction::DIR_SOUTH));
-			if (tile->wTile != nullptr)
+			if (tile->w_tile != nullptr)
 				moves.emplace_back(Move(MoveType::MT_MOVEMENT, Direction::DIR_WEST));
 			break;
 		case MoveType::MT_ATTACK:
-			if (tile->nTile != nullptr && isValidTarget(tile->nTile->content->id))
+			if (tile->n_tile != nullptr && is_valid_target(tile->n_tile->content->id))
 				moves.emplace_back(Move(MoveType::MT_ATTACK, Direction::DIR_NORTH));
-			if (tile->eTile != nullptr && isValidTarget(tile->eTile->content->id))
+			if (tile->e_tile != nullptr && is_valid_target(tile->e_tile->content->id))
 				moves.emplace_back(Move(MoveType::MT_ATTACK, Direction::DIR_EAST));
-			if (tile->sTile != nullptr && isValidTarget(tile->sTile->content->id))
+			if (tile->s_tile != nullptr && is_valid_target(tile->s_tile->content->id))
 				moves.emplace_back(Move(MoveType::MT_ATTACK, Direction::DIR_SOUTH));
-			if (tile->wTile != nullptr && isValidTarget(tile->wTile->content->id))
+			if (tile->w_tile != nullptr && is_valid_target(tile->w_tile->content->id))
 				moves.emplace_back(Move(MoveType::MT_ATTACK, Direction::DIR_WEST));
 			break;
 		case MoveType::MT_SKILL:
@@ -84,7 +84,7 @@ std::vector<Move> GameState::getAllMoves(int player_id)
 	return moves;
 }
 
-bool GameState::isValidTarget(char c)
+bool GameState::is_valid_target(char c)
 {
 	for (char x : VALID_TARGETS)
 	{
@@ -94,42 +94,42 @@ bool GameState::isValidTarget(char c)
 	return false;
 }
 
-void GameState::simulateNextGamestate(int player_id, Move* move)
+void GameState::simulate_next_gamestate(int player_id, Move* move)
 {
-	Player playerC = getPlayer(player_id);
+	Player playerC = get_player(player_id);
 	Player* player = static_cast<Player*>(current_field->field[playerC.x_pos][playerC.y_pos]->content);
 	switch (move->type)
 	{
 	case MoveType::MT_MOVEMENT:
 		if (move->direction == Direction::DIR_NORTH)
-			moveToTile(player, player->x_pos, player->y_pos - 1);
+			move_to_tile(player, player->x_pos, player->y_pos - 1);
 		if (move->direction == Direction::DIR_EAST)
-			moveToTile(player, player->x_pos + 1, player->y_pos);
+			move_to_tile(player, player->x_pos + 1, player->y_pos);
 		if (move->direction == Direction::DIR_SOUTH)
-			moveToTile(player, player->x_pos, player->y_pos + 1);
+			move_to_tile(player, player->x_pos, player->y_pos + 1);
 		if (move->direction == Direction::DIR_WEST)
-			moveToTile(player, player->x_pos - 1, player->y_pos);
+			move_to_tile(player, player->x_pos - 1, player->y_pos);
 		break;
 	case MoveType::MT_ATTACK:
 		if (move->direction == Direction::DIR_NORTH)
-			attackTile(player, player->x_pos, player->y_pos - 1);
+			attack_tile(player, player->x_pos, player->y_pos - 1);
 		if (move->direction == Direction::DIR_EAST)
-			attackTile(player, player->x_pos + 1, player->y_pos);
+			attack_tile(player, player->x_pos + 1, player->y_pos);
 		if (move->direction == Direction::DIR_SOUTH)
-			attackTile(player, player->x_pos, player->y_pos + 1);
+			attack_tile(player, player->x_pos, player->y_pos + 1);
 		if (move->direction == Direction::DIR_WEST)
-			attackTile(player, player->x_pos - 1, player->y_pos);
+			attack_tile(player, player->x_pos - 1, player->y_pos);
 		break;
 	case MoveType::MT_SKILL:
 		Skill* skill = &player->skill1;
 		if (move->skill.id == player->skill2.id)
 			skill = &player->skill2;
-		skill->useSkill(player, move->direction, this);
+		skill->use_skill(player, move->direction, this);
 		break;
 	}
 }
 
-void GameState::moveToTile(Player* player, int x_target, int y_target)
+void GameState::move_to_tile(Player* player, int x_target, int y_target)
 {
 	MapObject* target = current_field->field[x_target][y_target]->content;
 	char target_char = current_field->field_chars[x_target][y_target];
@@ -142,12 +142,12 @@ void GameState::moveToTile(Player* player, int x_target, int y_target)
 		current_field->field[x_target][y_target]->content = player;
 		current_field->field_chars[x][y] = '0';
 		current_field->field[x][y]->content = new MapObject('0', x, y);
-		player->setPos(x_target, y_target);
+		player->set_pos(x_target, y_target);
 	}
 	else if (target_char == '1' || target_char == '2' || target_char == '3' || target_char == '4')
 	{
-		player->takeDamage(WALK_IN_PLAYER_DAMAGE, this);
-		static_cast<Player*>(target)->takeDamage(PLAYER_WALKED_INTO_DAMAGE, this);
+		player->take_damage(WALK_IN_PLAYER_DAMAGE, this);
+		static_cast<Player*>(target)->take_damage(PLAYER_WALKED_INTO_DAMAGE, this);
 	}
 	else if (target_char == 'f')
 	{
@@ -156,48 +156,48 @@ void GameState::moveToTile(Player* player, int x_target, int y_target)
 		current_field->field[x_target][y_target]->content = player;
 		current_field->field_chars[x][y] = '0';
 		current_field->field[x][y]->content = new MapObject('0', x, y);
-		player->setPos(x_target, y_target);
-		player->takeDamage(ON_FIRE_DAMAGE, this);
-		player->setOnFire();
+		player->set_pos(x_target, y_target);
+		player->take_damage(ON_FIRE_DAMAGE, this);
+		player->set_on_fire();
 	}
 	else if (target_char == '-')
 	{
-		player->takeDamage(WALK_IN_WALL_DAMAGE, this);
-		static_cast<Wall*>(target)->takeDamage(ATTACK_DAMAGE, this);
+		player->take_damage(WALK_IN_WALL_DAMAGE, this);
+		static_cast<Wall*>(target)->take_damage(ATTACK_DAMAGE, this);
 	}
-	else if (isConsumable(target_char))
+	else if (is_consumable(target_char))
 	{
 		Consumable* con = static_cast<Consumable*>(target);
 		if (con->healing > 0)
 			player->heal(con->healing);
 		else
-			player->takeDamage(con->healing, this);
+			player->take_damage(con->healing, this);
 		if (con->shield > 0)
-			player->chargeShield(con->shield);
+			player->charge_shield(con->shield);
 		delete current_field->field[x_target][y_target]->content;
 		current_field->field_chars[x_target][y_target] = player->id;
 		current_field->field[x_target][y_target]->content = player;
 		current_field->field_chars[x][y] = '0';
 		current_field->field[x][y]->content = new MapObject('0', x, y);
-		player->setPos(x_target, y_target);
+		player->set_pos(x_target, y_target);
 	}
 }
 
-void GameState::attackTile(Player* player, int x_target, int y_target)
+void GameState::attack_tile(Player* player, int x_target, int y_target)
 {
 	MapObject* target = current_field->field[x_target][y_target]->content;
 	char target_char = current_field->field_chars[x_target][y_target];
 	if (target_char == '1' || target_char == '2' || target_char == '3' || target_char == '4')
 	{
-		static_cast<Player*>(target)->takeDamage(ATTACK_DAMAGE, this);
+		static_cast<Player*>(target)->take_damage(ATTACK_DAMAGE, this);
 	}
 	else if(target_char == '-')
 	{
-		static_cast<Wall*>(target)->takeDamage(ATTACK_DAMAGE, this);
+		static_cast<Wall*>(target)->take_damage(ATTACK_DAMAGE, this);
 	}
 }
 
-bool GameState::isConsumable(char c)
+bool GameState::is_consumable(char c)
 {
 	for (auto con : ALL_CONSUMABLES)
 	{
@@ -207,23 +207,23 @@ bool GameState::isConsumable(char c)
 	return false;
 }
 
-void GameState::prepareForNextRound()
+void GameState::prepare_for_next_round()
 {
 	for (auto p : current_players)
 	{
 		if (p.active)
-			p.prepareForNextRound(this);
+			p.prepare_for_next_round(this);
 	}
 	for (auto f : fires)
-		f.prepareForNextRound(this);
+		f.prepare_for_next_round(this);
 }
 
-bool GameState::isGameOver()
+bool GameState::is_game_over()
 {
 	return player_in_turn.size() <= 1;
 }
 
-Player GameState::getNextPlayer()
+Player GameState::get_next_player()
 {
 	for (auto p : current_players)
 	{
@@ -232,7 +232,7 @@ Player GameState::getNextPlayer()
 	}
 }
 
-Player GameState::getOwnPlayer()
+Player GameState::get_own_player()
 {
 	for (auto p : current_players)
 	{
@@ -241,7 +241,7 @@ Player GameState::getOwnPlayer()
 	}
 }
 
-Player GameState::getPlayer(int id)
+Player GameState::get_player(int id)
 {
 	for (auto p : current_players)
 	{
