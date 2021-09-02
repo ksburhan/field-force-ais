@@ -8,15 +8,15 @@ public:
 	int y_pos = 0;
 	MapObject* content;
 
-	Tile* nTile = nullptr;
-	Tile* eTile = nullptr;
-	Tile* sTile = nullptr;
-	Tile* wTile = nullptr;
+	Tile* n_tile = nullptr;
+	Tile* e_tile = nullptr;
+	Tile* s_tile = nullptr;
+	Tile* w_tile = nullptr;
 
 	Tile();
 	Tile(int, int, MapObject*);
 
-	void setPos(int, int);
+	void set_pos(int, int);
 
 	~Tile();
 };

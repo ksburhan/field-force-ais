@@ -13,5 +13,5 @@ public:
 	Fire(char, int, int);
 	Fire(char, int, int, int);
 
-	void prepareForNextRound(GameState*);
+	void prepare_for_next_round(GameState*);
 };

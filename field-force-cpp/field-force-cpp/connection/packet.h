@@ -37,31 +37,30 @@ public:
 	Packet();
 	Packet(std::vector<uint8_t>);
 
-	int readInt();
-	std::string readString();
-	void readConfig();
-	std::vector<Player> readPlayers();
-	Skill readSkill();
-	std::vector<std::vector<char>> readMap(int);
-	std::vector<int> readPlayerInTurn();
-	std::vector<Fire> readFires();
-	std::vector<Wall> readWalls();
-	std::vector<Consumable> readConsumables();
-	Move* readMove();
+	int read_int();
+	std::string read_string();
+	void read_config();
+	std::vector<Player> read_players();
+	Skill read_skill();
+	std::vector<std::vector<char>> read_map(int);
+	std::vector<int> read_player_in_turn();
+	std::vector<Fire> read_fires();
+	std::vector<Wall> read_walls();
+	std::vector<Consumable> read_consumables();
+	Move* read_move();
 
 	void write(std::vector<uint8_t>);
 	void write(int);
-	void write(float);
 	void write(std::string);
 	void write(Move);
 	void write(Skill);
-	void writeLength();
+	void write_length();
 
-	static int reverseIntByteArray(int);
-	static int convertByteArrayToInt(uint8_t*);
+	static int reverse_int_byte_array(int);
+	static int convert_byte_array_to_int(uint8_t*);
 private:
-	std::vector<Consumable> readConfigConsumables();
-	std::vector<Skill> readConfigSkills();
-	std::vector<uint8_t> intToByteArray(int);
-	std::vector<uint8_t> toByteArray();
+	std::vector<Consumable> read_config_consumables();
+	std::vector<Skill> read_config_skills();
+	std::vector<uint8_t> int_to_byte_array(int);
+	std::vector<uint8_t> to_byte_array();
 };

@@ -37,28 +37,28 @@ Player::Player(char _id, int _player_number, std::string _playername, int _hp, i
 	skill2 = _skill2;
 }
 
-void Player::takeDamage(int damage, GameState* game_state)
+void Player::take_damage(int damage, GameState* game_state)
 {
 	if (shield > 0)
 	{
-		takeShieldDamage(damage, game_state);
+		take_shield_damage(damage, game_state);
 	}
 	else
 	{
 		hp -= damage;
 		if (hp <= 0)
-			setInactive(game_state);
+			set_inactive(game_state);
 	}
 }
 
-void Player::takeShieldDamage(int shield_damage, GameState* game_state)
+void Player::take_shield_damage(int shield_damage, GameState* game_state)
 {
 	shield -= shield_damage;
 	if (shield <= 0)
 	{
 		int damage = shield * (-1);
 		shield = 0;
-		takeDamage(damage, game_state);
+		take_damage(damage, game_state);
 	}
 }
 
@@ -69,19 +69,19 @@ void Player::heal(int heal)
 		hp = HP;
 }
 
-void Player::chargeShield(int charge)
+void Player::charge_shield(int charge)
 {
 	shield += charge;
 	if (shield > SHIELD)
 		shield = SHIELD;
 }
 
-void Player::setOnFire()
+void Player::set_on_fire()
 {
 	on_fire = ON_FIRE_EFFECT_DURATION;
 }
 
-void Player::setInactive(GameState* game_state)
+void Player::set_inactive(GameState* game_state)
 {
 	destroy(game_state);
 	hp = 0;
@@ -89,14 +89,14 @@ void Player::setInactive(GameState* game_state)
 	active = false;
 }
 
-void Player::prepareForNextRound(GameState* game_state)
+void Player::prepare_for_next_round(GameState* game_state)
 {
 	if (on_fire > 0)
 	{
-		takeDamage(ON_FIRE_DAMAGE, game_state);
+		take_damage(ON_FIRE_DAMAGE, game_state);
 		on_fire--;
 	}
-	skill1.prepareForNextRound();
-	skill2.prepareForNextRound();
+	skill1.prepare_for_next_round();
+	skill2.prepare_for_next_round();
 }
 

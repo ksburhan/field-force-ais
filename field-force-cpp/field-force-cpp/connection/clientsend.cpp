@@ -17,12 +17,12 @@
 
 void sendPacket(Packet packet)
 {
-	packet.writeLength();
-	Client& client = Client::getInstance();
-	client.sendPacket(packet);
+	packet.write_length();
+	Client& client = Client::get_instance();
+	client.send_packet(packet);
 }
 
-void sendPlayername()
+void send_playername()
 {
 	Packet packet;
 	packet.write(PLAYERNAME);
@@ -32,7 +32,7 @@ void sendPlayername()
 	sendPacket(packet);
 }
 
-void sendMovereply(int id, Move* move)
+void send_movereply(int id, Move* move)
 {
 	Packet packet;
 	packet.write(MOVEREPLY);
@@ -40,7 +40,7 @@ void sendMovereply(int id, Move* move)
 	packet.write(*move);
 	if(move->type == MoveType::MT_SKILL)
 	{
-		move->skill.setOnCooldown();
+		move->skill.set_on_cooldown();
 	}
 	sendPacket(packet);
 }

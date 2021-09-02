@@ -28,7 +28,7 @@ Fire::Fire(char _id, int _x_pos, int _y_pos, int _duration)
 	duration = _duration;
 }
 
-void Fire::prepareForNextRound(GameState* game_state)
+void Fire::prepare_for_next_round(GameState* game_state)
 {
 	duration--;
 	if (duration <= 0)

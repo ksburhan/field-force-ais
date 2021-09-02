@@ -15,10 +15,10 @@ public:
 	GameField();
 	GameField(int, std::vector<std::vector<char>>, std::vector<Player>*);
 
-	void printMap();
+	void print_map();
 
 	~GameField();
 private:
 	std::vector<std::vector<Tile*>> createField(std::vector<std::vector<char>>, const std::vector<Player>&);
-	Player getPlayer(int,const std::vector<Player>&);
+	Player get_player(int,const std::vector<Player>&);
 };

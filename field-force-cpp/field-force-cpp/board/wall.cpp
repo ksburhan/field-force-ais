@@ -30,7 +30,7 @@ Wall::Wall(char _id, int _x_pos, int _y_pos, int _hp)
 	hp = _hp;
 }
 
-void Wall::takeDamage(int damage, GameState* game_state)
+void Wall::take_damage(int damage, GameState* game_state)
 {
 	hp -= damage;
 	if (hp <= 0)

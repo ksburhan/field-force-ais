@@ -27,7 +27,7 @@
 #include <arpa/inet.h>
 #endif
 
-Client& Client::getInstance()
+Client& Client::get_instance()
 {
 	static Client instance;
 
@@ -79,14 +79,14 @@ void Client::conn(std::string _ip, int _port)
 		return;
 	}
 
-	sendPlayername();
+	send_playername();
 	game_is_running = true;
 
 	while (game_is_running)
 	{
 		uint8_t* lengthB = new uint8_t[4];
 		int bytesReceived = recv(sock, (char*)lengthB, sizeof(int), MSG_WAITALL);
-		int length = Packet::convertByteArrayToInt(lengthB);
+		int length = Packet::convert_byte_array_to_int(lengthB);
 		delete[] lengthB;
 		std::cout << length << std::endl;
 		if (bytesReceived <= 0)
@@ -97,7 +97,7 @@ void Client::conn(std::string _ip, int _port)
 		}
 		uint8_t* typeB = new uint8_t[4];
 		bytesReceived = recv(sock, (char*)typeB, sizeof(int), MSG_WAITALL);
-		int type = Packet::convertByteArrayToInt(typeB);
+		int type = Packet::convert_byte_array_to_int(typeB);
 		delete[] typeB;
 		std::cout << type << std::endl;
 		if (bytesReceived <= 0)
@@ -117,7 +117,7 @@ void Client::conn(std::string _ip, int _port)
 			return;
 		}
 		Packet packet(data);
-		handleMessage(type, packet);
+		handle_message(type, packet);
 	}
 	disconnect();
 }
@@ -132,7 +132,7 @@ void Client::disconnect()
 #endif
 }
 
-void Client::handleMessage(int type, Packet packet)
+void Client::handle_message(int type, Packet packet)
 {
 	switch (type)
 	{
@@ -140,7 +140,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cout << "Type 2" << std::endl;
-			handleGamemode(packet);
+			handle_gamemode(packet);
 		} catch( std::exception &e)
 		{
 			std::cerr << e.what() << std::endl;
@@ -152,7 +152,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cout << "Type 3" << std::endl;
-			handlePlayerinformation(packet);
+			handle_playerinformation(packet);
 		}
 		catch (std::exception& e)
 		{
@@ -165,9 +165,9 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cout << "Type 4" << std::endl;
-			handleInitialMap(packet);
-			AI& ai = AI::getInstance();
-			ai.current_gamestate->current_field->printMap();
+			handle_initial_map(packet);
+			AI& ai = AI::get_instance();
+			ai.current_gamestate->current_field->print_map();
 		}
 		catch (std::exception& e)
 		{
@@ -180,7 +180,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cout << "Type 5" << std::endl;
-			handleMoveRequest(packet);
+			handle_move_request(packet);
 		}
 		catch (std::exception& e)
 		{
@@ -193,9 +193,9 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cout << "Type 7" << std::endl;
-			handleNewGamestate(packet);
-			AI& ai = AI::getInstance();
-			ai.current_gamestate->current_field->printMap();
+			handle_new_gamestate(packet);
+			AI& ai = AI::get_instance();
+			ai.current_gamestate->current_field->print_map();
 		}
 		catch (std::exception& e)
 		{
@@ -208,7 +208,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cout << "Type 8" << std::endl;
-			handleMovedistribution(packet);
+			handle_movedistribution(packet);
 		}
 		catch (std::exception& e)
 		{
@@ -221,7 +221,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cout << "Type 9" << std::endl;
-			handleError(packet);
+			handle_error(packet);
 			disconnect();
 			exit(-9);
 		}
@@ -236,7 +236,7 @@ void Client::handleMessage(int type, Packet packet)
 		try
 		{
 			std::cout << "Type 10" << std::endl;
-			handleGameover(packet);
+			handle_gameover(packet);
 			game_is_running = false;
 		}
 		catch (std::exception& e)
@@ -255,7 +255,7 @@ void Client::handleMessage(int type, Packet packet)
 }
 
 
-void Client::sendPacket(Packet packet)
+void Client::send_packet(Packet packet)
 {
 	int sendResult = send(sock, reinterpret_cast<const char*>(packet.buffer.data()), packet.buffer.size(), 0);
 	std::cout << sendResult << std::endl;

@@ -27,7 +27,7 @@ Packet::Packet(std::vector<uint8_t> data)
 	//write(data);
 }
 
-int Packet::readInt()
+int Packet::read_int()
 {
 	try
 	{
@@ -43,11 +43,11 @@ int Packet::readInt()
 	}
 }
 
-std::string Packet::readString()
+std::string Packet::read_string()
 {
 	try
 	{
-		int length = readInt();
+		int length = read_int();
 		std::string msg;
 		msg.resize(length + 1);
 		for(int i = 0; i < length; i++)
@@ -65,91 +65,91 @@ std::string Packet::readString()
 	}
 }
 
-void Packet::readConfig()
+void Packet::read_config()
 {
-	HP = readInt();
-	SHIELD = readInt();
+	HP = read_int();
+	SHIELD = read_int();
 
-	ATTACK_DAMAGE = readInt();
-	WALK_IN_PLAYER_DAMAGE = readInt();
-	PLAYER_WALKED_INTO_DAMAGE = readInt();
+	ATTACK_DAMAGE = read_int();
+	WALK_IN_PLAYER_DAMAGE = read_int();
+	PLAYER_WALKED_INTO_DAMAGE = read_int();
 
-	FIRE_DURATION_ON_MAP = readInt();
-	ON_FIRE_EFFECT_DURATION = readInt();
-	ON_FIRE_DAMAGE = readInt();
+	FIRE_DURATION_ON_MAP = read_int();
+	ON_FIRE_EFFECT_DURATION = read_int();
+	ON_FIRE_DAMAGE = read_int();
 
-	WALL_HP = readInt();
-	WALK_IN_WALL_DAMAGE = readInt();
-	WALL_TAKE_DAMAGE = readInt();
+	WALL_HP = read_int();
+	WALK_IN_WALL_DAMAGE = read_int();
+	WALL_TAKE_DAMAGE = read_int();
 
-	ALL_CONSUMABLES = readConfigConsumables();
+	ALL_CONSUMABLES = read_config_consumables();
 
-	ALL_SKILLS = readConfigSkills();
+	ALL_SKILLS = read_config_skills();
 }
 
-std::vector<Consumable> Packet::readConfigConsumables()
+std::vector<Consumable> Packet::read_config_consumables()
 {
 	std::vector<Consumable> cons;
-	int con_count = readInt();
+	int con_count = read_int();
 	for (int i = 0; i < con_count; i++)
 	{
-		char id = (char)readInt();
-		std::string con_name = readString();
-		int healing = readInt();
-		int shield = readInt();
+		char id = (char)read_int();
+		std::string con_name = read_string();
+		int healing = read_int();
+		int shield = read_int();
 		cons.push_back(Consumable(id, con_name, healing, shield));
 	}
 	return cons;
 }
 
-std::vector<Skill> Packet::readConfigSkills()
+std::vector<Skill> Packet::read_config_skills()
 {
 	std::vector<Skill> skills;
-	int skills_count = readInt();
+	int skills_count = read_int();
 	for (int i = 0; i < skills_count; i++)
 	{
-		int id = readInt();
-		std::string skill_name = readString();
-		int cooldown = readInt();
-		int range = readInt();
-		int value = readInt();
-		int type = readInt();
+		int id = read_int();
+		std::string skill_name = read_string();
+		int cooldown = read_int();
+		int range = read_int();
+		int value = read_int();
+		int type = read_int();
 		skills.push_back(Skill(id, skill_name, cooldown, range, value, static_cast<SkillType>(type)));
 	}
 	return skills;
 }
 
-std::vector<Player> Packet::readPlayers()
+std::vector<Player> Packet::read_players()
 {
 	std::vector<Player> players;
-	int player_count = readInt();
+	int player_count = read_int();
 	for (int i = 0; i < player_count; i++)
 	{
-		int player_number = readInt();
-		std::string player_name = readString();
-		int hp = readInt();
-		int shield = readInt();
-		int x_pos = readInt();
-		int y_pos = readInt();
-		Skill skill1 = readSkill();
-		Skill skill2 = readSkill();
+		int player_number = read_int();
+		std::string player_name = read_string();
+		int hp = read_int();
+		int shield = read_int();
+		int x_pos = read_int();
+		int y_pos = read_int();
+		Skill skill1 = read_skill();
+		Skill skill2 = read_skill();
 		players.push_back(Player((char)player_number, player_number, player_name, hp, shield, x_pos, y_pos, skill1, skill2));
 	}
 	return players;
 }
 
-Skill Packet::readSkill()
+Skill Packet::read_skill()
 {
-	int skill_id = readInt();
+	int skill_id = read_int();
 	if(skill_id == -1)
 	{
 		return Skill();
 	}
-	int cooldown_left = readInt();
+	int cooldown_left = read_int();
 	return Skill(skill_id, cooldown_left);
 }
 
-std::vector<std::vector<char>> Packet::readMap(int dimension)
+std::vector<std::vector<char>> Packet::read_map(int dimension)
 {
 	std::vector<std::vector<char>> map;
 	map.resize(dimension);
@@ -157,69 +157,69 @@ std::vector<std::vector<char>> Packet::readMap(int dimension)
 		map[i].resize(dimension);
 	for (int y = 0; y < dimension; y++) 
 		for (int x = 0; x < dimension; x++)
-			map[x][y] = (char)readInt();
+			map[x][y] = (char)read_int();
 	return map;
 }
 
-std::vector<int> Packet::readPlayerInTurn()
+std::vector<int> Packet::read_player_in_turn()
 {
 	std::vector<int> player_in_turn;
-	int player_count = readInt();
+	int player_count = read_int();
 	for(int i = 0; i < player_count; i++)
 	{
-		int player_number = readInt();
+		int player_number = read_int();
 		player_in_turn.push_back(player_number);
 	}
 	return player_in_turn;
 }
 
-std::vector<Fire> Packet::readFires()
+std::vector<Fire> Packet::read_fires()
 {
 	std::vector<Fire> fires;
-	int fires_count = readInt();
+	int fires_count = read_int();
 	for (int i = 0; i < fires_count; i++)
 	{
-		int x = readInt();
-		int y = readInt();
-		int duration = readInt();
+		int x = read_int();
+		int y = read_int();
+		int duration = read_int();
 		fires.push_back(Fire('f', x, y, duration));
 	}
 	return fires;
 }
 
-std::vector<Wall> Packet::readWalls()
+std::vector<Wall> Packet::read_walls()
 {
 	std::vector<Wall> walls;
-	int walls_count = readInt();
+	int walls_count = read_int();
 	for (int i = 0; i < walls_count; i++)
 	{
-		int x = readInt();
-		int y = readInt();
-		int hp = readInt();
+		int x = read_int();
+		int y = read_int();
+		int hp = read_int();
 		walls.push_back(Wall('-', x, y, hp));
 	}
 	return walls;
 }
 
-std::vector<Consumable> Packet::readConsumables()
+std::vector<Consumable> Packet::read_consumables()
 {
 	std::vector<Consumable> consumables;
-	int cons_count = readInt();
+	int cons_count = read_int();
 	for (int i = 0; i < cons_count; i++)
 	{
-		char id = (char)readInt();
-		int x = readInt();
-		int y = readInt();
+		char id = (char)read_int();
+		int x = read_int();
+		int y = read_int();
 		consumables.push_back(Consumable(id, x, y));
 	}
 	return consumables;
 }
 
-Move* Packet::readMove()
+Move* Packet::read_move()
 {
-	MoveType type = (MoveType)readInt();
-	Direction dir = (Direction)readInt();
-	Skill skill = readSkill();
+	MoveType type = (MoveType)read_int();
+	Direction dir = (Direction)read_int();
+	Skill skill = read_skill();
 	return new Move(type, dir, skill);
 }
 
@@ -234,7 +234,7 @@ void Packet::write(std::vector<uint8_t> value)
 
 void Packet::write(int value)
 {
-	std::vector<uint8_t> data = intToByteArray(value);
+	std::vector<uint8_t> data = int_to_byte_array(value);
 	for (int i = 0; i < data.size()-1; i++)
 	{
 		buffer.push_back(data[i]);
@@ -263,18 +263,18 @@ void Packet::write(Skill skill)
 }
 
 
-void Packet::writeLength()
+void Packet::write_length()
 {
-	std::vector<uint8_t> length = intToByteArray(buffer.size());
+	std::vector<uint8_t> length = int_to_byte_array(buffer.size());
 	for (int i = 0; i < length.size()-1; i++)
 	{
 		buffer.insert(buffer.begin() + i, length[i]);
 	}
 }
 
-std::vector<uint8_t> Packet::intToByteArray(int value)
+std::vector<uint8_t> Packet::int_to_byte_array(int value)
 {
-	value = reverseIntByteArray(value);
+	value = reverse_int_byte_array(value);
 	std::vector<uint8_t> ret;
 	ret.resize(5);
 	for (int i = 0; i < 4; i++)
@@ -282,7 +282,7 @@ std::vector<uint8_t> Packet::intToByteArray(int value)
 	return ret;
 }
 
-std::vector<uint8_t> Packet::toByteArray()
+std::vector<uint8_t> Packet::to_byte_array()
 {
 	int n = buffer.size();
 	std::vector<uint8_t> ret;
@@ -294,7 +294,7 @@ std::vector<uint8_t> Packet::toByteArray()
 	return ret;
 }
 
-int Packet::reverseIntByteArray(int data)
+int Packet::reverse_int_byte_array(int data)
 {
 	return ((data >> 24) & 0xff) |
 		((data << 8) & 0xff0000) | 
@@ -302,7 +302,7 @@ int Packet::reverseIntByteArray(int data)
 		((data << 24) & 0xff000000); 
 }
 
-int Packet::convertByteArrayToInt(uint8_t* data)
+int Packet::convert_byte_array_to_int(uint8_t* data)
 {
 	return int((unsigned char)(data[3]) << 24 |
 		(unsigned char)(data[2]) << 16 |

@@ -10,8 +10,8 @@ public:
 	Player* own_player;
 	GameState* current_gamestate;
 
-	static AI& getInstance();
-	Move getBestMove();
+	static AI& get_instance();
+	Move get_best_move();
 private:
 	AI() {}
 	

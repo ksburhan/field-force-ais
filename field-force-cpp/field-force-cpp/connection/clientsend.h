@@ -1,5 +1,5 @@
 #pragma once
 #include "../game/move.h"
 
-void sendPlayername();
-void sendMovereply(int, Move*);
+void send_playername();
+void send_movereply(int, Move*);

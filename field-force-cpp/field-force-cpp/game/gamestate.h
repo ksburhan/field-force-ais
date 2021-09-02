@@ -23,18 +23,18 @@ public:
 	GameState(GameField*, std::vector<int>);
 	GameState(GameField*, std::vector<Player>, std::vector<int>, std::vector<Fire>, std::vector<Wall>, std::vector<Consumable>);
 
-	std::vector<Move> getAllMoves(int);
-	void simulateNextGamestate(int, Move*);
-	void moveToTile(Player*, int, int);
-	void attackTile(Player*, int, int);
-	void prepareForNextRound();
-	bool isGameOver();
-	Player getNextPlayer();
-	Player getOwnPlayer();
-	Player getPlayer(int);
-	bool isConsumable(char);
+	std::vector<Move> get_all_moves(int);
+	void simulate_next_gamestate(int, Move*);
+	void move_to_tile(Player*, int, int);
+	void attack_tile(Player*, int, int);
+	void prepare_for_next_round();
+	bool is_game_over();
+	Player get_next_player();
+	Player get_own_player();
+	Player get_player(int);
+	bool is_consumable(char);
 
 	~GameState();
 private:
-	bool isValidTarget(char);
+	bool is_valid_target(char);
 };

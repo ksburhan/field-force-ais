@@ -40,84 +40,84 @@ Skill::Skill(int _id, std::string _name, int _cooldown, int _range, int _value, 
 	type = _type;
 }
 
-void Skill::setOnCooldown()
+void Skill::set_on_cooldown()
 {
 	cooldown_left = cooldown;
 }
 
-void Skill::prepareForNextRound()
+void Skill::prepare_for_next_round()
 {
 	if(cooldown_left > 0)
 		cooldown_left--;
 }
 
-void Skill::useSkill(Player* player, Direction direction, GameState* game_state)
+void Skill::use_skill(Player* player, Direction direction, GameState* game_state)
 {
     switch (type)
     {
     case MOVEMENT:
-        movementType(player, direction, game_state);
+        movement_type(player, direction, game_state);
         break;
     case REGENERATE:
-        regenerateType(player, direction, game_state);
+        regenerate_type(player, direction, game_state);
         break;
     case FIRE:
-        fireType(player, direction, game_state);
+        fire_type(player, direction, game_state);
         break;
     case ROCKET:
-        rocketType(player, direction, game_state);
+        rocket_type(player, direction, game_state);
         break;
     case PUSH:
-        pushType(player, direction, game_state);
+        push_type(player, direction, game_state);
         break;
     case BREAK:
-        breakType(player, direction, game_state);
+        break_type(player, direction, game_state);
         break;
     }
 }
 
-void Skill::movementType(Player* player, Direction direction, GameState* game_state)
+void Skill::movement_type(Player* player, Direction direction, GameState* game_state)
 {
     for (int i = 0; i < range; i++)
     {
         Tile* tile = game_state->current_field->field[player->x_pos][player->y_pos];
         if (direction == Direction::DIR_NORTH)
         {
-            if (tile->nTile != nullptr)
-                game_state->moveToTile(player, player->x_pos, player->y_pos - 1);
+            if (tile->n_tile != nullptr)
+                game_state->move_to_tile(player, player->x_pos, player->y_pos - 1);
             else
                 return;
         }
         if (direction == Direction::DIR_EAST)
         {
-            if (tile->eTile != nullptr)
-                game_state->moveToTile(player, player->x_pos + 1, player->y_pos);
+            if (tile->e_tile != nullptr)
+                game_state->move_to_tile(player, player->x_pos + 1, player->y_pos);
             else
                 return;
         }
         if (direction == Direction::DIR_SOUTH)
         {
-            if (tile->sTile != nullptr)
-                game_state->moveToTile(player, player->x_pos, player->y_pos + 1);
+            if (tile->s_tile != nullptr)
+                game_state->move_to_tile(player, player->x_pos, player->y_pos + 1);
             else
                 return;
         }
         if (direction == Direction::DIR_WEST)
         {
-            if (tile->wTile != nullptr)
-                game_state->moveToTile(player, player->x_pos - 1, player->y_pos);
+            if (tile->w_tile != nullptr)
+                game_state->move_to_tile(player, player->x_pos - 1, player->y_pos);
             else
                 return;
         }
     }
 }
 
-void Skill::regenerateType(Player* player, Direction direction, GameState* game_state)
+void Skill::regenerate_type(Player* player, Direction direction, GameState* game_state)
 {
     player->heal(value);
 }
 
-void Skill::fireType(Player* player, Direction direction, GameState* game_state)
+void Skill::fire_type(Player* player, Direction direction, GameState* game_state)
 {
     int x_target = player->x_pos;
     int y_target = player->y_pos;
@@ -127,34 +127,34 @@ void Skill::fireType(Player* player, Direction direction, GameState* game_state)
         tile = game_state->current_field->field[x_target][y_target];
         if (direction == Direction::DIR_NORTH)
         {
-            if (tile->nTile != nullptr)
+            if (tile->n_tile != nullptr)
                 y_target -= 1;
             else
                 return;
         }
         if (direction == Direction::DIR_EAST)
         {
-            if (tile->eTile != nullptr)
+            if (tile->e_tile != nullptr)
                 x_target += 1;
             else
                 return;
         }
         if (direction == Direction::DIR_SOUTH)
         {
-            if (tile->sTile != nullptr)
+            if (tile->s_tile != nullptr)
                 y_target += 1;
             else
                 return;
         }
         if (direction == Direction::DIR_WEST)
         {
-            if (tile->wTile != nullptr)
+            if (tile->w_tile != nullptr)
                 x_target -= 1;
             else
                 return;
         }
         MapObject* targetCellContent = game_state->current_field->field[x_target][y_target]->content;
-        if (targetCellContent->id == '0' || targetCellContent->id == 'f' || game_state->isConsumable(targetCellContent->id))
+        if (targetCellContent->id == '0' || targetCellContent->id == 'f' || game_state->is_consumable(targetCellContent->id))
         {
             delete game_state->current_field->field[x_target][y_target]->content;
             Fire* fire = new Fire('f', x_target, y_target);
@@ -162,13 +162,13 @@ void Skill::fireType(Player* player, Direction direction, GameState* game_state)
             game_state->current_field->field[x_target][y_target]->content = fire;
         }
         else if (targetCellContent->id == '1' || targetCellContent->id == '2' || targetCellContent->id == '3' || targetCellContent->id == '4')
-            static_cast<Player*>(targetCellContent)->takeDamage(value, game_state);
+            static_cast<Player*>(targetCellContent)->take_damage(value, game_state);
         else if (targetCellContent->id == '-')
             return;
     }
 }
 
-void Skill::rocketType(Player* player, Direction direction, GameState* game_state)
+void Skill::rocket_type(Player* player, Direction direction, GameState* game_state)
 {
     std::vector<std::vector<int>> targets;
     targets.resize(3);
@@ -214,7 +214,7 @@ void Skill::rocketType(Player* player, Direction direction, GameState* game_stat
 	    if(t[0] >= 0 && t[0] < game_state->current_field->dimension && t[1] >= 0 && t[1] < game_state->current_field->dimension)
 	    {
             MapObject* targetCellContent = game_state->current_field->field[t[0]][t[1]]->content;
-            if(targetCellContent->id == '0' || targetCellContent->id == 'f' || game_state->isConsumable(targetCellContent->id))
+            if(targetCellContent->id == '0' || targetCellContent->id == 'f' || game_state->is_consumable(targetCellContent->id))
             {
                 delete game_state->current_field->field[t[0]][t[1]]->content;
                 Fire* fire = new Fire('f', t[0], t[1]);
@@ -222,12 +222,12 @@ void Skill::rocketType(Player* player, Direction direction, GameState* game_stat
                 game_state->current_field->field[t[0]][t[1]]->content = fire;
             }
             else if (targetCellContent->id == '1' || targetCellContent->id == '2' || targetCellContent->id == '3' || targetCellContent->id == '4')
-                static_cast<Player*>(targetCellContent)->takeDamage(value, game_state);
+                static_cast<Player*>(targetCellContent)->take_damage(value, game_state);
 	    }
     }
 }
 
-void Skill::pushType(Player* player, Direction direction, GameState* game_state)
+void Skill::push_type(Player* player, Direction direction, GameState* game_state)
 {
     int x_target = 0;
     int y_target = 0;
@@ -254,38 +254,38 @@ void Skill::pushType(Player* player, Direction direction, GameState* game_state)
     if(x_target >= 0 && x_target < game_state->current_field->dimension && y_target >= 0 && y_target < game_state->current_field->dimension)
     {
         Tile* tile = game_state->current_field->field[x_target][y_target];
-        if (tile->nTile != nullptr)
+        if (tile->n_tile != nullptr)
         {
-            Tile* nTile = tile->nTile;
+            Tile* nTile = tile->n_tile;
             MapObject* targetCellContent = nTile->content;
-            if ((targetCellContent->id == '1' || targetCellContent->id == '2' || targetCellContent->id == '3' || targetCellContent->id == '4') && nTile->nTile != nullptr)
-                game_state->moveToTile(static_cast<Player*>(targetCellContent), targetCellContent->x_pos, targetCellContent->y_pos - 1);
+            if ((targetCellContent->id == '1' || targetCellContent->id == '2' || targetCellContent->id == '3' || targetCellContent->id == '4') && nTile->n_tile != nullptr)
+                game_state->move_to_tile(static_cast<Player*>(targetCellContent), targetCellContent->x_pos, targetCellContent->y_pos - 1);
         }
-        if (tile->eTile != nullptr)
+        if (tile->e_tile != nullptr)
         {
-            Tile* eTile = tile->eTile;
+            Tile* eTile = tile->e_tile;
             MapObject* targetCellContent = eTile->content;
-            if ((targetCellContent->id == '1' || targetCellContent->id == '2' || targetCellContent->id == '3' || targetCellContent->id == '4') && eTile->eTile != nullptr)
-                game_state->moveToTile(static_cast<Player*>(targetCellContent), targetCellContent->x_pos + 1, targetCellContent->y_pos);
+            if ((targetCellContent->id == '1' || targetCellContent->id == '2' || targetCellContent->id == '3' || targetCellContent->id == '4') && eTile->e_tile != nullptr)
+                game_state->move_to_tile(static_cast<Player*>(targetCellContent), targetCellContent->x_pos + 1, targetCellContent->y_pos);
         }
-        if (tile->sTile != nullptr)
+        if (tile->s_tile != nullptr)
         {
-            Tile* sTile = tile->sTile;
+            Tile* sTile = tile->s_tile;
             MapObject* targetCellContent = sTile->content;
-            if ((targetCellContent->id == '1' || targetCellContent->id == '2' || targetCellContent->id == '3' || targetCellContent->id == '4') && sTile->sTile != nullptr)
-                game_state->moveToTile(static_cast<Player*>(targetCellContent), targetCellContent->x_pos, targetCellContent->y_pos + 1);
+            if ((targetCellContent->id == '1' || targetCellContent->id == '2' || targetCellContent->id == '3' || targetCellContent->id == '4') && sTile->s_tile != nullptr)
+                game_state->move_to_tile(static_cast<Player*>(targetCellContent), targetCellContent->x_pos, targetCellContent->y_pos + 1);
         }
-        if (tile->wTile != nullptr)
+        if (tile->w_tile != nullptr)
         {
-            Tile* wTile = tile->wTile;
+            Tile* wTile = tile->w_tile;
             MapObject* targetCellContent = wTile->content;
-            if ((targetCellContent->id == '1' || targetCellContent->id == '2' || targetCellContent->id == '3' || targetCellContent->id == '4') && wTile->wTile != nullptr)
-                game_state->moveToTile(static_cast<Player*>(targetCellContent), targetCellContent->x_pos - 1, targetCellContent->y_pos);
+            if ((targetCellContent->id == '1' || targetCellContent->id == '2' || targetCellContent->id == '3' || targetCellContent->id == '4') && wTile->w_tile != nullptr)
+                game_state->move_to_tile(static_cast<Player*>(targetCellContent), targetCellContent->x_pos - 1, targetCellContent->y_pos);
         }
     }
 }
 
-void Skill::breakType(Player* player, Direction direction, GameState* game_state)
+void Skill::break_type(Player* player, Direction direction, GameState* game_state)
 {
     int x_target = player->x_pos;
     int y_target = player->y_pos;
@@ -296,40 +296,40 @@ void Skill::breakType(Player* player, Direction direction, GameState* game_state
         tile = game_state->current_field->field[x_target][y_target];
         if (direction == Direction::DIR_NORTH)
         {
-            if (tile->nTile != nullptr)
+            if (tile->n_tile != nullptr)
                 y_target -= 1;
             else
                 return;
         }
         if (direction == Direction::DIR_EAST)
         {
-            if (tile->eTile != nullptr)
+            if (tile->e_tile != nullptr)
                 x_target += 1;
             else
                 return;
         }
         if (direction == Direction::DIR_SOUTH)
         {
-            if (tile->sTile != nullptr)
+            if (tile->s_tile != nullptr)
                 y_target += 1;
             else
                 return;
         }
         if (direction == Direction::DIR_WEST)
         {
-            if (tile->wTile != nullptr)
+            if (tile->w_tile != nullptr)
                 x_target -= 1;
             else
                 return;
         }
         MapObject* targetCellContent = game_state->current_field->field[x_target][y_target]->content;
         if (targetCellContent->id == '1' || targetCellContent->id == '2' || targetCellContent->id == '3' || targetCellContent->id == '4')
-            static_cast<Player*>(targetCellContent)->takeDamage(value, game_state);
+            static_cast<Player*>(targetCellContent)->take_damage(value, game_state);
         else if (targetCellContent->id == '-')
         {
             if(broke)
 				return;
-            static_cast<Wall*>(targetCellContent)->takeDamage(WALL_HP, game_state);
+            static_cast<Wall*>(targetCellContent)->take_damage(WALL_HP, game_state);
             broke = true;
         }
     }

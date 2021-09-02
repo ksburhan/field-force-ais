@@ -11,5 +11,5 @@ public:
 	Wall(char, int, int);
 	Wall(char, int, int, int);
 
-	void takeDamage(int, GameState*);
+	void take_damage(int, GameState*);
 };
