@@ -24,9 +24,12 @@ Packet::Packet() { }
 Packet::Packet(std::vector<uint8_t> data)
 {
 	buffer = data;
-	//write(data);
 }
 
+/**
+ * \brief
+ * reads 4 bytes and increased read pos
+ */
 int Packet::read_int()
 {
 	try
@@ -43,6 +46,10 @@ int Packet::read_int()
 	}
 }
 
+/**
+ * \brief reads 4 bytes for the length of the string.
+ * reads the amount of bytes that are read in the length
+ */
 std::string Packet::read_string()
 {
 	try
@@ -65,6 +72,9 @@ std::string Packet::read_string()
 	}
 }
 
+/**
+ * \brief reads the full config needed to play the game
+ */
 void Packet::read_config()
 {
 	HP = read_int();
@@ -87,6 +97,9 @@ void Packet::read_config()
 	ALL_SKILLS = read_config_skills();
 }
 
+/**
+ * \brief reads all valid consumables and puts in global list VALID_CONSUMABLES
+ */
 std::vector<Consumable> Packet::read_config_consumables()
 {
 	std::vector<Consumable> cons;
@@ -102,6 +115,9 @@ std::vector<Consumable> Packet::read_config_consumables()
 	return cons;
 }
 
+/**
+ * \brief reads all valid skills
+ */
 std::vector<Skill> Packet::read_config_skills()
 {
 	std::vector<Skill> skills;
@@ -119,6 +135,9 @@ std::vector<Skill> Packet::read_config_skills()
 	return skills;
 }
 
+/**
+ * \brief reads playerinformation and returns a list of player objects
+ */
 std::vector<Player> Packet::read_players()
 {
 	std::vector<Player> players;
@@ -149,6 +168,9 @@ Skill Packet::read_skill()
 	return Skill(skill_id, cooldown_left);
 }
 
+/**
+ * \brief reads all the chars for the map and puts in appropriate 2d array
+ */
 std::vector<std::vector<char>> Packet::read_map(int dimension)
 {
 	std::vector<std::vector<char>> map;
@@ -161,6 +183,10 @@ std::vector<std::vector<char>> Packet::read_map(int dimension)
 	return map;
 }
 
+/**
+ * \brief reads the order in which players are supposed to play.
+ * index 0 is next player to move
+ */
 std::vector<int> Packet::read_player_in_turn()
 {
 	std::vector<int> player_in_turn;
@@ -173,6 +199,9 @@ std::vector<int> Packet::read_player_in_turn()
 	return player_in_turn;
 }
 
+/**
+ * \brief reads all the fires that are available on the map
+ */
 std::vector<Fire> Packet::read_fires()
 {
 	std::vector<Fire> fires;
@@ -187,6 +216,9 @@ std::vector<Fire> Packet::read_fires()
 	return fires;
 }
 
+/**
+ * \brief reads all the walls that are available on the map
+ */
 std::vector<Wall> Packet::read_walls()
 {
 	std::vector<Wall> walls;
@@ -201,6 +233,9 @@ std::vector<Wall> Packet::read_walls()
 	return walls;
 }
 
+/**
+ * \brief reads all the consumables that are available on the map
+ */
 std::vector<Consumable> Packet::read_consumables()
 {
 	std::vector<Consumable> consumables;
@@ -215,6 +250,9 @@ std::vector<Consumable> Packet::read_consumables()
 	return consumables;
 }
 
+/**
+ * \brief reads a move object
+ */
 Move* Packet::read_move()
 {
 	MoveType type = (MoveType)read_int();
@@ -224,6 +262,9 @@ Move* Packet::read_move()
 }
 
 
+/**
+ * \brief writes bytes in byte array
+ */
 void Packet::write(std::vector<uint8_t> value)
 {
 	for (int i = 0; i < sizeof(value); i++)
@@ -232,6 +273,9 @@ void Packet::write(std::vector<uint8_t> value)
 	}
 }
 
+/**
+ * \brief writes int value as bytes in byte array
+ */
 void Packet::write(int value)
 {
 	std::vector<uint8_t> data = int_to_byte_array(value);
@@ -241,6 +285,9 @@ void Packet::write(int value)
 	}
 }
 
+/**
+ * \brief writes string as bytes in byte array
+ */
 void Packet::write(std::string value)
 {
 	write((int)value.length());
@@ -250,6 +297,9 @@ void Packet::write(std::string value)
 	}
 }
 
+/**
+ * \brief writes move object as bytes in byte array
+ */
 void Packet::write(Move move)
 {
 	write(static_cast<int>(move.type));
@@ -257,12 +307,17 @@ void Packet::write(Move move)
 	write(move.skill);
 }
 
+/**
+ * \brief writes skill object as bytes in byte array
+ */
 void Packet::write(Skill skill)
 {
 	write(skill.id);
 }
 
-
+/**
+ * \brief prepends the length of current data in first 4 indexes of byte array
+ */
 void Packet::write_length()
 {
 	std::vector<uint8_t> length = int_to_byte_array(buffer.size());

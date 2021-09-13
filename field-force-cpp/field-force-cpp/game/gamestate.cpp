@@ -39,6 +39,9 @@ GameState::GameState(GameField* _gamefield, std::vector<Player> _players, std::v
 	last_move = new Move();
 }
 
+/**
+ * \brief returns all valid moves of player with playernumber playerID
+ */
 std::vector<Move> GameState::get_all_moves(int player_id)
 {
 	std::vector<Move> moves;
@@ -94,6 +97,9 @@ bool GameState::is_valid_target(char c)
 	return false;
 }
 
+/**
+ * \brief simulates gamestate with move by player with playernumber playerID
+ */
 void GameState::simulate_next_gamestate(int player_id, Move* move)
 {
 	Player playerC = get_player(player_id);
@@ -129,6 +135,9 @@ void GameState::simulate_next_gamestate(int player_id, Move* move)
 	}
 }
 
+/**
+ * \brief moves player to target position
+ */
 void GameState::move_to_tile(Player* player, int x_target, int y_target)
 {
 	MapObject* target = current_field->field[x_target][y_target]->content;
@@ -183,6 +192,9 @@ void GameState::move_to_tile(Player* player, int x_target, int y_target)
 	}
 }
 
+/**
+ * \brief player attacks target tile
+ */
 void GameState::attack_tile(Player* player, int x_target, int y_target)
 {
 	MapObject* target = current_field->field[x_target][y_target]->content;

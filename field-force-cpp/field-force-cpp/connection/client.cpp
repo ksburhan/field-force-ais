@@ -27,6 +27,9 @@
 #include <arpa/inet.h>
 #endif
 
+/**
+ * \brief returns singleton object
+ */
 Client& Client::get_instance()
 {
 	static Client instance;
@@ -34,6 +37,11 @@ Client& Client::get_instance()
 	return instance;
 }
 
+/**
+ * \brief creates socket to ip and port and connects to server.
+ * sends first packet to login.
+ * starts endless while loop to keep recieving packets.
+ */
 void Client::conn(std::string _ip, int _port)
 {
 	ip = _ip;
@@ -132,6 +140,9 @@ void Client::disconnect()
 #endif
 }
 
+/**
+ * \brief big switch case for different packettypes
+ */
 void Client::handle_message(int type, Packet packet)
 {
 	switch (type)

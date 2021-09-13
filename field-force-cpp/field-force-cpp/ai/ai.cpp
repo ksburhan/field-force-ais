@@ -20,6 +20,10 @@ AI& AI::get_instance()
 	return instance;
 }
 
+/**
+ * \brief function the players should be changing to return the move their AI picks
+ * \return returns a random valid move
+ */
 Move AI::get_best_move()
 {
 	srand(time(NULL));

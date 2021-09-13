@@ -98,7 +98,7 @@ public class Packet {
     /**
      * @return
      * @throws Exception
-     * reads playerifnromation and returns a list of player objects
+     * reads playerinformation and returns a list of player objects
      */
     public List<Player> readPlayers() throws Exception {
         List<Player> players = new ArrayList<>();

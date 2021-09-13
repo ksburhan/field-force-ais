@@ -51,6 +51,10 @@ void Skill::prepare_for_next_round()
 		cooldown_left--;
 }
 
+/**
+ * \brief calls function according to what type skill is and changes the gamestate accordingly.
+ * When creating new skilltypes add here and corresponding function below
+ */
 void Skill::use_skill(Player* player, Direction direction, GameState* game_state)
 {
     switch (type)
@@ -76,6 +80,9 @@ void Skill::use_skill(Player* player, Direction direction, GameState* game_state
     }
 }
 
+/**
+ * \brief moves player in chosen direction for amount of range the skill has
+ */
 void Skill::movement_type(Player* player, Direction direction, GameState* game_state)
 {
     for (int i = 0; i < range; i++)
@@ -112,11 +119,19 @@ void Skill::movement_type(Player* player, Direction direction, GameState* game_s
     }
 }
 
+
+/**
+ * \brief heals player by value of skill
+ */
 void Skill::regenerate_type(Player* player, Direction direction, GameState* game_state)
 {
     player->heal(value);
 }
 
+/**
+ * \brief adds fires amount of range of skill in direction player chose
+ * stops when hitting a wall
+ */
 void Skill::fire_type(Player* player, Direction direction, GameState* game_state)
 {
     int x_target = player->x_pos;
@@ -168,6 +183,10 @@ void Skill::fire_type(Player* player, Direction direction, GameState* game_state
     }
 }
 
+/**
+ * \brief shoots in range of skill in chosen direction
+ * then adds fire on target tile and neighbouring tiles
+ */
 void Skill::rocket_type(Player* player, Direction direction, GameState* game_state)
 {
     std::vector<std::vector<int>> targets;
@@ -227,6 +246,9 @@ void Skill::rocket_type(Player* player, Direction direction, GameState* game_sta
     }
 }
 
+/**
+ * \brief pushes players next to target tile to one further tile away
+ */
 void Skill::push_type(Player* player, Direction direction, GameState* game_state)
 {
     int x_target = 0;
@@ -285,6 +307,11 @@ void Skill::push_type(Player* player, Direction direction, GameState* game_state
     }
 }
 
+/**
+ * \brief deals damage in chosen direction.\n
+ * when hitting a wall the wall gets destroyed.\n
+ * when hitting a second wall the skill stops.
+ */
 void Skill::break_type(Player* player, Direction direction, GameState* game_state)
 {
     int x_target = player->x_pos;
