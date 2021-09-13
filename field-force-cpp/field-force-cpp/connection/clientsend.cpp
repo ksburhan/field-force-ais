@@ -15,6 +15,9 @@
 #include "packet.h"
 #include "../game/gameconstants.h"
 
+/**
+ * \brief writes length of packet for appropriate form and sends packet to server
+ */
 void sendPacket(Packet packet)
 {
 	packet.write_length();
@@ -22,6 +25,9 @@ void sendPacket(Packet packet)
 	client.send_packet(packet);
 }
 
+/**
+ * \brief sends Pakettype 1. tells server that client ist playing and what name and skills were chosen
+ */
 void send_playername()
 {
 	Packet packet;
@@ -32,6 +38,9 @@ void send_playername()
 	sendPacket(packet);
 }
 
+/**
+ * \brief sends Pakettype 6. tells server the movereply and sets skills on cooldown if used
+ */
 void send_movereply(int id, Move* move)
 {
 	Packet packet;

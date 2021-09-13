@@ -19,6 +19,6 @@ public:
 
 	~GameField();
 private:
-	std::vector<std::vector<Tile*>> createField(std::vector<std::vector<char>>, const std::vector<Player>&);
+	std::vector<std::vector<Tile*>> create_field(std::vector<std::vector<char>>, const std::vector<Player>&);
 	Player get_player(int,const std::vector<Player>&);
 };

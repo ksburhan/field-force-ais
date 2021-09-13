@@ -37,6 +37,9 @@ Player::Player(char _id, int _player_number, std::string _playername, int _hp, i
 	skill2 = _skill2;
 }
 
+/**
+ * \brief if shield is available, shielddamage is taken first. if damage is still left reduce hp
+ */
 void Player::take_damage(int damage, GameState* game_state)
 {
 	if (shield > 0)
@@ -51,6 +54,9 @@ void Player::take_damage(int damage, GameState* game_state)
 	}
 }
 
+/**
+ * \brief reduces shield damage, if damage is still left call takeDamage function with rest
+ */
 void Player::take_shield_damage(int shield_damage, GameState* game_state)
 {
 	shield -= shield_damage;
@@ -62,6 +68,9 @@ void Player::take_shield_damage(int shield_damage, GameState* game_state)
 	}
 }
 
+/**
+ * \brief heal player by value
+ */
 void Player::heal(int heal)
 {
 	hp += heal;
@@ -69,6 +78,9 @@ void Player::heal(int heal)
 		hp = HP;
 }
 
+/**
+ * \brief charge shield by value
+ */
 void Player::charge_shield(int charge)
 {
 	shield += charge;

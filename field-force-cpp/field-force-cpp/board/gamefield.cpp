@@ -24,10 +24,13 @@ GameField::GameField(int _dimension, std::vector<std::vector<char>> _map, std::v
 {
 	dimension = _dimension;
 	field_chars = _map;
-	field = createField(_map, *current_players);
+	field = create_field(_map, *current_players);
 }
 
-std::vector<std::vector<Tile*>> GameField::createField(std::vector<std::vector<char>> map, const std::vector<Player> &current_players)
+/**
+ * \brief player attacks target tile
+ */
+std::vector<std::vector<Tile*>> GameField::create_field(std::vector<std::vector<char>> map, const std::vector<Player> &current_players)
 {
 	std::vector<std::vector<Tile*>> field;
     field.resize(dimension);
