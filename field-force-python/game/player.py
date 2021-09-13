@@ -17,6 +17,8 @@ class Player(MapObject):
         self.active = True
         self.on_fire = 0
 
+    # takes damage unless shield is greater than 0
+    # then takes shield damage first and remaining normal damage
     def take_damage(self, damage, gamestate):
         if self.shield > 0:
             self.take_shield_damage(damage, gamestate)
@@ -25,6 +27,8 @@ class Player(MapObject):
             if self.hp <= 0:
                 self.set_inactive(gamestate)
 
+    # reduces shield
+    # remaining damage is being dealt to hp
     def take_shield_damage(self, damage, gamestate):
         self.shield -= damage
         if self.shield <= 0:
@@ -32,11 +36,13 @@ class Player(MapObject):
             self.shield = 0
             self.take_damage(damage, gamestate)
 
+    # heal player by value
     def heal(self, heal):
         self.hp += heal
         if self.hp > gameconstants.HP:
             self.hp = gameconstants.HP
 
+    # charge shield by value
     def charge_shield(self, charge):
         self.shield += charge
         if self.shield > gameconstants.SHIELD:
@@ -51,6 +57,7 @@ class Player(MapObject):
         self.shield = 0
         self.active = False
 
+    # every round player takes damage on fire and skill cooldown gets reduced
     def prepare_for_next_round(self, gamestate):
         if self.on_fire > 0:
             self.take_damage(gameconstants.ON_FIRE_DAMAGE, gamestate)

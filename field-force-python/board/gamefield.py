@@ -15,6 +15,8 @@ class GameField:
         self.map = self.create_field(_map, current_players)
         self.field_chars = _map
 
+    # creates tile objects in a 2d tile array
+    # then adds references to all tile objects to their neighbouring tiles in north, east, south and west
     def create_field(self, _map, current_players):
         tilemap = {}
         for y in range(self.dimension):

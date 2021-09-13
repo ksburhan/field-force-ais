@@ -1,3 +1,5 @@
+import time
+
 import game.player
 from board.gamefield import GameField
 from connection import clientsend
@@ -6,6 +8,8 @@ from ai import ai
 from game.gamestate import GameState
 
 
+# Reads Pakettype 2. Gamemode, Timelimit and own player number
+# if gamemode 1, two random skills are assigned
 def handle_gamemode(packet):
     print("Type 2")
     gameconstants.GAMEMODE = packet.read_int()
@@ -17,12 +21,14 @@ def handle_gamemode(packet):
     packet.read_config()
 
 
+# Reads Pakettype 3. information of all other players
 def handle_playerinformation(packet):
     print("Type 3")
     game.player.PLAYERS_IN_GAME = packet.read_players()
     ai.ownplayerobj = game.player.PLAYERS_IN_GAME[gameconstants.OWN_PLAYER_ID - 1]
 
 
+# reads Pakettype 4. reads all information to create new gamestate object as the current state
 def handle_initialmap(packet):
     print("Type 4")
     dimension = packet.read_int()
@@ -35,13 +41,16 @@ def handle_initialmap(packet):
                                      walls, consumables)
 
 
+# reads Pakettype 5. Only used to start looking for a move to reply with
 def handle_moverequest(packet, client):
     print("Type 5")
     own_id = packet.read_int()
+    ai.time_start = round(time.time() * 1000)
     move = ai.get_best_move()
     clientsend.send_movereply(client, own_id, move)
 
 
+# reads Pakettype 7. reads information needed to create new gamestate object after last move has been calculated
 def handle_newgamestate(packet):
     print("Type 7")
     dimension = packet.read_int()
@@ -55,6 +64,7 @@ def handle_newgamestate(packet):
     ai.current_gamestate.gamefield.print_map()
 
 
+# reads Pakettype 8. tells the last move that has been calculated
 def handle_movedistribution(packet):
     print("Type 8")
     last_player_id = packet.read_int()
@@ -64,6 +74,7 @@ def handle_movedistribution(packet):
     ai.current_gamestate.lastmove = move
 
 
+# reads Pakettype 9. received when own player did wrong move, gets disqualified but connected
 def handle_error(packet):
     print("Type 9")
     errormessage = packet.read_string()
@@ -71,6 +82,7 @@ def handle_error(packet):
     exit(9)
 
 
+# reads Pakettype 10. received when game is over. tells winner number
 def handle_gameover(packet):
     print("Type 10")
     message = packet.read_string()
@@ -79,3 +91,8 @@ def handle_gameover(packet):
     print(message)
     print(won)
     exit(10)
+
+
+#
+# when new server packets are created, just add new function to handle new packet
+#

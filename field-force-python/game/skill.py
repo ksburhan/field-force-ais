@@ -37,6 +37,9 @@ class Skill:
         if self.cooldown > 0:
             self.cooldown -= 1
 
+    # calculates new gamestate when skill is used
+    # calls function corresponding to skill type
+    # to add new skilltypes add function
     def use_skill(self, player, direction, gamestate):
         enum_type = SkillType(self.skilltype)
         switcher = {
@@ -51,6 +54,7 @@ class Skill:
         func()
         self.set_cd()
 
+    # moves player in chosen direction for amount of range the skill has
     def movement_type(self, player, direction, gamestate):
         for i in range(self.range):
             tile = gamestate.gamefield.map[(player.x, player.y)]
@@ -75,9 +79,12 @@ class Skill:
                 else:
                     return
 
+    # heals player by value of skill
     def regenerate_type(self, player, direction, gamestate):
         player.heal(self.value)
 
+    # adds fires amount of range of skill in direction player chose
+    # stops when hitting a wall
     def fire_type(self, player, direction, gamestate):
         x_target = player.x
         y_target = player.y
@@ -113,6 +120,8 @@ class Skill:
             elif isinstance(target_object, Wall):
                 return
 
+    # shoots in range of skill in chosen direction
+    # then adds fire on target tile and neighbouring tiles
     def rocket_type(self, player, direction, gamestate):
         targets = [[-1, -1], [-1, -1], [-1, -1]]
         if direction == Direction.NORTH:
@@ -146,6 +155,7 @@ class Skill:
                 elif isinstance(target_object, Player):
                     target_object.take_damage(self.value, gamestate)
 
+    # pushes players next to target tile to one further tile away
     def push_type(self, player, direction, gamestate):
         x_target = 0
         y_target = 0
@@ -184,6 +194,9 @@ class Skill:
                 if isinstance(target_object, Player) and wTile.nTile is not None:
                     gamestate.move_to_tile(target_object, target_object.x - 1, target_object.y)
 
+    # deals damage in chosen direction
+    # when hitting a wall the wall gets destroyed
+    # when hitting a second wall the skill stops
     def break_type(self, player, direction, gamestate):
         x_target = player.x
         y_target = player.y

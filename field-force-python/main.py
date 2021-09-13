@@ -54,6 +54,7 @@ def parse(argv):
             exit(1)
 
 
+# handles the messages received from the server
 def handle_msg(msgtype, packet, client):
     enum_type = ServerPackets(msgtype)
     switcher = {
@@ -70,6 +71,8 @@ def handle_msg(msgtype, packet, client):
     func()
 
 
+# parses commandline arguments and connects to the server
+# then sends the first package to the server and enters the while loop to keep receiving messages
 def main():
     parse(sys.argv[1:])
     client = Client(ip, port)
