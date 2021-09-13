@@ -24,6 +24,7 @@ class GameState:
         self.consumables = consumables
         self.last_move = None
 
+    # returns all the valid moves for the player with playernumber player_id
     def get_all_moves(self, player_id):
         moves = []
         player = self.get_player(player_id)
@@ -55,6 +56,7 @@ class GameState:
                         moves.append(Move(MoveType.SKILL, d, player.skill2))
         return moves
 
+    # simulates the parameter move in current gamestate
     def simulate_next_gamestate(self, player_id, move):
         player = self.get_player(player_id)
         if move.type == MoveType.MOVEMENT:
@@ -86,6 +88,8 @@ class GameState:
         self.prepare_for_next_round()
         self.last_move = move
 
+    # tries to move the player to target position
+    # might take damage by walking into walls or players
     def move_to_tile(self, player, x_target, y_target):
         target_object = self.gamefield.map[(x_target, y_target)].content
         x = player.x
@@ -128,6 +132,7 @@ class GameState:
             if target_object.shield > 0:
                 player.charge_shield(target_object.shield)
 
+    # player attacks the target tile
     def attack_tile(self, player, x_target, y_target):
         target_object = self.gamefield.map[(x_target, y_target)].content
         if isinstance(target_object, Player):
@@ -142,6 +147,7 @@ class GameState:
         for f in self.fires:
             f.prepare_for_next_round(self)
 
+    # checks if a move is valid
     def is_valid_move(self, move, player_id):
         player = self.players[player_id - 1]
         tile = self.gamefield.map[(player.x, player.y)]
