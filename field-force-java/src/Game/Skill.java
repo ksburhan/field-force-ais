@@ -67,6 +67,15 @@ public class Skill {
         }
     }
 
+    /**
+     * @param player
+     * @param direction
+     * @param gameState
+     * calls function according to what type skill is and changes the gamestate accordingly
+     *
+     *
+     * when creating new skilltypes add here and corresponding function below
+     */
     public void useSkill(Player player, Direction direction, GameState gameState){
         switch (this.type) {
             case MOVEMENT -> movementType(player, direction, gameState);
@@ -79,6 +88,13 @@ public class Skill {
         setOnCooldown();
     }
 
+
+    /**
+     * @param player
+     * @param direction
+     * @param gameState
+     * moves player in chosen direction for amount of range the skill has
+     */
     private void movementType(Player player, Direction direction, GameState gameState){
         for (int i = 0; i < range; i++){
             Tile tile = gameState.getCurrentField().getField()[player.getxPos()][player.getyPos()];
@@ -114,10 +130,23 @@ public class Skill {
         }
     }
 
+    /**
+     * @param player
+     * @param direction
+     * @param gameState
+     * heals player by value of skill
+     */
     public void regenerateType(Player player, Direction direction, GameState gameState){
         player.heal(value);
     }
 
+    /**
+     * @param player
+     * @param direction
+     * @param gameState
+     * adds fires amount of range of skill in direction player chose
+     * stops when hitting a wall
+     */
     public void fireType(Player player, Direction direction, GameState gameState){
         int xTarget = player.getxPos();
         int yTarget = player.getyPos();
@@ -171,6 +200,13 @@ public class Skill {
         }
     }
 
+    /**
+     * @param player
+     * @param direction
+     * @param gameState
+     * shoots in range of skill in chosen direction
+     * then adds fire on target tile and neighbouring tiles
+     */
     public void rocketType(Player player, Direction direction, GameState gameState){
         List<int[]> targets = new ArrayList<>();
         int[] target = new int[2];
@@ -216,6 +252,12 @@ public class Skill {
         }
     }
 
+    /**
+     * @param player
+     * @param direction
+     * @param gameState
+     * pushes players next to target tile to one further tile away
+     */
     public void pushType(Player player, Direction direction, GameState gameState){
         int xTarget = 0;
         int yTarget = 0;
@@ -266,6 +308,14 @@ public class Skill {
         }
     }
 
+    /**
+     * @param player
+     * @param direction
+     * @param gameState
+     * deals damage in chosen direction
+     * when hitting a wall the wall gets destroyed
+     * when hitting a second wall the skill stops
+     */
     public void breakType(Player player, Direction direction, GameState gameState){
         int xTarget = player.getxPos();
         int yTarget = player.getyPos();

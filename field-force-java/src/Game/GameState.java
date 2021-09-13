@@ -55,6 +55,11 @@ public class GameState {
         this.consumables = consumables;
     }
 
+    /**
+     * @param playerID
+     * @return
+     * returns all valid moves of player with playernumber playerID
+     */
     public List<Move> getAllMoves(int playerID){
         List<Move> moves = new ArrayList<>();
         Player player = getPlayer(playerID);
@@ -103,6 +108,11 @@ public class GameState {
         return false;
     }
 
+    /**
+     * @param playerID
+     * @param move
+     * simulates gamestate with move by player with playernumber playerID
+     */
     public void simulateNextGamestate(int playerID, Move move){
         Player player = getPlayer(playerID);
         switch (move.getType()) {
@@ -142,6 +152,12 @@ public class GameState {
         this.lastMove = move;
     }
 
+    /**
+     * @param player
+     * @param xTarget
+     * @param yTarget
+     * moves player to target position
+     */
     public void moveToTile(Player player, int xTarget, int yTarget){
         MapObject targetCellContent = currentField.getField()[xTarget][yTarget].getContent();
         int x = player.getxPos();
@@ -197,6 +213,12 @@ public class GameState {
         }
     }
 
+    /**
+     * @param player
+     * @param xTarget
+     * @param yTarget
+     * player attacks target tile
+     */
     public void attackTile(Player player, int xTarget, int yTarget){
         MapObject targetCellContent = currentField.getField()[xTarget][yTarget].getContent();
         if (targetCellContent instanceof Player)

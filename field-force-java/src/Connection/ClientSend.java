@@ -7,11 +7,19 @@ import Game.SkillType;
 
 public class ClientSend {
 
+
+    /**
+     * @param packet
+     * writes length of packet for appropriate form and sends packet to server
+     */
     private static void sendPacket(Packet packet){
         packet.writeLength();
         Client.getInstance().sendPacket(packet);
     }
 
+    /**
+     * sends Pakettype 1. tells server that client ist playing and what name and skills were chosen
+     */
     public static void sendPlayername(){
         Packet packet = new Packet();
         packet.write(ClientPackets.PLAYERNAME.getId());
@@ -21,6 +29,9 @@ public class ClientSend {
         sendPacket(packet);
     }
 
+    /**
+     * sends Pakettype 6. tells server the movereply and sets skills on cooldown if used
+     */
     public static void sendMovereply(int id, Move move){
         Packet packet = new Packet();
         packet.write(ClientPackets.MOVEREPLY.getId());

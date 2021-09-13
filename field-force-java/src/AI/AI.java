@@ -18,6 +18,13 @@ public class AI {
 
     private GameState currentState;
 
+    /**
+     * @return
+     * @throws InterruptedException
+     * @throws TimeoutException
+     * function that is supposed to be changed by players. currently returns a random valid move
+     * players should change this to return AI move output
+     */
     public Move getBestMove() throws InterruptedException, TimeoutException {
         List<Move> moves = AI.instance.getCurrentState().getAllMoves(GameConstants.OWN_PLAYER_ID);
         Move bestMove = moves.get(0);
@@ -34,6 +41,10 @@ public class AI {
         }
     }
 
+    /**
+     * @throws TimeoutException
+     * checks if there is used time is greater than maximum timelimit with 500 ms buffer
+     */
     private void checkTimelimit() throws TimeoutException {
         if (System.currentTimeMillis() - AI.time_start > GameConstants.TIME_LIMIT - 500) {
             throw new TimeoutException();
