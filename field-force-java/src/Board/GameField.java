@@ -40,6 +40,12 @@ public class GameField {
                 this.fieldChars[x][y] = other.fieldChars[x][y];
     }
 
+    /**
+     * @param map
+     * @param currentPlayers
+     * @return
+     * creates 2d Tile array and gives tiles references to north, east, south and west tiles
+     */
     private Tile[][] createField(char[][] map, List<Player> currentPlayers) {
         Tile[][] field = new Tile[dimension][dimension];
         for (int y = 0; y < dimension; y++)

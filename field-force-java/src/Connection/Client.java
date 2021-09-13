@@ -22,10 +22,12 @@ public class Client {
 
     private boolean gameIsRunning = false;
 
-    public Client(){
+    public Client() { }
 
-    }
-
+    /**
+     * @return
+     * returns singleton object
+     */
     public static Client getInstance(){
         if(instance == null) {
             instance = new Client();
@@ -33,6 +35,13 @@ public class Client {
         return instance;
     }
 
+    /**
+     * @param ip
+     * @param port
+     * creates socket to ip and port and connects to server
+     * sends first packet to login
+     * starts endless while loop to keep recieving packets
+     */
     public void initConnection(String ip, int port) {
         this.ip = ip;
         this.port = port;
@@ -61,6 +70,12 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+    /**
+     * @param type
+     * @param packet
+     * big switch case for different packettypes
+     */
     private void handleMessages(int type, Packet packet){
         ServerPackets typeEnum = ServerPackets.fromInt(type);
         switch (typeEnum){

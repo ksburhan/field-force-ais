@@ -54,6 +54,11 @@ public class Player extends MapObject {
         this.skill2 = new Skill(other.skill2);
     }
 
+    /**
+     * @param damage
+     * @param gameState
+     * if shield is available, shielddamage is taken first. if damage is still left reduce hp
+     */
     public void takeDamage(int damage, GameState gameState){
         if(shield > 0)
         {
@@ -66,6 +71,12 @@ public class Player extends MapObject {
                 setInactive(gameState);
         }
     }
+
+    /**
+     * @param shieldDamage
+     * @param gameState
+     * reduces shield damage, if damage is still left call takeDamage function with rest
+     */
     public void takeShieldDamage(int shieldDamage, GameState gameState) {
         shield -= shieldDamage;
         if (shield <= 0)
@@ -75,12 +86,22 @@ public class Player extends MapObject {
             takeDamage(damage, gameState);
         }
     }
+
+    /**
+     * @param heal
+     * heal player by value
+     */
     public void heal(int heal)
     {
         hp += heal;
         if (hp > GameConstants.HP)
             hp = GameConstants.HP;
     }
+
+    /**
+     * @param charge
+     * charge shield by value
+     */
     public void chargeShield(int charge)
     {
         shield += charge;

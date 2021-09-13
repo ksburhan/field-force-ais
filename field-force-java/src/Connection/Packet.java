@@ -24,13 +24,6 @@ public class Packet {
         readPos = 0;
     }
 
-    public Packet(int id) {
-        buffer = new ArrayList<>();
-        readPos = 0;
-
-        write(id);
-    }
-
     public Packet(byte[] data) {
         buffer = new ArrayList<>();
         readPos = 0;
@@ -43,6 +36,11 @@ public class Packet {
         readableBuffer = toByteArray();
     }
 
+    /**
+     * @return
+     * @throws Exception
+     * reads 4 bytes and increased read pos
+     */
     public int readInt() throws Exception {
         if (buffer.size() > readPos)
         {
@@ -56,6 +54,12 @@ public class Packet {
         }
     }
 
+    /**
+     * @return
+     * @throws Exception
+     * reads 4 bytes for the length of the string
+     * reads the amount of bytes that are read in the length
+     */
     public String readString() throws Exception {
         try
         {
@@ -73,6 +77,12 @@ public class Packet {
         }
     }
 
+    /**
+     * @param dimension
+     * @return
+     * @throws Exception
+     * reads all the chars for the map and puts in appropriate 2d array
+     */
     public char[][] readMap(int dimension) throws Exception {
         char[][] map = new char[dimension][dimension];
         for (int y = 0; y < dimension; y++)
@@ -84,18 +94,12 @@ public class Packet {
         }
         return map;
     }
-    public List<Player> readPlayersInit() throws Exception {
-        List<Player> players = new ArrayList<>();
-        int playerCount = readInt();
-        for (int i = 0; i < playerCount; i++){
-            int playerNumber = readInt();
-            String playerName = readString();
-            int xPos = readInt();
-            int yPos = readInt();
-            players.add(new Player((char)(playerNumber+'0'), playerNumber, playerName, xPos, yPos));
-        }
-        return players;
-    }
+
+    /**
+     * @return
+     * @throws Exception
+     * reads playerifnromation and returns a list of player objects
+     */
     public List<Player> readPlayers() throws Exception {
         List<Player> players = new ArrayList<>();
         int playerCount = readInt();
@@ -112,6 +116,12 @@ public class Packet {
         return players;
     }
 
+    /**
+     * @return
+     * @throws Exception
+     * reads the order in which players are supposed to play
+     * index 0 is next player to move
+     */
     public List<Integer> readPlayerInTurn() throws Exception {
         List<Integer> playerInTurn = new ArrayList<>();
         int playerCount = readInt();
@@ -122,6 +132,11 @@ public class Packet {
         return playerInTurn;
     }
 
+    /**
+     * @return
+     * @throws Exception
+     * reads all the fires that are available on the map
+     */
     public List<Fire> readFires() throws Exception {
         List<Fire> fires = new ArrayList<>();
         int fireCount = readInt();
@@ -135,6 +150,11 @@ public class Packet {
         return fires;
     }
 
+    /**
+     * @return
+     * @throws Exception
+     * reads all the walls that are available on the map
+     */
     public List<Wall> readWalls() throws Exception {
         List<Wall> walls = new ArrayList<>();
         int wallCount = readInt();
@@ -148,6 +168,10 @@ public class Packet {
         return walls;
     }
 
+    /**
+     * @throws Exception
+     * reads the full config needed to play the game
+     */
     public void readConfig() throws Exception {
         // read basics
         GameConstants.HP = readInt();
@@ -172,6 +196,11 @@ public class Packet {
         Skill.allSkills = readConfigSkills();
     }
 
+    /**
+     * @return
+     * @throws Exception
+     * reads all valid consumables and puts in global list GameConstants.VALID_CONSUMABLES
+     */
     public List<Consumable> readConfigConsumables() throws Exception {
         List<Consumable> consumables = new ArrayList<>();
         int consumableCount = readInt();
@@ -187,6 +216,11 @@ public class Packet {
         return consumables;
     }
 
+    /**
+     * @return
+     * @throws Exception
+     * reads all the consumables that are available on the map
+     */
     public List<Consumable> readConsumables() throws Exception {
         List<Consumable> consumables = new ArrayList<>();
         int consumableCount = readInt();
@@ -200,6 +234,11 @@ public class Packet {
         return consumables;
     }
 
+    /**
+     * @return
+     * @throws Exception
+     * reads all valid skills
+     */
     public List<Skill> readConfigSkills() throws Exception {
         List<Skill> skills = new ArrayList<>();
         int skillCount = readInt();
@@ -216,6 +255,11 @@ public class Packet {
         return skills;
     }
 
+    /**
+     * @return
+     * @throws Exception
+     * reads a move object
+     */
     public Move readMove() throws Exception {
         MoveType type =  MoveType.fromInt(readInt());
         Direction direction = Direction.fromInt(readInt());
@@ -223,6 +267,11 @@ public class Packet {
         return new Move(type, direction, skill);
     }
 
+    /**
+     * @return
+     * @throws Exception
+     * reads a single skill object
+     */
     public Skill readSkill() throws Exception {
         int skillId = readInt();
         if(skillId == -1){
@@ -232,24 +281,40 @@ public class Packet {
         return new Skill(skillId, cooldownLeft);
     }
 
+    /**
+     * @param data
+     * function writes bytes in byte array
+     */
     public void write(byte[] data){
         for(Byte b : data) {
             buffer.add(b);
         }
     }
 
+    /**
+     * @param value
+     * function writes int value as bytes in byte array
+     */
     public void write(int value){
         for(Byte b : intToByteArray(value)) {
             buffer.add(b);
         }
     }
 
+    /**
+     * @param value
+     * function writes float value as bytes in byte array
+     */
     public void write(float value){
         for(Byte b : floatToByteArray(value)) {
             buffer.add(b);
         }
     }
 
+    /**
+     * @param value
+     * function writes string as bytes in byte array
+     */
     public void write(String value){
         write(value.length());
         for(Byte b : value.getBytes(StandardCharsets.US_ASCII)) {
@@ -257,12 +322,20 @@ public class Packet {
         }
     }
 
+    /**
+     * @param move
+     * function writes move object as bytes in byte array
+     */
     public void write(Move move){
         write(move.getType().getId());
         write(move.getDirection().getId());
         write(move.getSkill());
     }
 
+    /**
+     * @param skill
+     * function writes skill object as bytes in byte array
+     */
     public void write(Skill skill){
         if(skill != null)
             write(skill.getId());
@@ -270,6 +343,9 @@ public class Packet {
             write(-1);
     }
 
+    /**
+     * prepends the length of current data in first 4 indexes of byte array
+     */
     public void writeLength(){
         int i = 0;
         for(Byte b : intToByteArray(buffer.size())) {
