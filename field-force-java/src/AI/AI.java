@@ -24,10 +24,10 @@ public class AI {
 
     public Move getBestMove() throws InterruptedException, TimeoutException {
         try {
-            Move move = minmax_first(1, Float.MIN_VALUE, Float.MAX_VALUE, currentState.getOwnPlayer(), currentState);
+            Move move = minmaxFirst(1, Float.MIN_VALUE, Float.MAX_VALUE, currentState.getOwnPlayer(), currentState);
             for(int d = 2; d <= maxDepth; d++) {
                 System.out.println("Looking from start to depth: " + d);
-                move = minmax_first(d, Integer.MIN_VALUE, Integer.MAX_VALUE, currentState.getOwnPlayer(), currentState);
+                move = minmaxFirst(d, Integer.MIN_VALUE, Integer.MAX_VALUE, currentState.getOwnPlayer(), currentState);
             }
             return move;
         }
@@ -37,7 +37,7 @@ public class AI {
         }
     }
 
-    private Move minmax_first(int depth, float alpha, float beta, Player currentplayer, GameState gameState) throws TimeoutException {
+    private Move minmaxFirst(int depth, float alpha, float beta, Player currentplayer, GameState gameState) throws TimeoutException {
         boolean maximizer;
         maximizer = currentplayer.getPlayerNumber() == GameConstants.OWN_PLAYER_ID;
         float bestRating = Float.MIN_VALUE;
