@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-inline std::string playername = "c++";
+inline std::string playername = "behaviour";
 inline int skill1 = 4;
 inline int skill2 = 3;
 
