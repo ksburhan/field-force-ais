@@ -31,32 +31,20 @@ Move AI::get_best_move()
 	Move move = moves.at(std::rand() % moves.size() + 0);
 	enemy_distance(current_gamestate);
 	consum_distance(current_gamestate);
-	if (enemy_distance(current_gamestate) < 6)
+	/*if (enemy_distance(current_gamestate) < 6)
 	{
 		for (auto m : moves)
-		{
 			if (m.type == MoveType::MT_ATTACK)
-			{
 				return m;
-			}
-		}
 		if (op.skill1.cooldown_left == 0 || op.skill2.cooldown_left == 0)
 		{
 			for (auto m : moves)
-			{
 				if (m.type == MoveType::MT_SKILL && m.direction == enemy_direction)
-				{
 					return m;
-				}
-			}
 		}
 		for (auto m : moves)
-		{
 			if (m.type == MoveType::MT_MOVEMENT && m.direction == enemy_direction)
-			{
 				return m;
-			}
-		}
 	}
 	else
 	{
@@ -65,33 +53,61 @@ Move AI::get_best_move()
 			if(op.hp < HP || op.shield < SHIELD)
 			{
 				for (auto m : moves)
-				{
 					if (m.type == MoveType::MT_MOVEMENT && m.direction == consum_direction)
-					{
 						return m;
-					}
-				}
 			}
 			else
 			{
 				for (auto m : moves)
-				{
 					if (m.type == MoveType::MT_MOVEMENT && m.direction == enemy_direction)
-					{
 						return m;
-					}
-				}
 			}
 		}
 		else
 		{
 			for (auto m : moves)
-			{
 				if (m.type == MoveType::MT_MOVEMENT && m.direction == enemy_direction)
-				{
 					return m;
-				}
+		}
+	}*/
+
+	if (consum_distance(current_gamestate) < 4)
+	{
+		if (op.hp < HP || op.shield < SHIELD)
+		{
+			for (auto m : moves)
+				if (m.type == MoveType::MT_MOVEMENT && m.direction == consum_direction)
+					return m;
+		}
+		else
+		{
+			for (auto m : moves)
+				if (m.type == MoveType::MT_MOVEMENT && m.direction == enemy_direction)
+					return m;
+		}
+	}
+	else
+	{
+		if (enemy_distance(current_gamestate) < 6)
+		{
+			for (auto m : moves)
+				if (m.type == MoveType::MT_ATTACK)
+					return m;
+			if (op.skill1.cooldown_left == 0 || op.skill2.cooldown_left == 0)
+			{
+				for (auto m : moves)
+					if (m.type == MoveType::MT_SKILL && m.direction == enemy_direction)
+						return m;
 			}
+			for (auto m : moves)
+				if (m.type == MoveType::MT_MOVEMENT && m.direction == enemy_direction)
+					return m;
+		}
+		else
+		{
+			for (auto m : moves)
+				if (m.type == MoveType::MT_MOVEMENT && m.direction == enemy_direction)
+					return m;
 		}
 	}
 	return move;
