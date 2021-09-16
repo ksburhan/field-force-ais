@@ -75,7 +75,7 @@ class FieldEnv(gym.Env):
         self.observation_space = spaces.Box(np.array([0, 0, 0, 0]), np.array([1, 1, 1, 1]),
                                             dtype=np.int)
         dimension = ai.ai.current_gamestate.gamefield.dimension
-        self.observation_space = spaces.Box(low=0, high=1, shape=(dimension * dimension + 4, 1), dtype=np.float32)
+        self.observation_space = spaces.Box(low=-1, high=1, shape=(dimension * dimension + 4, 1), dtype=np.float32)
 
     def set_gamestate(self, gamestate):
         self.first_gamestate = gamestate

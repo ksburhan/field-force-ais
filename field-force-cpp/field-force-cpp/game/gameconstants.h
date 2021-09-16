@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
 
-inline std::string playername = "behaviour";
+inline std::string playername = "behaviour2";
 inline int skill1 = 4;
 inline int skill2 = 3;
 
-inline char VALID_TARGETS[] = { '1', '2', '3', '4', '-' };
+inline char VALID_TARGETS[] = { 1, 2, 3, 4, '-' };
 
 inline bool VERBOSE = false;
 
