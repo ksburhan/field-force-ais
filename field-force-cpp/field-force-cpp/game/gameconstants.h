@@ -5,7 +5,7 @@ inline std::string playername = "c++";
 inline int skill1 = 4;
 inline int skill2 = 3;
 
-inline char VALID_TARGETS[] = { '1', '2', '3', '4', '-' };
+inline char VALID_TARGETS[] = { 1, 2, 3, 4, '-' };
 
 inline bool VERBOSE = false;
 
