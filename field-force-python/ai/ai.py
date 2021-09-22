@@ -58,9 +58,9 @@ def get_best_move():
     gamestate = copy.deepcopy(current_gamestate)
     aidqn.env.set_gamestate(gamestate)
     observation = aidqn.env.reset()
-    action = aidqn.agent.choose_action(observation)
+    action = aidqn.agent.choose_action(observation, False)
     while current_gamestate.is_valid_move(get_move(action), ownplayerobj.identifier) is not True:
-        action = aidqn.agent.choose_action(observation)
+        action = aidqn.agent.choose_action(observation, True)
     observation_, reward, done, info = aidqn.env.step(action)
     print('reward', reward)
     aidqn.score += reward

@@ -33,6 +33,7 @@ def handle_initialmap(packet):
     consumables = packet.read_consumables()
     ai.current_gamestate = GameState(GameField(dimension, init_map, game.player.PLAYERS_IN_GAME), game.player.PLAYERS_IN_GAME, player_in_turn, fires,
                                      walls, consumables)
+    ai.aidqn = ai.AIDQN()
 
 
 def handle_moverequest(packet, client):

@@ -69,13 +69,16 @@ class Agent:
         self.terminal_memory[index] = 1 - terminal
         self.mem_cntr += 1
 
-    def choose_action(self, observation):
+    def choose_action(self, observation, rnd):
         rand = np.random.random()
         actions = self.Q_eval.forward(observation)
-        if rand > self.EPSILON:
-            action = torch.argmax(actions).item()
+        if ai.ai.train or rnd:
+            if rand > self.EPSILON:
+                action = torch.argmax(actions).item()
+            else:
+                action = np.random.choice(self.action_space)
         else:
-            action = np.random.choice(self.action_space)
+            action = torch.argmax(actions).item()
         return action
 
     def learn(self):
@@ -117,7 +120,7 @@ class Agent:
 
     def load_model(self):
         if os.path.exists(ai.ai.model_path):
-            self.Q_eval.load_state_dict(torch.load(ai.ai.model_path))
+            self.Q_eval.load_state_dict(torch.load(ai.ai.model_path, map_location=torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')))
             self.Q_eval.eval()
         else:
             print("Model {} does not exist. Creating new one".format(ai.ai.model_path))
