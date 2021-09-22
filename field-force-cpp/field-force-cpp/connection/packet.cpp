@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <cstring>
 
 Packet::Packet() { }
 

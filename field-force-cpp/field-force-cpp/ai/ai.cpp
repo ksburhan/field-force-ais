@@ -31,7 +31,7 @@ Move AI::get_best_move()
 	Move move = moves.at(std::rand() % moves.size() + 0);
 	enemy_distance(current_gamestate);
 	consum_distance(current_gamestate);
-	/*if (enemy_distance(current_gamestate) < 6)
+	if (enemy_distance(current_gamestate) < 6)
 	{
 		for (auto m : moves)
 			if (m.type == MoveType::MT_ATTACK)
@@ -69,9 +69,9 @@ Move AI::get_best_move()
 				if (m.type == MoveType::MT_MOVEMENT && m.direction == enemy_direction)
 					return m;
 		}
-	}*/
+	}
 
-	if (consum_distance(current_gamestate) < 4)
+	/*if (consum_distance(current_gamestate) < 4)
 	{
 		if (op.hp < HP || op.shield < SHIELD)
 		{
@@ -109,7 +109,7 @@ Move AI::get_best_move()
 				if (m.type == MoveType::MT_MOVEMENT && m.direction == enemy_direction)
 					return m;
 		}
-	}
+	}*/
 	return move;
 }
 
