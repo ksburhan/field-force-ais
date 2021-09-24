@@ -181,7 +181,7 @@ class Skill:
             if tile.wTile is not None:
                 wTile = tile.wTile
                 target_object = wTile.content
-                if isinstance(target_object, Player) and wTile.nTile is not None:
+                if isinstance(target_object, Player) and wTile.wTile is not None:
                     gamestate.move_to_tile(target_object, target_object.x - 1, target_object.y)
 
     def break_type(self, player, direction, gamestate):
