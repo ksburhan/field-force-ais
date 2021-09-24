@@ -79,7 +79,7 @@ class GameState:
                 self.attack_tile(player, player.x - 1, player.y)
         if move.type == MoveType.SKILL:
             skill = player.skill1
-            if move.skill.identifier == player.skill2:
+            if move.skill.identifier == player.skill2.identifier:
                 skill = player.skill2
             skill.use_skill(player, move.direction, self)
         if player_id in self.playerinturn:

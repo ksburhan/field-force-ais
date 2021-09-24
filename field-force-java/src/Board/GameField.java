@@ -72,6 +72,7 @@ public class GameField {
                     }
                     case 'f' -> mapObject = new Fire(map[x][y], x, y);
                     case '-' -> mapObject = new Wall(map[x][y], x, y);
+                    case 'x' -> mapObject = new MapObject(map[x][y], x, y);
                     case '0' -> mapObject = new MapObject(map[x][y], x, y);
                     default -> {
                         for (char c : GameConstants.VALID_CONSUMEABLES) {
