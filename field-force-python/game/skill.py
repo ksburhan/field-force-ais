@@ -155,7 +155,7 @@ class Skill:
                 elif isinstance(target_object, Player):
                     target_object.take_damage(self.value, gamestate)
 
-    # pushes players next to target tile to one further tile away
+    # pushes players next to target tile to one further tile away from the target tile
     def push_type(self, player, direction, gamestate):
         x_target = 0
         y_target = 0
@@ -191,7 +191,7 @@ class Skill:
             if tile.wTile is not None:
                 wTile = tile.wTile
                 target_object = wTile.content
-                if isinstance(target_object, Player) and wTile.nTile is not None:
+                if isinstance(target_object, Player) and wTile.wTile is not None:
                     gamestate.move_to_tile(target_object, target_object.x - 1, target_object.y)
 
     # deals damage in chosen direction

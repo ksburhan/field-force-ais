@@ -33,5 +33,5 @@ def get_best_move():
 
 
 def check_time_limit():
-    if (time.time() * 1000) - time_start > game.gameconstants.TIME_LIMIT - 500:
+    if time.time() * 1000 - time_start > (game.gameconstants.TIME_LIMIT * 1000) - 500:
         raise Exception()
